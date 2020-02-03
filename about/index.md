@@ -1,5 +1,6 @@
-# About LoveIt
+# About Me
 
+I am GUO Chen, a msc student at HongKong ploytechnic university.
 
 [LoveIt :(far fa-heart):](https://github.com/dillonzq/LoveIt) is a **clean**, **elegant** but **advanced** blog theme for [Hugo](https://gohugo.io/) developed by [Dillon](https://dillonzq.com).
 
