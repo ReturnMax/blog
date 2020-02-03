@@ -1,2 +1,0 @@
-# gmorn.github.io
- Blog
