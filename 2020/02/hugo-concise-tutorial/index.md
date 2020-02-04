@@ -1,23 +1,33 @@
 # Hugo简明教程
 
+# What is Hugo
 
-Hugo是由GO语言实现的静态网站生成器，具有简单、易用、高效、快速部署等特点。  
-本文介绍了Win10系统下Hugo的安装，通过hugo theme快速生成静态网页以及如何托管到github pages等内容。  
+Hugo是由GO语言实现的静态网站生成器，自称"The world’s fastest framework for building websites"。  
+
+静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
+
+本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。  
 
 ## Step 1: Install Hugo for Win  
-[<u>下载</u>](https://github.com/gohugoio/hugo/releases) 对应版本的二进制文件，解压后获得exe文件，然后将exe所在路径加入环境变量PATH中。  
-在cmd中输入`hugo version`检查是否安装成功，通过执行`hugo -help`查看命令帮助。  
+在release[<u>下载</u>](https://github.com/gohugoio/hugo/releases) 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。  
+
+添加成功后，在cmd中输入`hugo version`检查是否安装成功，如果安装成功会输出  
+`Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z`。  
+  
+我们也可以通过执行`hugo -help`查看命令帮助。  
 
 ## Step 2: Create a New Site
+创建一个新的hugo站点：  
+
 ```
 hugo new site path/to/site
 ```
 
-将会在site目录下创建一个新的hugo站点，文件目录结构如下：  
-path  
-├─&ensp;config.toml  
+该命令会在site目录下创建一个新的hugo站点，文件目录结构如下：  
+site/    
 ├─&ensp;archetypes  
-│&emsp;&emsp;└─&ensp;default.md    
+│&emsp;&emsp;└─&ensp;default.md  
+├─&ensp;config.toml    
 ├─&ensp;content  
 ├─&ensp;data  
 ├─&ensp;layouts  
@@ -27,15 +37,17 @@ path
 * config.toml  
 	站点的全局参数配置文件  
 * archetypes  
-	存放default.md文件，该文件定义了Hugo的markdown文件前置数据(Front Matter)的结构。我们可以自定义结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json，默认的default.md文件为yaml格式：  
+	存放default.md文件，该文件定义了Hugo的markdown文件`前置数据(Front Matter)`的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，包括以下3项：  
 
 ```
----  
-title: "{{ replace .Name "-" " " | title }}"  
-date: {{ .Date }}  
-draft: true  
----  
-```  	
+	---  
+	title: "{{ replace .Name "-" " " | title }}"  
+	date: {{ .Date }}  
+	draft: true  
+	---  
+```  
+&emsp;&emsp;`draft: true`表示该文章处于草稿状态，不会被显示，发布时需要改为`true`。  
+  
 * content  
 	存放网页内容的目录，我们编写的markdown文件都存放在该目录中，是Hugo的默认源目录。  
 
@@ -55,16 +67,16 @@ draft: true
 ## Step 3: Add a Theme
 Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！  
   
-首先我们挑选一个喜欢的 [<u>hugo主题</u>](https://themes.gohugo.io/) ，例如 [<u>loveit</u>](https://themes.gohugo.io/loveit/) 。  
+首先我们挑选一个喜欢的 [<u>hugo主题</u>](https://themes.gohugo.io/) ，例如 [<u>LoveIt</u>](https://themes.gohugo.io/loveit/)，然后将主题下载到themes目录下。  
 ```
 cd path/to/site
 git init
-git clone https://github.com/xx/xx.git themes/loveit
+git clone https://github.com/xx/xx.git themes/LoveIt
 ```
-将主题下载到themes目录下，执行成功后，会在themesm目录下生成主题目录loveit。  
-然后将该theme添加到站点的配置中：
+执行成功后，会在themesm目录下生成主题目录LoveIt。  
+添加主题到配置文件中：
 ```shell
-echo 'theme = "loveit"' >> config.toml
+echo 'theme = "LoveIt"' >> config.toml
 ```
 或直接用文本编辑器打开config.toml修改相应的配置。  
   
@@ -75,8 +87,7 @@ echo 'theme = "loveit"' >> config.toml
 ```shell
 hugo new posts/my-first-post.md
 ```  
-在`content/posts`目录中会自动以`archetypes/default.md`为模板，生成一篇名为`my-first-post.md`的文章草稿。  
-metadata中的`draft: true`表示该文章处于草稿状态，不会被显示，因此在生成网页前我们需要将其改为`draft: false`。  
+在`content/posts`目录中会生成一篇名为`my-first-post.md`的文章草稿，并自动添加`archetypes/default.md`中的内容。    
 
 ## Step 5: Hosting Hugo Site Locally  
 在站点目录下执行：  
@@ -86,16 +97,16 @@ hugo server
 启动服务器后，可以通过[http://localhost:1313/](http://localhost:1313/)访问站点并调试。Hugo支持所谓的liveload，相应配置及内容的修改会即刻生效并显示。  
 
 ## Step 6: Build Static Pages
-在创建静态页面之前，我们需要对`config.toml`进行修改。因为我们准备将该网页托管到github pages上，因此需要将baseURL修改为"https://yourgithubusername.github.io/"。  
+在创建静态页面之前，我们需要对`config.toml`进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为"https://yourgithubusername.github.io/"。  
 调试无误后，我们在站点目录下执行：  
 ```shell
 hugo
 ```  
-该命令会在站点目录下生成public子目录，然后将渲染后的全部站点文件输出到该目录中。  
+该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。  
 我们可以将public目录中的文件直接提交到github上以Githbu Pages方式发布，也可以部署到自己的服务器上。  
 
 ## Step 7: Hosting on Github Pages  
-我们在github中新建一个名为`yourgithubusername.github.io`的仓库，然后将public中的文件push到该仓库中。  
+我们在github中新建一个repo，命名为`yourgithubusername.github.io`，然后将public中的文件push到该仓库中。  
 ```shell
 cd path/to/site/public
 git init
@@ -104,6 +115,6 @@ git add.
 git commit -m "your message"
 git push origin master
 ```  
-同步完毕后，即可通过 <u>http://yourgitubusername.github.io</u> 访问你的网页了。  
+叮！ 通过<u>http://yourgitubusername.github.io</u> 访问你的网站吧。  
 
 <!--more-->
