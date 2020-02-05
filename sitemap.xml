@@ -3,7 +3,7 @@
         <url>
             <loc>https://gmorn.github.io/categories/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -17,7 +17,7 @@
         <url>
             <loc>https://gmorn.github.io/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -31,7 +31,7 @@
         <url>
             <loc>https://gmorn.github.io/categories/hugo/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -45,7 +45,7 @@
         <url>
             <loc>https://gmorn.github.io/tags/hugo/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -57,9 +57,9 @@
         </url>
     
         <url>
-            <loc>https://gmorn.github.io/2020/02/hugo-concise-tutorial/</loc>
+            <loc>https://gmorn.github.io/2020/02/hugo-concise-tutorial2/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -73,7 +73,7 @@
         <url>
             <loc>https://gmorn.github.io/posts/</loc>
             
-                <lastmod>2020-02-03T17:23:08+08:00</lastmod>
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -86,6 +86,34 @@
     
         <url>
             <loc>https://gmorn.github.io/tags/</loc>
+            
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://gmorn.github.io/tags/theme/</loc>
+            
+                <lastmod>2020-02-04T17:46:40+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://gmorn.github.io/2020/02/hugo-concise-tutorial/</loc>
             
                 <lastmod>2020-02-03T17:23:08+08:00</lastmod>
             
@@ -128,20 +156,6 @@
     
         <url>
             <loc>https://gmorn.github.io/2019/08/loveit-preview/</loc>
-            
-                <lastmod>2019-08-25T16:22:42+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://gmorn.github.io/tags/theme/</loc>
             
                 <lastmod>2019-08-25T16:22:42+08:00</lastmod>
             

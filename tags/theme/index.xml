@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 25 Aug 2019 16:22:42 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 04 Feb 2020 17:46:40 +0800</lastBuildDate>
     
 	<atom:link href="https://gmorn.github.io/tags/theme/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Hugo Concise Tutorial2</title>
+      <link>https://gmorn.github.io/2020/02/hugo-concise-tutorial2/</link>
+      <pubDate>Tue, 04 Feb 2020 17:46:40 +0800</pubDate>
+      
+      <guid>https://gmorn.github.io/2020/02/hugo-concise-tutorial2/</guid>
+      <description>&lt;p&gt;在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。&lt;/p&gt;
+&lt;p&gt;但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！&lt;/p&gt;
+&lt;p&gt;接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！&lt;/p&gt;
+&lt;h2 id=&#34;content-management&#34;&gt;Content Management&lt;/h2&gt;
+&lt;h3 id=&#34;organization&#34;&gt;Organization&lt;/h3&gt;</description>
+    </item>
     
     <item>
       <title>LoveIt Theme Preview and Documentation</title>

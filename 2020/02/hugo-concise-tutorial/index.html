@@ -7,6 +7,7 @@
 <meta name="robots" content="noodp" />
 <meta name="Description" content="LoveIt Theme Demo">
 <link rel="prev" href="https://gmorn.github.io/2019/08/loveit-preview/" />
+<link rel="next" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" />
 <link rel="canonical" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -50,7 +51,7 @@ site/
 config.toml
 站点的全局参数配置文件
 archetypes
-存放default.md文件，该文件定义了Hugo的markdown文件前置数据(Front Matter)的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，包括以下3项：
+存放default.md文件，该文件定义了Hugo的markdown文件前置数据(Front Matter)的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，至少包括以下3项：
 
 
 
@@ -68,7 +69,7 @@ archetypes
 	---  
 
 
-  draft: true表示该文章处于草稿状态，不会被显示，发布时需要改为true。
+  draft为true表示该文章处于草稿状态，不会被渲染和显示，发布时需要改为false。
 
 
 content
@@ -80,11 +81,12 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 
 
 layouts
-存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。
+存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。模板是以.html文件指明如何将内容视图渲染为静态页面。
+模板包括列表页面、主页、分类模板、partals、单页模板等。
 
 
 static
-存放静态文件，比如css、js、img、CNAME等文件目录。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。
+存放所有的静态内容，如images, css、js、CNAME等。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。
 
 
 themes
@@ -117,7 +119,7 @@ echo &#39;theme = &#34;LoveIt&#34;&#39; &gt;&gt; config.toml
 
 
 或直接用文本编辑器打开config.toml修改相应的配置。
-一个快速简便的配置方法是用themes/loveit/exampleSite下的config.toml替换/site站点目录下的config.tmol。
+一个快速简便的配置方法是用themes/loveit/exampleSite下的config.toml替换/site站点目录下默认生成的config.tmol。
 Step 4: Add Some Content
 我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：
 
@@ -139,7 +141,7 @@ Step 5: Hosting Hugo Site Locally
 hugo server
 
 
-启动服务器后，可以通过http://localhost:1313/访问站点并调试。Hugo支持所谓的liveload，相应配置及内容的修改会即刻生效并显示。
+启动服务器后，可以通过http://localhost:1313/访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。
 Step 6: Build Static Pages
 在创建静态页面之前，我们需要对config.toml进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&quot;https://yourgithubusername.github.io/&quot;。
 调试无误后，我们在站点目录下执行：
@@ -173,7 +175,11 @@ git commit -m &#34;your message&#34;
 git push origin master
 
 
-叮！ 通过http://yourgitubusername.github.io 访问你的网站吧。"/>
+叮！ 通过http://yourgitubusername.github.io 访问你的网站吧。
+Reference
+
+Hugo Documentation
+"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -195,7 +201,7 @@ git push origin master
     
         "keywords": "Hugo, Tutorial",
     
-    "wordcount":  206 ,
+    "wordcount":  201 ,
     "url": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/",
     
         "datePublished": "2020-02-03T17:23:08\x2b08:00",
@@ -304,7 +310,7 @@ git push origin master
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-03>2020-02-03</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>about 206 words&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>about 201 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>1 min&nbsp;</div>
         </div>
 
@@ -322,6 +328,7 @@ git push origin master
     <li><a href="#step-5-hosting-hugo-site-locally">Step 5: Hosting Hugo Site Locally</a></li>
     <li><a href="#step-6-build-static-pages">Step 6: Build Static Pages</a></li>
     <li><a href="#step-7-hosting-on-github-pages">Step 7: Hosting on Github Pages</a></li>
+    <li><a href="#reference">Reference</a></li>
   </ul>
 </nav>
                 </div>
@@ -341,6 +348,7 @@ git push origin master
     <li><a href="#step-5-hosting-hugo-site-locally">Step 5: Hosting Hugo Site Locally</a></li>
     <li><a href="#step-6-build-static-pages">Step 6: Build Static Pages</a></li>
     <li><a href="#step-7-hosting-on-github-pages">Step 7: Hosting on Github Pages</a></li>
+    <li><a href="#reference">Reference</a></li>
   </ul>
 </nav>
                     </div>
@@ -405,7 +413,7 @@ site/ <br>
 <li>config.toml<br>
 站点的全局参数配置文件</li>
 <li>archetypes<br>
-存放default.md文件，该文件定义了Hugo的markdown文件<code>前置数据(Front Matter)</code>的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，包括以下3项：</li>
+存放default.md文件，该文件定义了Hugo的markdown文件<code>前置数据(Front Matter)</code>的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，至少包括以下3项：</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -416,14 +424,14 @@ site/ <br>
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">	---  
-	title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;  
-	date: {{ .Date }}  
-	draft: true  
-	---  
-</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-YAML" data-lang="YAML"><span class="w">	</span>--- <span class="w"> 
+</span><span class="w">	</span><span class="k">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;{{ replace .Name &#34;</span>-<span class="s2">&#34; &#34;</span><span class="w"> </span><span class="s2">&#34; | title }}&#34;</span><span class="w">  
+</span><span class="w">	</span><span class="k">date</span><span class="p">:</span><span class="w"> </span>{{<span class="w"> </span>.Date<span class="w"> </span>}}<span class="w">  
+</span><span class="w">	</span><span class="k">draft</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">  
+</span><span class="w">	</span>--- <span class="w"> 
+</span></code></pre></td></tr></table>
 </div>
-</div><p>  <code>draft: true</code>表示该文章处于草稿状态，不会被显示，发布时需要改为<code>true</code>。</p>
+</div><p>  <code>draft</code>为<code>true</code>表示该文章处于草稿状态，不会被渲染和显示，发布时需要改为<code>false</code>。</p>
 <ul>
 <li>
 <p>content<br>
@@ -435,11 +443,12 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </li>
 <li>
 <p>layouts<br>
-存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。</p>
+存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。模板是以<code>.html</code>文件指明如何将内容视图渲染为静态页面。<br>
+模板包括列表页面、主页、分类模板、partals、单页模板等。</p>
 </li>
 <li>
 <p>static<br>
-存放静态文件，比如css、js、img、CNAME等文件目录。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。</p>
+存放所有的静态内容，如images, css、js、CNAME等。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。</p>
 </li>
 <li>
 <p>themes<br>
@@ -456,7 +465,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">cd path/to/site
+<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">cd</span> path/to/site
 git init
 git clone https://github.com/xx/xx.git themes/LoveIt
 </code></pre></td></tr></table>
@@ -468,11 +477,11 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
+<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
 </code></pre></td></tr></table>
 </div>
 </div><p>或直接用文本编辑器打开config.toml修改相应的配置。</p>
-<p>一个快速简便的配置方法是用<code>themes/loveit/exampleSite</code>下的<code>config.toml</code>替换<code>/site</code>站点目录下的<code>config.tmol</code>。</p>
+<p>一个快速简便的配置方法是用<code>themes/loveit/exampleSite</code>下的<code>config.toml</code>替换<code>/site</code>站点目录下默认生成的<code>config.tmol</code>。</p>
 <a class="post-dummy-target" id="step-4-add-some-content"></a><h2>Step 4: Add Some Content</h2>
 <p>我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：</p>
 <div class="highlight"><div class="chroma">
@@ -480,7 +489,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">hugo new posts/my-first-post.md
+<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo new posts/my-first-post.md
 </code></pre></td></tr></table>
 </div>
 </div><p>在<code>content/posts</code>目录中会生成一篇名为<code>my-first-post.md</code>的文章草稿，并自动添加<code>archetypes/default.md</code>中的内容。</p>
@@ -491,10 +500,10 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">hugo server
+<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo server
 </code></pre></td></tr></table>
 </div>
-</div><p>启动服务器后，可以通过<a href="http://localhost:1313/">http://localhost:1313/</a>访问站点并调试。Hugo支持所谓的liveload，相应配置及内容的修改会即刻生效并显示。</p>
+</div><p>启动服务器后，可以通过<a href="http://localhost:1313/">http://localhost:1313/</a>访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。</p>
 <a class="post-dummy-target" id="step-6-build-static-pages"></a><h2>Step 6: Build Static Pages</h2>
 <p>在创建静态页面之前，我们需要对<code>config.toml</code>进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&quot;https://yourgithubusername.github.io/&quot;。<br>
 调试无误后，我们在站点目录下执行：</p>
@@ -503,7 +512,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">hugo
+<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo
 </code></pre></td></tr></table>
 </div>
 </div><p>该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。<br>
@@ -520,7 +529,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">cd</span> path/to/site/public
+<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">cd</span> path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
 git add.
@@ -529,6 +538,10 @@ git push origin master
 </code></pre></td></tr></table>
 </div>
 </div><p>叮！ 通过<u><a href="http://yourgitubusername.github.io">http://yourgitubusername.github.io</a></u> 访问你的网站吧。</p>
+<a class="post-dummy-target" id="reference"></a><h2>Reference</h2>
+<ol>
+<li><a href="https://s0gohugo0io.icopy.site/documentation/">Hugo Documentation</a></li>
+</ol>
         </div>
 
         <div class="post-footer" id="post-footer">
@@ -603,6 +616,8 @@ git push origin master
         
             <a href="https://gmorn.github.io/2019/08/loveit-preview/" class="prev" rel="prev" title="LoveIt Theme Preview and Documentation"><i class="fas fa-angle-left fa-fw"></i>LoveIt Theme Preview and Documentation</a>
         
+        
+            <a href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" class="next" rel="next" title="Hugo Concise Tutorial2">Hugo Concise Tutorial2<i class="fas fa-angle-right fa-fw"></i></a>
         
     </div>
 </div>
