@@ -5,10 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Hugo简明教程 | Chen&#39;s Blog</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
-<meta name="Description" content="LoveIt Theme Demo">
-<link rel="prev" href="https://gmorn.github.io/2019/08/loveit-preview/" />
-<link rel="next" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" />
-<link rel="canonical" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial/" />
+<meta name="Description" content="About LoveIt Theme"><link rel="prev" href="https://gmorn.github.io/2019/08/loveit-preview/" /><link rel="next" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" /><link rel="canonical" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -16,7 +13,172 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Hugo简明教程" />
+<meta property="og:description" content="Hugo是由GO语言实现的静态网站生成器，自称&quot;The world’s fastest framework for building websites&rdquo;。
+静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。
+本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。
+Step 1: Install Hugo for Win
+在release下载 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。
+添加成功后，在cmd中输入hugo version检查是否安装成功，如果安装成功会输出
+Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z。
+我们也可以通过执行hugo -help查看命令帮助。
+Step 2: Create a New Site
+创建一个新的hugo站点：
+
+
+1
+
+
+hugo new site path/to/site
+
+
+该命令会在site目录下创建一个新的hugo站点，文件目录结构如下：
+site/ 
+├─ archetypes
+│  └─ default.md
+├─ config.toml 
+├─ content
+├─ data
+├─ layouts
+├─ static
+└─ themes
+
+config.toml
+站点的全局参数配置文件
+archetypes
+存放default.md文件，该文件定义了Hugo的markdown文件前置数据(Front Matter)的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，至少包括以下3项：
+
+
+
+1
+2
+3
+4
+5
+
+
+	---  
+	title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;  
+	date: {{ .Date }}  
+	draft: true  
+	---  
+
+
+  draft为true表示该文章处于草稿状态，不会被渲染和显示，发布时需要改为false。
+
+
+content
+存放网页内容的目录，我们编写的markdown文件都存放在该目录中，是Hugo的默认源目录。
+
+
+data
+data目录用来存放数据文件，一般是json文件，Hugo提供了相关命令可以从data目录下读取相关的文件数据，然后渲染到HTML页面中，将业务数据与模板分离。
+
+
+layouts
+存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。模板是以.html文件指明如何将内容视图渲染为静态页面。
+模板包括列表页面、主页、分类模板、partals、单页模板等。
+
+
+static
+存放所有的静态内容，如images, css、js、CNAME等。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。
+
+
+themes
+存放网站主题，可以下载多个主题，themes目录下的每个子目录代表了一个主题。可以通过在config.toml中通过参数theme指定主题，即theme目录下的子目录名字，也可以在执行hugo命令渲染时通过增加flag参数–theme=xx指定。
+
+
+Step 3: Add a Theme
+Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！
+首先我们挑选一个喜欢的 hugo主题 ，例如 LoveIt，然后将主题下载到themes目录下。
+
+
+1
+2
+3
+
+
+cd path/to/site
+git init
+git clone https://github.com/xx/xx.git themes/LoveIt
+
+
+执行成功后，会在themesm目录下生成主题目录LoveIt。
+添加主题到配置文件中：
+
+
+1
+
+
+echo &#39;theme = &#34;LoveIt&#34;&#39; &gt;&gt; config.toml
+
+
+或直接用文本编辑器打开config.toml修改相应的配置。
+一个快速简便的配置方法是用themes/loveit/exampleSite下的config.toml替换/site站点目录下默认生成的config.tmol。
+Step 4: Add Some Content
+我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：
+
+
+1
+
+
+hugo new posts/my-first-post.md
+
+
+在content/posts目录中会生成一篇名为my-first-post.md的文章草稿，并自动添加archetypes/default.md中的内容。
+Step 5: Hosting Hugo Site Locally
+在站点目录下执行：
+
+
+1
+
+
+hugo server
+
+
+启动服务器后，可以通过http://localhost:1313/访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。
+Step 6: Build Static Pages
+在创建静态页面之前，我们需要对config.toml进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&quot;https://yourgithubusername.github.io/&quot;。
+调试无误后，我们在站点目录下执行：
+
+
+1
+
+
+hugo
+
+
+该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。
+我们可以将public目录中的文件直接提交到github上以Githbu Pages方式发布，也可以部署到自己的服务器上。
+Step 7: Hosting on Github Pages
+我们在github中新建一个repo，命名为yourgithubusername.github.io，然后将public中的文件push到该仓库中。
+
+
+1
+2
+3
+4
+5
+6
+
+
+cd path/to/site/public
+git init
+git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
+git add.
+git commit -m &#34;your message&#34;
+git push origin master
+
+
+叮！ 通过http://yourgitubusername.github.io 访问你的网站吧。
+Reference
+
+Hugo Documentation
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gmorn.github.io/2020/02/hugo-concise-tutorial/" />
+<meta property="article:published_time" content="2020-02-03T17:23:08+08:00" />
+<meta property="article:modified_time" content="2020-02-03T17:23:08+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Hugo简明教程"/>
 <meta name="twitter:description" content="Hugo是由GO语言实现的静态网站生成器，自称&quot;The world’s fastest framework for building websites&rdquo;。
@@ -182,89 +344,43 @@ Hugo Documentation
 "/>
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "headline": "Hugo简明教程",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/"
-    },
-    
-        "image": {
-            "@type": "ImageObject",
-            "url": "https:\/\/gmorn.github.io\/cover.png",
-            "width":  800 ,
-            "height":  600 
-        },
-    
-    "genre": "posts",
-    
-        "keywords": "Hugo, Tutorial",
-    
-    "wordcount":  201 ,
-    "url": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/",
-    
-        "datePublished": "2020-02-03T17:23:08\x2b08:00",
-    
-    
-        "dateModified": "2020-02-03T17:23:08\x2b08:00",
-    
-    
-        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
-    
-    
-        "publisher": {
-            "@type": "Organization",
-            "name": "XXXX",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https:\/\/gmorn.github.io\/logo.png",
-            "width":  127 ,
-            "height":  40 
-            }
-        },
-    
-    
-    "description": ""
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Hugo简明教程",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/gmorn.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "Hugo, Tutorial","wordcount":  201 ,
+        "url": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/","datePublished": "2020-02-03T17:23:08\x2b08:00","dateModified": "2020-02-03T17:23:08\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "xxxx",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/gmorn.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
     }
-    </script>
-<link rel="stylesheet" href="/css/style.min.css">
-<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
-
-<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
-
-
-    </head>
-    <body>
-        <script>
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
             window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
             window.isDark && document.body.classList.add('dark-theme');
-        </script>
-        <div class="wrapper">
-            <nav class="navbar">
+        </script><div class="wrapper"><nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-header animated bounceIn">
             <a href="https://gmorn.github.io/">Chen&#39;s Blog</a>
         </div>
-        <div class="navbar-menu">
-            
-            
-                <a class="menu-item" href="https://gmorn.github.io/posts" title="">Posts</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/tags" title="">Tags</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/categories" title="">Categories</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/about" title="">About</a>
-            
-                <a class="menu-item" href="https://hugo-loveit-zh.netlify.com" title=""><i class="fas fa-search fa-fw"></i></a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="Switch Theme"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://gmorn.github.io/posts" title="">Posts</a><a class="menu-item" href="https://gmorn.github.io/tags" title="">Tags</a><a class="menu-item" href="https://gmorn.github.io/categories" title="">Categories</a><a class="menu-item" href="https://gmorn.github.io/about" title="">About</a><a class="menu-item" href="https://hugo-loveit-zh.netlify.com" title="简体中文"><i class="fas fa-language fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="Switch Theme"></i></a>
         </div>
     </div>
-</nav>
-<nav class="navbar-mobile">
-     <div class="navbar-container">
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
         <div class="navbar-header">
             <div class="navbar-header-title animated bounceIn">
                 <a href="https://gmorn.github.io/">Chen&#39;s Blog</a>
@@ -273,53 +389,20 @@ Hugo Documentation
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu">
-            
-            
-                <a class="menu-item" href="https://gmorn.github.io/posts" title="">Posts</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/tags" title="">Tags</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/categories" title="">Categories</a>
-            
-                <a class="menu-item" href="https://gmorn.github.io/about" title="">About</a>
-            
-                <a class="menu-item" href="https://hugo-loveit-zh.netlify.com" title=""><i class="fas fa-search fa-fw"></i></a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://gmorn.github.io/posts" title="">Posts</a><a class="menu-item" href="https://gmorn.github.io/tags" title="">Tags</a><a class="menu-item" href="https://gmorn.github.io/categories" title="">Categories</a><a class="menu-item" href="https://gmorn.github.io/about" title="">About</a><a class="menu-item" href="https://hugo-loveit-zh.netlify.com" title="简体中文"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="Switch Theme"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container">
-                    
-    
-    
-    
-
-    <article class="post-warp">
-        <h1 class="post-title animated flipInX">Hugo简明教程</h1>
-
-        <div class="post-meta">
-            <div class="post-meta-main">
-                <a class="author" href="https://gmorn.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>GUO Chen&nbsp;</a>
-                <span class="post-category">
-                        included in
-                        <i class="far fa-folder fa-fw"></i><a href="https://gmorn.github.io/categories/hugo/">Hugo</a>
-                            
-                    </span>
-            </div>
-            <div class="post-meta-other">
-                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-03>2020-02-03</time>&nbsp;
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Hugo简明教程</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://gmorn.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>GUO Chen
+                </a>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://gmorn.github.io/categories/hugo/">Hugo</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-03>2020-02-03</time>&nbsp;
                 <i class="fas fa-pencil-alt fa-fw"></i>about 201 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>1 min&nbsp;</div>
-        </div>
-
-        
-
-        <div class="post-toc" id="post-toc">
-                <h2 class="post-toc-title">Table of Contents</h2>
-                <div class="post-toc-content">
-                    <nav id="TableOfContents">
+        </div><div class="post-toc" id="post-toc">
+                <h2 class="post-toc-title">Contents</h2>
+                <div class="post-toc-content"><nav id="TableOfContents">
   <ul>
     <li><a href="#step-1-install-hugo-for-win">Step 1: Install Hugo for Win</a></li>
     <li><a href="#step-2-create-a-new-site">Step 2: Create a New Site</a></li>
@@ -330,16 +413,17 @@ Hugo Documentation
     <li><a href="#step-7-hosting-on-github-pages">Step 7: Hosting on Github Pages</a></li>
     <li><a href="#reference">Reference</a></li>
   </ul>
-</nav>
-                </div>
+</nav></div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
                 <details>
-                    <summary><div class="post-toc-title"><span>Table of Contents</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
-                    <div class="post-toc-content">
-                        
-                        
-                        <nav id="TableOfContentsMobile">
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>Contents</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#step-1-install-hugo-for-win">Step 1: Install Hugo for Win</a></li>
     <li><a href="#step-2-create-a-new-site">Step 2: Create a New Site</a></li>
@@ -350,42 +434,13 @@ Hugo Documentation
     <li><a href="#step-7-hosting-on-github-pages">Step 7: Hosting on Github Pages</a></li>
     <li><a href="#reference">Reference</a></li>
   </ul>
-</nav>
-                    </div>
+</nav></div>
                 </details>
-            </div>
-
-        <div class="post-content">
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <p>Hugo是由GO语言实现的静态网站生成器，自称&quot;The world’s fastest framework for building websites&rdquo;。</p>
+            </div><div class="post-content"><p>Hugo是由GO语言实现的静态网站生成器，自称&quot;The world’s fastest framework for building websites&rdquo;。</p>
 <p>静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。</p>
 <p>本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。</p>
 <a class="post-dummy-target" id="step-1-install-hugo-for-win"></a><h2>Step 1: Install Hugo for Win</h2>
-<p>在release<a href="https://github.com/gohugoio/hugo/releases"><u>下载</u></a> 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。</p>
+<p>在release<a href="https://github.com/gohugoio/hugo/releases" target="_blank"><u>下载</u></a> 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。</p>
 <p>添加成功后，在cmd中输入<code>hugo version</code>检查是否安装成功，如果安装成功会输出<br>
 <code>Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z</code>。</p>
 <p>我们也可以通过执行<code>hugo -help</code>查看命令帮助。</p>
@@ -457,7 +512,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </ul>
 <a class="post-dummy-target" id="step-3-add-a-theme"></a><h2>Step 3: Add a Theme</h2>
 <p>Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！</p>
-<p>首先我们挑选一个喜欢的 <a href="https://themes.gohugo.io/"><u>hugo主题</u></a> ，例如 <a href="https://themes.gohugo.io/loveit/"><u>LoveIt</u></a>，然后将主题下载到themes目录下。</p>
+<p>首先我们挑选一个喜欢的 <a href="https://themes.gohugo.io/" target="_blank"><u>hugo主题</u></a> ，例如 <a href="https://themes.gohugo.io/loveit/" target="_blank"><u>LoveIt</u></a>，然后将主题下载到themes目录下。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -465,10 +520,10 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site
-git init
-git clone https://github.com/xx/xx.git themes/LoveIt
-</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">site</span>
+<span class="n">git</span> <span class="n">init</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="nl">https</span><span class="p">:</span><span class="c1">//github.com/xx/xx.git themes/LoveIt
+</span></code></pre></td></tr></table>
 </div>
 </div><p>执行成功后，会在themesm目录下生成主题目录LoveIt。<br>
 添加主题到配置文件中：</p>
@@ -477,7 +532,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
+<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
 </code></pre></td></tr></table>
 </div>
 </div><p>或直接用文本编辑器打开config.toml修改相应的配置。</p>
@@ -489,7 +544,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">hugo new posts/my-first-post.md
+<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo new posts/my-first-post.md
 </code></pre></td></tr></table>
 </div>
 </div><p>在<code>content/posts</code>目录中会生成一篇名为<code>my-first-post.md</code>的文章草稿，并自动添加<code>archetypes/default.md</code>中的内容。</p>
@@ -503,7 +558,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo server
 </code></pre></td></tr></table>
 </div>
-</div><p>启动服务器后，可以通过<a href="http://localhost:1313/">http://localhost:1313/</a>访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。</p>
+</div><p>启动服务器后，可以通过<a href="http://localhost:1313/" target="_blank">http://localhost:1313/</a>访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。</p>
 <a class="post-dummy-target" id="step-6-build-static-pages"></a><h2>Step 6: Build Static Pages</h2>
 <p>在创建静态页面之前，我们需要对<code>config.toml</code>进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&quot;https://yourgithubusername.github.io/&quot;。<br>
 调试无误后，我们在站点目录下执行：</p>
@@ -512,7 +567,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">hugo</span>
+<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo
 </code></pre></td></tr></table>
 </div>
 </div><p>该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。<br>
@@ -529,7 +584,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site/public
+<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">cd</span> path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
 git add.
@@ -540,235 +595,71 @@ git push origin master
 </div><p>叮！ 通过<u><a href="http://yourgitubusername.github.io">http://yourgitubusername.github.io</a></u> 访问你的网站吧。</p>
 <a class="post-dummy-target" id="reference"></a><h2>Reference</h2>
 <ol>
-<li><a href="https://s0gohugo0io.icopy.site/documentation/">Hugo Documentation</a></li>
-</ol>
-        </div>
-
-        <div class="post-footer" id="post-footer">
+<li><a href="https://s0gohugo0io.icopy.site/documentation/" target="_blank">Hugo Documentation</a></li>
+</ol></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>This article is updated with 2020-02-03</span>
+                <span>The article was updated on 2020-02-03</span>
             </div>
-            <div class="post-info-license">
-                
-            </div>
+            <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
-            <div class="post-info-md">
-                
-                    
-                        <span><a class="link-to-markdown" href="https://gmorn.github.io/2020/02/hugo-concise-tutorial/index.md" target="_blank"></a></span>
-                    
-                
-            </div>
-            <div class="post-info-share">
-                
-                    <span>
-    
-        <a href="//twitter.com/share?url=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f&amp;text=Hugo%e7%ae%80%e6%98%8e%e6%95%99%e7%a8%8b&amp;via=xxxx" target="_blank" title="Share on Twitter">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f&amp;text=Hugo%e7%ae%80%e6%98%8e%e6%95%99%e7%a8%8b&amp;via=xxxx" target="_blank" title="Share on Twitter">
             <i class="fab fa-twitter fa-fw"></i>
-        </a>
-    
-    
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f" target="_blank" title="Share on Facebook">
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f" target="_blank" title="Share on Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a>
-    
-    
-        <a href="//reddit.com/submit?url=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f&amp;title=Hugo%e7%ae%80%e6%98%8e%e6%95%99%e7%a8%8b" target="_blank" title="Share on Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fgmorn.github.io%2f2020%2f02%2fhugo-concise-tutorial%2f&amp;title=Hugo%e7%ae%80%e6%98%8e%e6%95%99%e7%a8%8b" target="_blank" title="Share on Reddit">
             <i class="fab fa-reddit fa-fw"></i>
-        </a>
-    
-    
-    
-    
-    
-    
-    
-    
-</span>
-                
-            </div>
+        </a></span></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section>
-            
-                
-                    <span class="tag">
-                        <a href="https://gmorn.github.io/tags/hugo/"><i class="fas fa-tag fa-fw"></i>Hugo</a>
-                    </span>
-                
-                    <span class="tag">
-                        <a href="https://gmorn.github.io/tags/tutorial/"><i class="fas fa-tag fa-fw"></i>Tutorial</a>
-                    </span>
-                
-            
-        </section>
+        <section><span class="tag">
+                        <a href="https://gmorn.github.io/tags/hugo/"><i class="fas fa-tag fa-fw"></i>&nbsp;Hugo</a>&nbsp;
+                    </span><span class="tag">
+                        <a href="https://gmorn.github.io/tags/tutorial/"><i class="fas fa-tag fa-fw"></i>&nbsp;Tutorial</a>&nbsp;
+                    </span></section>
         <section>
             <span><a href="javascript:window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="https://gmorn.github.io/">Home</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-        
-            <a href="https://gmorn.github.io/2019/08/loveit-preview/" class="prev" rel="prev" title="LoveIt Theme Preview and Documentation"><i class="fas fa-angle-left fa-fw"></i>LoveIt Theme Preview and Documentation</a>
-        
-        
-            <a href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" class="next" rel="next" title="Hugo Concise Tutorial2">Hugo Concise Tutorial2<i class="fas fa-angle-right fa-fw"></i></a>
-        
-    </div>
-</div>
-
-        <div class="post-comment">
-            
-            <div id="disqus_thread"></div>
+    <div class="post-nav"><a href="https://gmorn.github.io/2019/08/loveit-preview/" class="prev" rel="prev" title="LoveIt Theme Preview and Documentation"><i class="fas fa-angle-left fa-fw"></i>LoveIt Theme Preview and Documentation</a>
+            <a href="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" class="next" rel="next" title="Hugo Concise Tutorial2">Hugo Concise Tutorial2<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div><div class="post-comment"><div id="disqus_thread"></div>
         <script type="text/javascript">
             (function() {
                 
                 
                 if (window.location.hostname == "localhost")
                     return;
-
                 var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
                 var disqus_shortname = "gmorn";
                 dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
                 (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
             })();
         </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-            
-        </div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
     </article></div>
-            </main>
-            <footer class="footer">
-    <div class="copyright">
-        <div class="copyright-line">
-            Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a>&nbsp;|&nbsp;Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
-        <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2018 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://gmorn.github.io/">GUO Chen</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://gmorn.github.io/" target="_blank">GUO Chen</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
-</footer>
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
-<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
-<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
-
-
-    
-    
-    
-
-    
-
-    
-        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
-    
-
-    
-
-    
-
-
-
-
-
-
-<script src="/js/blog.min.js"></script>
-
-
-    
-</div>
-        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
-    </body>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/blog.min.js"></script></body>
 </html>

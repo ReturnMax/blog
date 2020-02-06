@@ -35,7 +35,7 @@
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;/p&gt;
 &lt;p&gt;本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;
 &lt;h2 id=&#34;step-1-install-hugo-for-win&#34;&gt;Step 1: Install Hugo for Win&lt;/h2&gt;
-&lt;p&gt;在release&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34;&gt;&lt;u&gt;下载&lt;/u&gt;&lt;/a&gt; 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。&lt;/p&gt;
+&lt;p&gt;在release&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;下载&lt;/u&gt;&lt;/a&gt; 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。&lt;/p&gt;
 &lt;p&gt;添加成功后，在cmd中输入&lt;code&gt;hugo version&lt;/code&gt;检查是否安装成功，如果安装成功会输出&lt;br&gt;
 &lt;code&gt;Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;我们也可以通过执行&lt;code&gt;hugo -help&lt;/code&gt;查看命令帮助。&lt;/p&gt;
@@ -107,7 +107,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 &lt;/ul&gt;
 &lt;h2 id=&#34;step-3-add-a-theme&#34;&gt;Step 3: Add a Theme&lt;/h2&gt;
 &lt;p&gt;Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！&lt;/p&gt;
-&lt;p&gt;首先我们挑选一个喜欢的 &lt;a href=&#34;https://themes.gohugo.io/&#34;&gt;&lt;u&gt;hugo主题&lt;/u&gt;&lt;/a&gt; ，例如 &lt;a href=&#34;https://themes.gohugo.io/loveit/&#34;&gt;&lt;u&gt;LoveIt&lt;/u&gt;&lt;/a&gt;，然后将主题下载到themes目录下。&lt;/p&gt;
+&lt;p&gt;首先我们挑选一个喜欢的 &lt;a href=&#34;https://themes.gohugo.io/&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;hugo主题&lt;/u&gt;&lt;/a&gt; ，例如 &lt;a href=&#34;https://themes.gohugo.io/loveit/&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;LoveIt&lt;/u&gt;&lt;/a&gt;，然后将主题下载到themes目录下。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -115,10 +115,10 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site
-git init
-git clone https://github.com/xx/xx.git themes/LoveIt
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;n&#34;&gt;cd&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;to&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;site&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;git&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;init&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;git&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clone&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;https&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//github.com/xx/xx.git themes/LoveIt
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;执行成功后，会在themesm目录下生成主题目录LoveIt。&lt;br&gt;
 添加主题到配置文件中：&lt;/p&gt;
@@ -127,7 +127,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;theme = &amp;#34;LoveIt&amp;#34;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; config.toml
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;theme = &amp;#34;LoveIt&amp;#34;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; config.toml
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;或直接用文本编辑器打开config.toml修改相应的配置。&lt;/p&gt;
@@ -139,7 +139,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;hugo new posts/my-first-post.md
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;hugo new posts/my-first-post.md
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;在&lt;code&gt;content/posts&lt;/code&gt;目录中会生成一篇名为&lt;code&gt;my-first-post.md&lt;/code&gt;的文章草稿，并自动添加&lt;code&gt;archetypes/default.md&lt;/code&gt;中的内容。&lt;/p&gt;
@@ -153,7 +153,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;hugo server
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;启动服务器后，可以通过&lt;a href=&#34;http://localhost:1313/&#34;&gt;http://localhost:1313/&lt;/a&gt;访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。&lt;/p&gt;
+&lt;/div&gt;&lt;p&gt;启动服务器后，可以通过&lt;a href=&#34;http://localhost:1313/&#34; target=&#34;_blank&#34;&gt;http://localhost:1313/&lt;/a&gt;访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。&lt;/p&gt;
 &lt;h2 id=&#34;step-6-build-static-pages&#34;&gt;Step 6: Build Static Pages&lt;/h2&gt;
 &lt;p&gt;在创建静态页面之前，我们需要对&lt;code&gt;config.toml&lt;/code&gt;进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&amp;quot;https://yourgithubusername.github.io/&amp;quot;。&lt;br&gt;
 调试无误后，我们在站点目录下执行：&lt;/p&gt;
@@ -162,7 +162,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;hugo&lt;/span&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;hugo
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。&lt;br&gt;
@@ -179,7 +179,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site/public
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
 git add.
@@ -190,7 +190,7 @@ git push origin master
 &lt;/div&gt;&lt;p&gt;叮！ 通过&lt;u&gt;&lt;a href=&#34;http://yourgitubusername.github.io&#34;&gt;http://yourgitubusername.github.io&lt;/a&gt;&lt;/u&gt; 访问你的网站吧。&lt;/p&gt;
 &lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://s0gohugo0io.icopy.site/documentation/&#34;&gt;Hugo Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://s0gohugo0io.icopy.site/documentation/&#34; target=&#34;_blank&#34;&gt;Hugo Documentation&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     
