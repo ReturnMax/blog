@@ -1,9 +1,7 @@
 # Hugo简明教程
 
   
-Hugo是由GO语言实现的静态网站生成器，自称"The world’s fastest framework for building websites"。  
-
-静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
+Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
 
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。  
 
