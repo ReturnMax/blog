@@ -465,7 +465,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Bash" data-lang="Bash"><span class="nb">cd</span> path/to/site
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site
 git init
 git clone https://github.com/xx/xx.git themes/LoveIt
 </code></pre></td></tr></table>
@@ -477,7 +477,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
 </code></pre></td></tr></table>
 </div>
 </div><p>或直接用文本编辑器打开config.toml修改相应的配置。</p>
@@ -489,7 +489,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo new posts/my-first-post.md
+<pre class="chroma"><code class="language-shell" data-lang="shell">hugo new posts/my-first-post.md
 </code></pre></td></tr></table>
 </div>
 </div><p>在<code>content/posts</code>目录中会生成一篇名为<code>my-first-post.md</code>的文章草稿，并自动添加<code>archetypes/default.md</code>中的内容。</p>
@@ -512,7 +512,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">hugo</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。<br>
@@ -529,7 +529,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">cd</span> path/to/site/public
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
 git add.
