@@ -68,7 +68,7 @@ site/
 Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！  
   
 首先我们挑选一个喜欢的 [<u>hugo主题</u>](https://themes.gohugo.io/) ，例如 [<u>LoveIt</u>](https://themes.gohugo.io/loveit/)，然后将主题下载到themes目录下。  
-```Shell
+```Bash
 cd path/to/site
 git init
 git clone https://github.com/xx/xx.git themes/LoveIt

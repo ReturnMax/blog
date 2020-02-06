@@ -115,7 +115,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Shell&#34; data-lang=&#34;Shell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Bash&#34; data-lang=&#34;Bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site
 git init
 git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
