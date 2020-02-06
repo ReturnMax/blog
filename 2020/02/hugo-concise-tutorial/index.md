@@ -1,8 +1,9 @@
 # Hugo简明教程
 
   
-Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
-
+Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。
+  
+静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。  
 
 ## Step 1: Install Hugo for Win  
@@ -16,7 +17,7 @@ Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest 
 ## Step 2: Create a New Site
 创建一个新的hugo站点：  
 
-```
+```bash
 hugo new site path/to/site
 ```
 
@@ -66,14 +67,14 @@ site/
 Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！  
   
 首先我们挑选一个喜欢的 [<u>hugo主题</u>](https://themes.gohugo.io/) ，例如 [<u>LoveIt</u>](https://themes.gohugo.io/loveit/)，然后将主题下载到themes目录下。  
-```c
+```bash
 cd path/to/site
 git init
 git clone https://github.com/xx/xx.git themes/LoveIt
 ```
 执行成功后，会在themesm目录下生成主题目录LoveIt。  
 添加主题到配置文件中：
-```Shell
+```bash
 echo 'theme = "LoveIt"' >> config.toml
 ```
 或直接用文本编辑器打开config.toml修改相应的配置。  
@@ -82,14 +83,14 @@ echo 'theme = "LoveIt"' >> config.toml
 
 ## Step 4: Add Some Content
 我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：  
-```Shell
+```bash
 hugo new posts/my-first-post.md
 ```  
 在`content/posts`目录中会生成一篇名为`my-first-post.md`的文章草稿，并自动添加`archetypes/default.md`中的内容。    
 
 ## Step 5: Hosting Hugo Site Locally  
 在站点目录下执行：  
-```Shell
+```bash
 hugo server
 ```
 启动服务器后，可以通过[http://localhost:1313/](http://localhost:1313/)访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。  
@@ -97,7 +98,7 @@ hugo server
 ## Step 6: Build Static Pages
 在创建静态页面之前，我们需要对`config.toml`进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为"https://yourgithubusername.github.io/"。  
 调试无误后，我们在站点目录下执行：  
-```Shell
+```bash
 hugo
 ```  
 该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。  
@@ -105,7 +106,7 @@ hugo
 
 ## Step 7: Hosting on Github Pages  
 我们在github中新建一个repo，命名为`yourgithubusername.github.io`，然后将public中的文件push到该仓库中。  
-```Shell
+```bash
 cd path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io

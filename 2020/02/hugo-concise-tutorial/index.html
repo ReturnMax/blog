@@ -14,7 +14,8 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff"><meta property="og:title" content="Hugo简明教程" />
-<meta property="og:description" content="Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。
+<meta property="og:description" content="Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。
+静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。
 Step 1: Install Hugo for Win
 在release下载 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。
@@ -180,7 +181,8 @@ Hugo Documentation
 <meta property="article:modified_time" content="2020-02-03T17:23:08+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Hugo简明教程"/>
-<meta name="twitter:description" content="Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。
+<meta name="twitter:description" content="Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。
+静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。
 Step 1: Install Hugo for Win
 在release下载 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。
@@ -353,7 +355,7 @@ Hugo Documentation
                 "url": "https:\/\/gmorn.github.io\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Hugo, Tutorial","wordcount":  200 ,
+            },"genre": "posts","keywords": "Hugo, Tutorial","wordcount":  201 ,
         "url": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial\/","datePublished": "2020-02-03T17:23:08\x2b08:00","dateModified": "2020-02-03T17:23:08\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "xxxx",
@@ -396,7 +398,7 @@ Hugo Documentation
                     <i class="fas fa-user-circle fa-fw"></i>GUO Chen
                 </a>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://gmorn.github.io/categories/hugo/">Hugo</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-03>2020-02-03</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>about 200 words&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>about 201 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>1 min&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">Contents</h2>
@@ -434,8 +436,9 @@ Hugo Documentation
   </ul>
 </nav></div>
                 </details>
-            </div><div class="post-content"><p>Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。</p>
-<p>本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。</p>
+            </div><div class="post-content"><p>Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。</p>
+<p>静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。<br>
+本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。</p>
 <a class="post-dummy-target" id="step-1-install-hugo-for-win"></a><h2>Step 1: Install Hugo for Win</h2>
 <p>在release<a href="https://github.com/gohugoio/hugo/releases" target="_blank"><u>下载</u></a> 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。</p>
 <p>添加成功后，在cmd中输入<code>hugo version</code>检查是否安装成功，如果安装成功会输出<br>
@@ -448,7 +451,7 @@ Hugo Documentation
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">hugo new site path/to/site
+<pre class="chroma"><code class="language-bash" data-lang="bash">hugo new site path/to/site
 </code></pre></td></tr></table>
 </div>
 </div><p>该命令会在site目录下创建一个新的hugo站点，文件目录结构如下：<br>
@@ -517,10 +520,10 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">site</span>
-<span class="n">git</span> <span class="n">init</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="nl">https</span><span class="p">:</span><span class="c1">//github.com/xx/xx.git themes/LoveIt
-</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site
+git init
+git clone https://github.com/xx/xx.git themes/LoveIt
+</code></pre></td></tr></table>
 </div>
 </div><p>执行成功后，会在themesm目录下生成主题目录LoveIt。<br>
 添加主题到配置文件中：</p>
@@ -529,7 +532,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s1">&#39;theme = &#34;LoveIt&#34;&#39;</span> &gt;&gt; config.toml
 </code></pre></td></tr></table>
 </div>
 </div><p>或直接用文本编辑器打开config.toml修改相应的配置。</p>
@@ -541,7 +544,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo new posts/my-first-post.md
+<pre class="chroma"><code class="language-bash" data-lang="bash">hugo new posts/my-first-post.md
 </code></pre></td></tr></table>
 </div>
 </div><p>在<code>content/posts</code>目录中会生成一篇名为<code>my-first-post.md</code>的文章草稿，并自动添加<code>archetypes/default.md</code>中的内容。</p>
@@ -552,7 +555,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo server
+<pre class="chroma"><code class="language-bash" data-lang="bash">hugo server
 </code></pre></td></tr></table>
 </div>
 </div><p>启动服务器后，可以通过<a href="http://localhost:1313/" target="_blank">http://localhost:1313/</a>访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。</p>
@@ -564,7 +567,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell">hugo
+<pre class="chroma"><code class="language-bash" data-lang="bash">hugo
 </code></pre></td></tr></table>
 </div>
 </div><p>该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。<br>
@@ -581,7 +584,7 @@ data目录用来存放数据文件，一般是json文件，Hugo提供了相关�
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-Shell" data-lang="Shell"><span class="nb">cd</span> path/to/site/public
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> path/to/site/public
 git init
 git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
 git add.
