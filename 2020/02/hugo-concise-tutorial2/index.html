@@ -18,7 +18,80 @@
 但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！
 接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！
 Content Management
-Organization" />
+Basic Concepts
+
+
+Content
+内容就是我们自己以markdown格式撰写的文章，通常我们把单独的文章放到content目录下，将同一类型的文章放到content的子目录下。
+文章可以通过命令行，如hugo new about.md生成，也可以手动创建后放入content目录下。
+
+
+Template
+模板保存在两个地方，分别为site/layouts目录中和site/themes/themename/layouts目录中，其中前者的优先级高于后者，当前者为空时才去寻找后一个目录下的设置。
+模板主要分为以下几种，分别为基础模板（），单页模板（），列表模板（），局部模板（），首页模板以及404页面模板。
+
+
+Static Page
+Static Page = Content &#43; Template
+页面是通过hugo命令生成的静态网站中的html页面。Hugo会根据文章的kind属性和固定的规则去找到相应的模板，然后根据模板生成最终的html页面。
+最终我们自己创建的文章和Hugo自动创建的文件的路径会转换成对应的网站的url，文章、页面和url的对应关系为：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+
+└── content
+    ├── _index.md          // [home]            &lt;- https://example.com/**
+    ├── about.md           // [page]            &lt;- https://example.com/about/
+    ├── posts               
+    |   ├── _index.md      // [section]         &lt;- https://example.com/posts/**         
+    |   ├── firstpost.md   // [page]            &lt;- https://example.com/posts/firstpost/
+    |   ├── happy           
+    |   |   ├── _index.md  // [section]         &lt;- https://example.com/posts/happy/**
+    |   |   └── ness.md    // [page]            &lt;- https://example.com/posts/happy/ness/
+    |   └── secondpost.md  // [page]            &lt;- https://example.com/posts/secondpost/
+    └── quote   
+        ├── _index.md      // [section]         &lt;- https://example.com/quote/**           
+        ├── first.md       // [page]            &lt;- https://example.com/quote/first/
+        └── second.md      // [page]            &lt;- https://example.com/quote/second/
+// hugo默认生成的页面, 没有对应的markdown文章
+分类列表页面               // [taxonomyTerm]    &lt;- https://example.com/categories/**
+某个分类下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/categories/one-category **
+标签列表页面               // [taxonomyTerm]    &lt;- https://example.com/tags/**
+某个标签下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/tags/one-tag **
+
+
+注意：_index.md不是必须的, 如果没有找到_index.md，hugo会使用一些默认值。
+页面总体分为两种，分别为单页(signle page)和列表页(list page)，根据[]中标注的页面属性(kind)，single包括page，list包括home, section, taxonomyTerm和taxonomy。其中，单页为用户撰写的文章，列表为Hugo自动创建的文件。
+
+
+LoveIt模板：
+_default/
+home page - baseof.html &#43; summary.html
+posts - baseof.html &#43; section.html
+post - baseof.html &#43; patrial/
+about - baseof.html &#43; single.html
+posts/
+在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。
+Hugo默认的基础模板页是_default/baseof.html。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://gmorn.github.io/2020/02/hugo-concise-tutorial2/" />
 <meta property="article:published_time" content="2020-02-04T17:46:40+08:00" />
@@ -29,7 +102,80 @@ Organization" />
 但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！
 接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！
 Content Management
-Organization"/>
+Basic Concepts
+
+
+Content
+内容就是我们自己以markdown格式撰写的文章，通常我们把单独的文章放到content目录下，将同一类型的文章放到content的子目录下。
+文章可以通过命令行，如hugo new about.md生成，也可以手动创建后放入content目录下。
+
+
+Template
+模板保存在两个地方，分别为site/layouts目录中和site/themes/themename/layouts目录中，其中前者的优先级高于后者，当前者为空时才去寻找后一个目录下的设置。
+模板主要分为以下几种，分别为基础模板（），单页模板（），列表模板（），局部模板（），首页模板以及404页面模板。
+
+
+Static Page
+Static Page = Content &#43; Template
+页面是通过hugo命令生成的静态网站中的html页面。Hugo会根据文章的kind属性和固定的规则去找到相应的模板，然后根据模板生成最终的html页面。
+最终我们自己创建的文章和Hugo自动创建的文件的路径会转换成对应的网站的url，文章、页面和url的对应关系为：
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+
+└── content
+    ├── _index.md          // [home]            &lt;- https://example.com/**
+    ├── about.md           // [page]            &lt;- https://example.com/about/
+    ├── posts               
+    |   ├── _index.md      // [section]         &lt;- https://example.com/posts/**         
+    |   ├── firstpost.md   // [page]            &lt;- https://example.com/posts/firstpost/
+    |   ├── happy           
+    |   |   ├── _index.md  // [section]         &lt;- https://example.com/posts/happy/**
+    |   |   └── ness.md    // [page]            &lt;- https://example.com/posts/happy/ness/
+    |   └── secondpost.md  // [page]            &lt;- https://example.com/posts/secondpost/
+    └── quote   
+        ├── _index.md      // [section]         &lt;- https://example.com/quote/**           
+        ├── first.md       // [page]            &lt;- https://example.com/quote/first/
+        └── second.md      // [page]            &lt;- https://example.com/quote/second/
+// hugo默认生成的页面, 没有对应的markdown文章
+分类列表页面               // [taxonomyTerm]    &lt;- https://example.com/categories/**
+某个分类下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/categories/one-category **
+标签列表页面               // [taxonomyTerm]    &lt;- https://example.com/tags/**
+某个标签下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/tags/one-tag **
+
+
+注意：_index.md不是必须的, 如果没有找到_index.md，hugo会使用一些默认值。
+页面总体分为两种，分别为单页(signle page)和列表页(list page)，根据[]中标注的页面属性(kind)，single包括page，list包括home, section, taxonomyTerm和taxonomy。其中，单页为用户撰写的文章，列表为Hugo自动创建的文件。
+
+
+LoveIt模板：
+_default/
+home page - baseof.html &#43; summary.html
+posts - baseof.html &#43; section.html
+post - baseof.html &#43; patrial/
+about - baseof.html &#43; single.html
+posts/
+在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。
+Hugo默认的基础模板页是_default/baseof.html。"/>
 <script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -43,7 +189,7 @@ Organization"/>
                 "url": "https:\/\/gmorn.github.io\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Hugo, theme","wordcount":  6 ,
+            },"genre": "posts","keywords": "Hugo, theme","wordcount":  178 ,
         "url": "https:\/\/gmorn.github.io\/2020\/02\/hugo-concise-tutorial2\/","datePublished": "2020-02-04T17:46:40\x2b08:00","dateModified": "2020-02-04T17:46:40\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "xxxx",
@@ -86,7 +232,7 @@ Organization"/>
                     <i class="fas fa-user-circle fa-fw"></i>GUO Chen
                 </a>&nbsp;<span class="post-category">included in&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://gmorn.github.io/categories/hugo/">Hugo</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-04>2020-02-04</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>about 6 words&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>about 178 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>1 min&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">Contents</h2>
@@ -94,7 +240,7 @@ Organization"/>
   <ul>
     <li><a href="#content-management">Content Management</a>
       <ul>
-        <li><a href="#organization">Organization</a></li>
+        <li><a href="#basic-concepts">Basic Concepts</a></li>
       </ul>
     </li>
   </ul>
@@ -112,7 +258,7 @@ Organization"/>
   <ul>
     <li><a href="#content-management">Content Management</a>
       <ul>
-        <li><a href="#organization">Organization</a></li>
+        <li><a href="#basic-concepts">Basic Concepts</a></li>
       </ul>
     </li>
   </ul>
@@ -122,7 +268,80 @@ Organization"/>
 <p>但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！</p>
 <p>接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！</p>
 <a class="post-dummy-target" id="content-management"></a><h2>Content Management</h2>
-<a class="post-dummy-target" id="organization"></a><h3>Organization</h3></div><div class="post-footer" id="post-footer">
+<a class="post-dummy-target" id="basic-concepts"></a><h3>Basic Concepts</h3>
+<ul>
+<li>
+<p>Content<br>
+内容就是我们自己以markdown格式撰写的文章，通常我们把单独的文章放到content目录下，将同一类型的文章放到content的子目录下。<br>
+文章可以通过命令行，如<code>hugo new about.md</code>生成，也可以手动创建后放入content目录下。</p>
+</li>
+<li>
+<p>Template<br>
+模板保存在两个地方，分别为<code>site/layouts</code>目录中和<code>site/themes/themename/layouts</code>目录中，其中前者的优先级高于后者，当前者为空时才去寻找后一个目录下的设置。<br>
+模板主要分为以下几种，分别为基础模板（），单页模板（），列表模板（），局部模板（），首页模板以及404页面模板。</p>
+</li>
+<li>
+<p>Static Page<br>
+Static Page = Content + Template<br>
+页面是通过<code>hugo</code>命令生成的静态网站中的html页面。Hugo会根据文章的kind属性和固定的规则去找到相应的模板，然后根据模板生成最终的html页面。<br>
+最终我们自己创建的文章和Hugo自动创建的文件的路径会转换成对应的网站的url，文章、页面和url的对应关系为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">└── content
+    ├── _index.md          // [home]            &lt;- https://example.com/**
+    ├── about.md           // [page]            &lt;- https://example.com/about/
+    ├── posts               
+    |   ├── _index.md      // [section]         &lt;- https://example.com/posts/**         
+    |   ├── firstpost.md   // [page]            &lt;- https://example.com/posts/firstpost/
+    |   ├── happy           
+    |   |   ├── _index.md  // [section]         &lt;- https://example.com/posts/happy/**
+    |   |   └── ness.md    // [page]            &lt;- https://example.com/posts/happy/ness/
+    |   └── secondpost.md  // [page]            &lt;- https://example.com/posts/secondpost/
+    └── quote   
+        ├── _index.md      // [section]         &lt;- https://example.com/quote/**           
+        ├── first.md       // [page]            &lt;- https://example.com/quote/first/
+        └── second.md      // [page]            &lt;- https://example.com/quote/second/
+// hugo默认生成的页面, 没有对应的markdown文章
+分类列表页面               // [taxonomyTerm]    &lt;- https://example.com/categories/**
+某个分类下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/categories/one-category **
+标签列表页面               // [taxonomyTerm]    &lt;- https://example.com/tags/**
+某个标签下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/tags/one-tag **
+</code></pre></td></tr></table>
+</div>
+</div><p><strong><em><small>注意：_index.md不是必须的, 如果没有找到_index.md，hugo会使用一些默认值。</small></em></strong><br>
+页面总体分为两种，分别为<code>单页(signle page)</code>和<code>列表页(list page)</code>，根据<code>[]</code>中标注的页面<code>属性(kind)</code>，<code>single</code>包括<code>page</code>，<code>list</code>包括<code>home</code>, <code>section</code>, <code>taxonomyTerm</code>和<code>taxonomy</code>。其中，单页为用户撰写的文章，列表为Hugo自动创建的文件。</p>
+</li>
+</ul>
+<p>LoveIt模板：<br>
+_default/<br>
+home page - baseof.html + summary.html<br>
+posts - baseof.html + section.html<br>
+post - baseof.html + patrial/<br>
+about - baseof.html + single.html</p>
+<p>posts/</p>
+<p>在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。<br>
+Hugo默认的基础模板页是<code>_default/baseof.html</code>。</p></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
