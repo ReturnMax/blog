@@ -93,7 +93,8 @@ home page - baseof.html + summary.html&lt;br&gt;
 posts - baseof.html + section.html&lt;br&gt;
 post - baseof.html + patrial/&lt;br&gt;
 about - baseof.html + single.html&lt;/p&gt;
-&lt;p&gt;posts/&lt;/p&gt;
+&lt;p&gt;posts/&lt;br&gt;
+single.html&lt;/p&gt;
 &lt;p&gt;在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。&lt;br&gt;
 Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&lt;/p&gt;</description>
     </item>

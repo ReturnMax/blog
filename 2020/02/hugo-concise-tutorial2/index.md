@@ -53,7 +53,7 @@ post - baseof.html + patrial/
 about - baseof.html + single.html  
 
 posts/  
-
+single.html  
 
 
 
