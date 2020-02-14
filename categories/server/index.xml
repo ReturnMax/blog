@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Server on 晨钟暮鼓</title>
+    <link>https://guorou.github.io/categories/server/</link>
+    <description>Recent content in Server on 晨钟暮鼓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 12 Feb 2020 19:48:57 +0800</lastBuildDate>
+    
+	<atom:link href="https://guorou.github.io/categories/server/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ali Cloud Server</title>
+      <link>https://guorou.github.io/2020/02/ali-cloud-server/</link>
+      <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
+      
+      <guid>https://guorou.github.io/2020/02/ali-cloud-server/</guid>
+      <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
+&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
+&lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
+&lt;h3 id=&#34;密码&#34;&gt;密码&lt;/h3&gt;
+&lt;p&gt;管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&amp;ldquo;woc&amp;hellip;马什么梅?&amp;quot;。&lt;br&gt;
+ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实例密码&lt;br&gt;
+实例密码是Linux操作系统的密码，就是Root用户密码。奇怪的是创建实例时没有任何初始密码的提示，我是在创建完成后在服务控制台进行的密码重置，需要注意的是重置密码需要重启实例后才会生效。&lt;/li&gt;
+&lt;li&gt;远程连接密码&lt;br&gt;
+远程连接密码是指阿里云控制台自带的远程连接工具的密码，这个密码最初是系统自动生成的6位数字，用户可以自定义修改这个远程连接密码。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;事实上，如果我们不使用阿里云控制台自带的VNC远程连接工具，那么就用不到远程连接密码。更改远程连接密码无需重启直接生效；实例密码是Linux系统下的root密码，Windows系统下的administrator密码，修改实例密码必须重启实例才可以生效。&lt;/p&gt;
+&lt;h2 id=&#34;网络&#34;&gt;网络&lt;/h2&gt;
+&lt;p&gt;阿里云面向客户提供的网络类型服务有经典网络和专有网络两种，官方文档给的解释是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;经典网络&lt;br&gt;
+IP地址由阿里云统一分配，配置简便，使用方便，适合对操作易用性要求比较高、需要快速使用 ECS 的用户。&lt;/li&gt;
+&lt;li&gt;专有网络&lt;br&gt;
+是指逻辑隔离的私有网络，您可以自定义网络拓扑和 IP 地址，支持通过专线连接。适合于熟悉网络管理的用户。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;你懂了吧？~喂，认真点！~&lt;br&gt;
+我们通俗点的理解就是，从公网IP来看，经典网络和专有网络没有区别。从内网IP来看，经典网络是DHIP，也就是系统自动分配局域网IP地址，而专有网络则是手动分配局域网IP地址，方便有多台云服务器的用户自行定义内网IP结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。&lt;/p&gt;
+&lt;p&gt;经典网络初始化了很多参数，适合快速入门ECS的用户；专有网络适合精通网络管理的用户，定制型可扩展型更强，是逻辑隔离的私有网络支持用户自定义网络拓扑和ip地址。&lt;/p&gt;
+&lt;h2 id=&#34;带宽&#34;&gt;带宽&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;入网带宽（上行带宽）&lt;br&gt;
+流入云服务器ECS的带宽，例如：
+&lt;ul&gt;
+&lt;li&gt;云服务器ECS下载外部网络资源&lt;/li&gt;
+&lt;li&gt;FTP客户端上传资源到云服务器ECS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;出网带宽（下行带宽）&lt;br&gt;
+流出云服务器ECS的带宽，例如：
+&lt;ul&gt;
+&lt;li&gt;云服务器ECS对外提供访问&lt;/li&gt;
+&lt;li&gt;FTP客户端下载云服务器ECS内部资源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;安全组&#34;&gt;安全组&lt;/h2&gt;
+&lt;p&gt;安全组是ECS实例的虚拟防火墙，用于设置实例的网络访问控制，允许或拒绝公网请求和内网请求。&lt;br&gt;
+安全组具备状态检测和数据包过滤功能，可以设置单台或多台云服务器的网络访问控制。&lt;br&gt;
+每个实例必须属于至少一个安全组，一个安全组可以包括多个实例。同一安全组内的实例之间默认内网互通，不同安全组的实例之间默认内网不通，可以授权两个安全组之间互访。&lt;br&gt;
+在创建实例时，系统会提供一个默认安全组，默认安全组中的默认规则仅设置针对ICMP协议、SSH 22端口、RDP 3389端口、HTTP 80端口和HTTPS 443端口的入方向规则。&lt;br&gt;
+我们也可以自行创建一个安全组并添加能满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。&lt;/p&gt;
+&lt;h3 id=&#34;添加安全组规则&#34;&gt;添加安全组规则&lt;/h3&gt;
+&lt;p&gt;一般场景下我们需要设置的选项主要有两个：端口范围和授权对象，其他可参考默认设置。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;端口范围&lt;br&gt;
+端口取值范围从1到65535，设置格式例如1/200或者80/80，其中“-1/-1”不能单独设置，代表不限制端口。&lt;/li&gt;
+&lt;li&gt;授权对象&lt;br&gt;
+可以填写单个IP地址，例如223.78.253.196/32，填写0.0.0.0/0表示允许/拒绝全网段访问指定端口。&lt;br&gt;
+可以填写多个IP地址，彼此之间用逗号隔开。&lt;br&gt;
+此外还可以指定IP地址段，如 223.78.253.196/31，这将会授权/拒绝223.78.253.196和223.78.253.197的连接。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;规则优先级&#34;&gt;规则优先级&lt;/h3&gt;
+&lt;p&gt;同类型规则间依赖优先级（手动建立1-100，系统建立110）决定最终执行的规则。当ECS实例加入了多个安全组时，多个安全组会从高到低依次匹配规则。优先级取值范围如下所示，数值越小，优先级越高。&lt;/p&gt;
+&lt;h3 id=&#34;实践建议&#34;&gt;实践建议&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;仅允许少量请求访问ECS实例时，可以将安全组作为白名单使用。即先设置安全组为拒绝全部访问，然后逐一添加允许通信的访问请求策略。&lt;/li&gt;
+&lt;li&gt;选择开放具体的端口，如80/80端口，不要设置为端口范围。&lt;/li&gt;
+&lt;li&gt;添加安全组规则时，谨慎授权0.0.0.0/0（全网段）访问源。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;案例&#34;&gt;案例&lt;/h3&gt;
+&lt;p&gt;如果您在实例上架设了一个网站，希望您的用户能通过HTTPS服务访问到您的网站，您需要在实例所在安全组中添加以下安全组规则。&lt;/p&gt;
+&lt;p&gt;|网络类型|网卡类型|规则方向|授权策略|协议类型|端口范围|授权类型|授权对象|优先级|&lt;br&gt;
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:||:-:|&lt;br&gt;
+|VPC|不需要配置|入方向|允许|HTTPS|443|地址段访问|0.0.0.0/0|1|&lt;br&gt;
+|经典网络|公网|入方向|允许|HTTPS|443|地址段访问|0.0.0.0/0|1|&lt;/p&gt;
+&lt;h2 id=&#34;ssh连接实例&#34;&gt;SSH连接实例&lt;/h2&gt;
+&lt;p&gt;SSH是Secure Shell的缩写，目的是在积极之间建立安全连接，对传输内容进行加密，以达到安全的远程访问、操作以及数据传输。&lt;br&gt;
+SSH不是本文介绍的重点，详细请&lt;a href=&#34;daibuchong&#34;&gt;戳&lt;/a&gt;，这里主要介绍阿里云的SSH配置。&lt;br&gt;
+首先，我们需要在安全组中开放入方向的22端口（默认已经开启），确认开启之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。&lt;br&gt;
+密码验证的设置比较简单，在此不再赘述。&lt;br&gt;
+密钥对证相对更加安全，而且阿里云的SSH密钥设置也非常简便，直接在控制台中即可完成。&lt;br&gt;
+首先我们在 &lt;code&gt;云服务控制台 &amp;gt; 网络与安全 &amp;gt; 密钥对&lt;/code&gt; 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥生成后会提示我们把私钥保存到本地，然后便可通过XShell等工具连接实例了。&lt;br&gt;
+使用SSH密钥需要注意两点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果使用SSH密钥对登录Linux实例，将会禁用密码登录，以提高安全性。&lt;br&gt;
+如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。&lt;/li&gt;
+&lt;li&gt;基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
