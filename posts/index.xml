@@ -7,17 +7,317 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 21:24:11 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 19 Feb 2020 10:42:56 +0800</lastBuildDate>
     
 	<atom:link href="https://guorou.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Ssh Introduction</title>
-      <link>https://guorou.github.io/2020/02/ssh-introduction/</link>
+      <title>Markdown Syntax</title>
+      <link>https://guorou.github.io/2020/02/0000-markdown-syntax/</link>
+      <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate>
+      
+      <guid>https://guorou.github.io/2020/02/0000-markdown-syntax/</guid>
+      <description>&lt;h1 id=&#34;待完成列表&#34;&gt;待完成列表&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;空格&#34;&gt;空格&lt;/h1&gt;
+&lt;p&gt; 代表半角空格，  代表全角空格&lt;/p&gt;
+&lt;h1 id=&#34;表格&#34;&gt;表格&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Header1&lt;/th&gt;
+&lt;th&gt;Header2&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;item 1&lt;/td&gt;
+&lt;td&gt;1. one&lt;br /&gt;2. two&lt;br /&gt;3. three&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h1 id=&#34;页面跳转&#34;&gt;页面跳转&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;#%e8%a1%a8%e6%a0%bc&#34;&gt;跳转到表格&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux文件与用户管理</title>
+      <link>https://guorou.github.io/2020/02/0005-linux-user-management/</link>
+      <pubDate>Sun, 16 Feb 2020 23:12:35 +0800</pubDate>
+      
+      <guid>https://guorou.github.io/2020/02/0005-linux-user-management/</guid>
+      <description>&lt;p&gt;Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。在Linux中每个用户必须至少属于一个组。&lt;br&gt;
+&lt;br /&gt;
+用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。&lt;/p&gt;
+&lt;h2 id=&#34;文件基本属性&#34;&gt;文件基本属性&lt;/h2&gt;
+&lt;p&gt;在学习Linux用户管理之前，我们先来了解关于文件的一些基本概念。&lt;br&gt;
+在Linux系统中有一个基本思想，即“一切皆文件”。控制文件的访问权限非常重要，Linux中针对每一个文件都有属主(User/Owner)、属组(Group)和其他组(Other)的概念，藉此可以管理不同用户访问同一文件的权限。&lt;br&gt;
+&lt;br /&gt;
+在Linux系统中，我们可以使用&lt;code&gt;ls -l&lt;/code&gt;命令来显示一个文件的属性及其所属的用户和组，如：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;root@guoc:/# ls -l
+total &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt;
+...
+drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; Otc &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; bin  
+----------   ---- ----                  ---
+ 类型及权限   属主  属组                 文件
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;属性&#34;&gt;属性&lt;/h3&gt;
+&lt;p&gt;首字段&lt;code&gt;drwxrw-r--&lt;/code&gt;描述了文件的类型及不同用户的权限(Permission)。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;文件类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;属主权限&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;属组权限&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;其他用户权限&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;d&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;r w x&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;r w -&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;r - -&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1 2 3&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;4 5 6&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;7 8 9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;目录文件&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;读写执行&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;读写&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;读&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;其中，首字符表示文件类型：&lt;br&gt;
+&lt;code&gt;d&lt;/code&gt;为目录，&lt;code&gt;-&lt;/code&gt;为文件，&lt;code&gt;l&lt;/code&gt;为链接文档，&lt;code&gt;b&lt;/code&gt;为可供存储的接口设备，&lt;code&gt;c&lt;/code&gt;为串行端口设备。&lt;/p&gt;
+&lt;p&gt;接下来的字符中，&lt;code&gt;rwx&lt;/code&gt;三个一组，分别表示&lt;code&gt;read&lt;/code&gt;、&lt;code&gt;write&lt;/code&gt;和&lt;code&gt;execute&lt;/code&gt;权限，&lt;code&gt;-&lt;/code&gt;表示没有对应的权限。&lt;/p&gt;
+&lt;p&gt;总体来看，第0位确定文件类型，第1-3位确定属主拥有该文件的权限，
+第4-6位确定属组拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。&lt;/p&gt;
+&lt;h3 id=&#34;属主userowner&#34;&gt;属主(User/Owner)&lt;/h3&gt;
+&lt;p&gt;属主是文件的所有者。默认情况下，属主为该文件的创建者，谁创建了这个文件，谁就自然的成为了该文件的所有者。&lt;/p&gt;
+&lt;h3 id=&#34;属组group&#34;&gt;属组(Group)&lt;/h3&gt;
+&lt;p&gt;在Linux系统中，用户是按组分类的，一个用户属于一个或多个组，属于同一个组的用户对同一文件拥有相同的访问权限。&lt;br&gt;
+当一个用户创建了一个文件后，默认该用户所在的组就是这个文件的属组。通过设定文件的属组，我们可以集中管理属组内所有用户对这个文件的访问权限。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;默认情况下，文件的属主和属组分别为该文件的创建者及其所在的用户组，但我们也可以更改文件的属主和属组。因此，一些教程中把文件的属组解释为文件属主所在的组，或者把属组用户解释为与属主同组的用户，这种理解并不正确。&lt;/li&gt;
+&lt;li&gt;上面的例子中，虽然属主和属组都为root，但是属主字段为&lt;strong&gt;用户&lt;/strong&gt;&lt;code&gt;uid&lt;/code&gt;，属组字段为&lt;strong&gt;用户组&lt;/strong&gt;&lt;code&gt;gid&lt;/code&gt;，前者代表单个用户账号，后者代表账号的集合。我们在创建新用户时，会默认创建一个同名的用户组，但是两者之间并不等价。&lt;/li&gt;
+&lt;li&gt;对每一个文件来说，除属主以外的用户再划分为属组用户和其他用户，三者之间的权限彼此独立。比如：
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;d---rw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; usr usr &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; Otc &lt;span class=&#34;m&#34;&gt;18&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;假设属主usr的gid为usr，此时属主没有读写执行bin文件的权限，但是与属主同组的其他用户拥有读写bin文件的权限。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;其他组other&#34;&gt;其他组(Other)&lt;/h3&gt;
+&lt;p&gt;除去文件属主和属组用户以外的用户为其他组用户。&lt;/p&gt;
+&lt;h2 id=&#34;文件属性管理&#34;&gt;文件属性管理&lt;/h2&gt;
+&lt;h3 id=&#34;更改文件属主&#34;&gt;更改文件属主&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Root用户&lt;/strong&gt;可以使用&lt;code&gt;chown&lt;/code&gt;命令更改文件的属主，也可以同时更改文件的属组。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chown &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-R&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; User&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;:Group&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;File&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;Directory...&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;[  ]&lt;/code&gt;内为可选参数。&lt;br&gt;
+-R 为递归更改，当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属主。&lt;/p&gt;
+&lt;h3 id=&#34;更改文件属组&#34;&gt;更改文件属组&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Root用户&lt;/strong&gt;和&lt;strong&gt;文件属主&lt;/strong&gt;可以使用&lt;code&gt;chgrp&lt;/code&gt;命令更改文件属组，前者更改没有限制，后者只可将属组改为自己是其成员的组。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chgrp &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-R&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; User &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;File&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;Directory...&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;-R 为可选参数。当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属组。&lt;/p&gt;
+&lt;h3 id=&#34;更改文件权限&#34;&gt;更改文件权限&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Root用户&lt;/strong&gt;和&lt;strong&gt;文件属主&lt;/strong&gt;可以使用&lt;code&gt;chmod&lt;/code&gt;命令更改文件权限。&lt;br&gt;
+更改文件权限有两种方式，分别为数字模式(Numeric Mode)和符号模式(Symbolic Mode)。&lt;/p&gt;
+&lt;h4 id=&#34;数字模式&#34;&gt;数字模式&lt;/h4&gt;
+&lt;p&gt;数字模式中&lt;code&gt;r``w``x&lt;/code&gt;权限分别用分数表示：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;r&lt;/code&gt;：4&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;w&lt;/code&gt;：2&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x&lt;/code&gt;：1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;三种权限的分数累加之和代表User、Group和Other用户的权限。举个例子，&lt;code&gt;[-rwxrw----]&lt;/code&gt;分数计算如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;User = rwx = 4 + 2 + 1 = 7&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Group = rw- = 4 + 2 + 0 = 6&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Other = --- = 0 + 0 + 0 = 0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因此，该文件的权限数字可以用&lt;code&gt;760&lt;/code&gt;表示。&lt;br&gt;
+更改权限的时我们输入如下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-R&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; xyz &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;File&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;Directory...&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中xyz就是按照上述方法计算出的用户权限。&lt;/p&gt;
+&lt;h4 id=&#34;符号模式&#34;&gt;符号模式&lt;/h4&gt;
+&lt;p&gt;符号模式中使用&lt;code&gt;u&lt;/code&gt;，&lt;code&gt;g&lt;/code&gt;，&lt;code&gt;o&lt;/code&gt;分别表示&lt;code&gt;User&lt;/code&gt;，&lt;code&gt;Group&lt;/code&gt;，&lt;code&gt;Other&lt;/code&gt;，用&lt;code&gt;a&lt;/code&gt;来表示&lt;code&gt;All&lt;/code&gt;，即全部的身份。此外，使用&lt;code&gt;+&lt;/code&gt;，&lt;code&gt;-&lt;/code&gt;，&lt;code&gt;=&lt;/code&gt;分别表示添加、除去和设定权限。&lt;/p&gt;
+&lt;p&gt;举个例子，我们设定&lt;code&gt;test&lt;/code&gt;文件的权限为&lt;code&gt;-rwxr-xr--&lt;/code&gt;，可以使用以下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod &lt;span class=&#34;nv&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;rwx,g&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;rx,o&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;r &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;现在我们使用以下命令，除去&lt;code&gt;test&lt;/code&gt;文件所有用户的执行权限：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod a-x &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;用户管理&#34;&gt;用户管理&lt;/h2&gt;
+&lt;p&gt;用户账号的管理主要涉及到用户账号的添加、修改和删除。&lt;/p&gt;
+&lt;h3 id=&#34;添加新用户账号&#34;&gt;添加新用户账号&lt;/h3&gt;
+&lt;p&gt;添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。刚添加的账号是被锁定的，无法使用。&lt;br&gt;
+通过使用&lt;code&gt;useradd&lt;/code&gt;命令添加新的用户账号，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;useradd &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; username
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-c comment 指定一段注释性描述&lt;/li&gt;
+&lt;li&gt;-d 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录&lt;/li&gt;
+&lt;li&gt;-g 指定用户所属的用户组 &lt;/li&gt;
+&lt;li&gt;-G 指定用户所属的附加组，有多个附加组则用逗号隔开&lt;/li&gt;
+&lt;li&gt;-s 指定用户的登录Shell&lt;/li&gt;
+&lt;li&gt;-u 指定用户的用户号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;useradd -d /home/gavin -m -s /bin/bash -g group -G root,adm gavin
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令添加了一个名为&lt;code&gt;gavin&lt;/code&gt;的新用户，&lt;code&gt;-d&lt;/code&gt;和&lt;code&gt;-m&lt;/code&gt;选项为该用户创建了主目录&lt;code&gt;/home/gavin&lt;/code&gt;，登录shell为&lt;code&gt;bash&lt;/code&gt;，他属于&lt;code&gt;group&lt;/code&gt;用户组，同时也属于&lt;code&gt;root&lt;/code&gt;和&lt;code&gt;adm&lt;/code&gt;用户组，其中&lt;code&gt;group&lt;/code&gt;是他的主用户组。&lt;br&gt;
+&lt;br /&gt;
+添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节&lt;a href=&#34;#%e7%94%a8%e6%88%b7%e5%92%8c%e7%94%a8%e6%88%b7%e7%bb%84%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6&#34;&gt;用户和用户组配置文件&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;指定或修改用户密码&#34;&gt;指定或修改用户密码&lt;/h3&gt;
+&lt;p&gt;刚创建的用户没有密码，被系统锁定无法使用，需要为其指定密码后才可以使用，即使是指定空的密码。&lt;br&gt;
+使用&lt;code&gt;passwd&lt;/code&gt;命令指定或修改用户密码，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;passwd &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; username
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-l 锁定密码，禁用账号&lt;/li&gt;
+&lt;li&gt;-u 密码解锁&lt;/li&gt;
+&lt;li&gt;-d 使账号没有密码&lt;/li&gt;
+&lt;li&gt;-f 强迫用户下次登录时修改密码&lt;/li&gt;
+&lt;li&gt;如果username为空，则默认修改当前用户的密码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;修改用户&#34;&gt;修改用户&lt;/h3&gt;
+&lt;p&gt;修改用户账号就是根据实际业务需求更改用户的相关书信，如用户组、登录Shell等。&lt;br&gt;
+使用&lt;code&gt;usermod&lt;/code&gt;命令修改用户属性，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;usermod &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; username
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-l newname 修改用户名&lt;/li&gt;
+&lt;li&gt;其它可参考&lt;code&gt;useradd&lt;/code&gt;命令。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;删除用户&#34;&gt;删除用户&lt;/h3&gt;
+&lt;p&gt;我们可以使用&lt;code&gt;userdel&lt;/code&gt;命令执行删除用户的操作，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;userdel &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; username
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;常用的选项是&lt;code&gt;-r&lt;/code&gt;，它的作用是将该用户的主目录一起删除，不添加的话会保留该用户的主目录。&lt;br&gt;
+举个例子：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;userdel -r gavin
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令会删除用户&lt;code&gt;gavin&lt;/code&gt;在系统文件，如/etc/passwd，/etc/shadow，/etc/group中的相应记录，同时删除用户的主目录。&lt;/p&gt;
+&lt;h3 id=&#34;查询用户&#34;&gt;查询用户&lt;/h3&gt;
+&lt;p&gt;whoami
+id
+groups&lt;/p&gt;
+&lt;h3 id=&#34;切换用户&#34;&gt;切换用户&lt;/h3&gt;
+&lt;p&gt;su&lt;/p&gt;
+&lt;h3 id=&#34;切换用户组&#34;&gt;切换用户组&lt;/h3&gt;
+&lt;p&gt;newgrp&lt;/p&gt;
+&lt;h2 id=&#34;用户组管理&#34;&gt;用户组管理&lt;/h2&gt;
+&lt;h2 id=&#34;用户和用户组配置文件&#34;&gt;用户和用户组配置文件&lt;/h2&gt;
+&lt;h2 id=&#34;常用命令总结&#34;&gt;常用命令总结&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>SSH简介</title>
+      <link>https://guorou.github.io/2020/02/0004-ssh-introduction/</link>
       <pubDate>Wed, 12 Feb 2020 21:24:11 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/ssh-introduction/</guid>
+      <guid>https://guorou.github.io/2020/02/0004-ssh-introduction/</guid>
       <description>&lt;p&gt;虽然一直在使用SSH连接服务器，但是对于SSH连接的原理却没有深究，只是大体了解是使用了非对称加密技术对传输信息进行了加密。搜资料的时候顺手翻到了一篇博文，介绍的还比较详细，特转载保存。本文转自&lt;a href=&#34;https://fancyseeker.github.io/2013/12/30/ssh_overview/&#34; target=&#34;_blank&#34;&gt;链接&lt;/a&gt;，作者是FancySeeker。&lt;br&gt;
 本文主要介绍了SSH的连接认证原理以及SSH的配置和使用。&lt;/p&gt;
 &lt;h2 id=&#34;ssh简要介绍&#34;&gt;SSH简要介绍&lt;/h2&gt;
@@ -171,11 +471,11 @@ RSA加密验证方式，充分利用了非对称加密体系的优势，不需�
     </item>
     
     <item>
-      <title>Ali Cloud Server</title>
-      <link>https://guorou.github.io/2020/02/ali-cloud-server/</link>
+      <title>Ali云服务器配置</title>
+      <link>https://guorou.github.io/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/ali-cloud-server/</guid>
+      <guid>https://guorou.github.io/2020/02/0003-ali-cloud-server/</guid>
       <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
 &lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
@@ -197,8 +497,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 &lt;li&gt;专有网络&lt;br&gt;
 是指逻辑隔离的私有网络，您可以自定义网络拓扑和 ip 地址，支持通过专线连接。适合于熟悉网络管理的用户。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;你懂了吧？~喂，认真点！~&lt;br&gt;
-通俗点的理解，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。&lt;/p&gt;
+&lt;p&gt;我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。&lt;/p&gt;
 &lt;h2 id=&#34;带宽&#34;&gt;带宽&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;入网带宽（上行带宽）&lt;br&gt;
@@ -242,10 +541,45 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 &lt;/ul&gt;
 &lt;h3 id=&#34;案例&#34;&gt;案例&lt;/h3&gt;
 &lt;p&gt;如果您在实例上架设了一个网站，希望您的用户能通过HTTPS服务访问到您的网站，您需要在实例所在安全组中添加以下安全组规则。&lt;/p&gt;
-&lt;p&gt;|网络类型|网卡类型|规则方向|授权策略|协议类型|端口范围|授权类型|授权对象|优先级|&lt;br&gt;
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:||:-:|&lt;br&gt;
-|VPC|不需要配置|入方向|允许|HTTPS|443|地址段访问|0.0.0.0/0|1|&lt;br&gt;
-|经典网络|公网|入方向|允许|HTTPS|443|地址段访问|0.0.0.0/0|1|&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;网络类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;网卡类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;规则方向&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;授权策略&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;协议类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;端口范围&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;授权类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;授权对象&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;优先级&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;VPC&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;不需要配置&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;入方向&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;允许&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;HTTPS&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;443&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;地址段访问&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0.0.0.0/0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;经典网络&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;公网&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;入方向&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;允许&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;HTTPS&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;443&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;地址段访问&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0.0.0.0/0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;h2 id=&#34;ssh连接实例&#34;&gt;SSH连接实例&lt;/h2&gt;
 &lt;p&gt;Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。&lt;br&gt;
 SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#34;&gt;文章&lt;/a&gt;，本文主要介绍阿里云SSH配置。&lt;/p&gt;
@@ -263,11 +597,11 @@ SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#3
     </item>
     
     <item>
-      <title>Hugo Concise Tutorial2</title>
-      <link>https://guorou.github.io/2020/02/hugo-concise-tutorial2/</link>
+      <title>Hugo简明教程2</title>
+      <link>https://guorou.github.io/2020/02/0002-hugo-concise-tutorial2/</link>
       <pubDate>Tue, 04 Feb 2020 17:46:40 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/hugo-concise-tutorial2/</guid>
+      <guid>https://guorou.github.io/2020/02/0002-hugo-concise-tutorial2/</guid>
       <description>&lt;p&gt;在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。&lt;/p&gt;
 &lt;p&gt;但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！&lt;/p&gt;
 &lt;p&gt;接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！&lt;/p&gt;
@@ -350,11 +684,11 @@ Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&
     </item>
     
     <item>
-      <title>Hugo简明教程</title>
-      <link>https://guorou.github.io/2020/02/hugo-concise-tutorial/</link>
+      <title>Hugo简明教程1</title>
+      <link>https://guorou.github.io/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/hugo-concise-tutorial/</guid>
+      <guid>https://guorou.github.io/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;

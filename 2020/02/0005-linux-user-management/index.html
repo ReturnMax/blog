@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Linux文件与用户管理 | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="Gavin&#39;s Blog"><link rel="prev" href="https://guorou.github.io/2020/02/0004-ssh-introduction/" /><link rel="next" href="https://guorou.github.io/2020/02/0000-markdown-syntax/" /><link rel="canonical" href="https://guorou.github.io/2020/02/0005-linux-user-management/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Linux文件与用户管理" />
+<meta property="og:description" content="Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。在Linux中每个用户必须至少属于一个组。
+
+用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。
+文件基本属性
+在学习Linux用户管理之前，我们先来了解关于文件的一些基本概念。
+在Linux系统中有一个基本思想，即“一切皆文件”。控制文件的访问权限非常重要，Linux中针对每一个文件都有属主(User/Owner)、属组(Group)和其他组(Other)的概念，藉此可以管理不同用户访问同一文件的权限。
+
+在Linux系统中，我们可以使用ls -l命令来显示一个文件的属性及其所属的用户和组，如：
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+root@guoc:/# ls -l
+total 7
+...
+drwxrw-r-- 1 root root 4096 Otc 18 2020 bin  
+----------   ---- ----                  ---
+ 类型及权限   属主  属组                 文件
+...
+
+
+属性
+首字段drwxrw-r--描述了文件的类型及不同用户的权限(Permission)。
+
+
+
+文件类型
+属主权限
+属组权限
+其他用户权限
+
+
+
+
+d
+r w x
+r w -
+r - -
+
+
+0
+1 2 3
+4 5 6
+7 8 9
+
+
+目录文件
+读写执行
+读写
+读
+
+
+
+其中，首字符表示文件类型：
+d为目录，-为文件，l为链接文档，b为可供存储的接口设备，c为串行端口设备。
+接下来的字符中，rwx三个一组，分别表示read、write和execute权限，-表示没有对应的权限。
+总体来看，第0位确定文件类型，第1-3位确定属主拥有该文件的权限，
+第4-6位确定属组拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。
+属主(User/Owner)
+属主是文件的所有者。默认情况下，属主为该文件的创建者，谁创建了这个文件，谁就自然的成为了该文件的所有者。
+属组(Group)
+在Linux系统中，用户是按组分类的，一个用户属于一个或多个组，属于同一个组的用户对同一文件拥有相同的访问权限。
+当一个用户创建了一个文件后，默认该用户所在的组就是这个文件的属组。通过设定文件的属组，我们可以集中管理属组内所有用户对这个文件的访问权限。
+注意：
+
+默认情况下，文件的属主和属组分别为该文件的创建者及其所在的用户组，但我们也可以更改文件的属主和属组。因此，一些教程中把文件的属组解释为文件属主所在的组，或者把属组用户解释为与属主同组的用户，这种理解并不正确。
+上面的例子中，虽然属主和属组都为root，但是属主字段为用户uid，属组字段为用户组gid，前者代表单个用户账号，后者代表账号的集合。我们在创建新用户时，会默认创建一个同名的用户组，但是两者之间并不等价。
+对每一个文件来说，除属主以外的用户再划分为属组用户和其他用户，三者之间的权限彼此独立。比如：
+
+
+1
+
+
+d---rw-r-- 1 usr usr 4096 Otc 18 2020 bin
+
+
+假设属主usr的gid为usr，此时属主没有读写执行bin文件的权限，但是与属主同组的其他用户拥有读写bin文件的权限。
+
+
+其他组(Other)
+除去文件属主和属组用户以外的用户为其他组用户。
+文件属性管理
+更改文件属主
+Root用户可以使用chown命令更改文件的属主，也可以同时更改文件的属组。
+
+
+1
+
+
+chown [-R] User[:Group] {File|Directory...}
+
+
+[  ]内为可选参数。
+-R 为递归更改，当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属主。
+更改文件属组
+Root用户和文件属主可以使用chgrp命令更改文件属组，前者更改没有限制，后者只可将属组改为自己是其成员的组。
+
+
+1
+
+
+chgrp [-R] User {File|Directory...}
+
+
+-R 为可选参数。当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属组。
+更改文件权限
+Root用户和文件属主可以使用chmod命令更改文件权限。
+更改文件权限有两种方式，分别为数字模式(Numeric Mode)和符号模式(Symbolic Mode)。
+数字模式
+数字模式中r``w``x权限分别用分数表示：
+
+r：4
+w：2
+x：1
+
+三种权限的分数累加之和代表User、Group和Other用户的权限。举个例子，[-rwxrw----]分数计算如下：
+
+User = rwx = 4 &#43; 2 &#43; 1 = 7
+Group = rw- = 4 &#43; 2 &#43; 0 = 6
+Other = --- = 0 &#43; 0 &#43; 0 = 0
+
+因此，该文件的权限数字可以用760表示。
+更改权限的时我们输入如下命令：
+
+
+1
+
+
+chmod [-R] xyz {File|Directory...}
+
+
+其中xyz就是按照上述方法计算出的用户权限。
+符号模式
+符号模式中使用u，g，o分别表示User，Group，Other，用a来表示All，即全部的身份。此外，使用&#43;，-，=分别表示添加、除去和设定权限。
+举个例子，我们设定test文件的权限为-rwxr-xr--，可以使用以下命令：
+
+
+1
+
+
+chmod u=rwx,g=rx,o=r test
+
+
+现在我们使用以下命令，除去test文件所有用户的执行权限：
+
+
+1
+
+
+chmod a-x test
+
+
+用户管理
+用户账号的管理主要涉及到用户账号的添加、修改和删除。
+添加新用户账号
+添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。刚添加的账号是被锁定的，无法使用。
+通过使用useradd命令添加新的用户账号，语法如下：
+
+
+1
+
+
+useradd [option] username
+
+
+选项说明：
+
+-c comment 指定一段注释性描述
+-d 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录
+-g 指定用户所属的用户组 
+-G 指定用户所属的附加组，有多个附加组则用逗号隔开
+-s 指定用户的登录Shell
+-u 指定用户的用户号
+
+举个例子：
+
+
+1
+
+
+useradd -d /home/gavin -m -s /bin/bash -g group -G root,adm gavin
+
+
+该命令添加了一个名为gavin的新用户，-d和-m选项为该用户创建了主目录/home/gavin，登录shell为bash，他属于group用户组，同时也属于root和adm用户组，其中group是他的主用户组。
+
+添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节用户和用户组配置文件。
+指定或修改用户密码
+刚创建的用户没有密码，被系统锁定无法使用，需要为其指定密码后才可以使用，即使是指定空的密码。
+使用passwd命令指定或修改用户密码，语法如下：
+
+
+1
+
+
+passwd [option] username
+
+
+选项说明：
+
+-l 锁定密码，禁用账号
+-u 密码解锁
+-d 使账号没有密码
+-f 强迫用户下次登录时修改密码
+如果username为空，则默认修改当前用户的密码
+
+修改用户
+修改用户账号就是根据实际业务需求更改用户的相关书信，如用户组、登录Shell等。
+使用usermod命令修改用户属性，语法如下：
+
+
+1
+
+
+usermod [option] username
+
+
+选项说明：
+
+-l newname 修改用户名
+其它可参考useradd命令。
+
+删除用户
+我们可以使用userdel命令执行删除用户的操作，语法如下：
+
+
+1
+
+
+userdel [option] username
+
+
+常用的选项是-r，它的作用是将该用户的主目录一起删除，不添加的话会保留该用户的主目录。
+举个例子：
+
+
+1
+
+
+userdel -r gavin
+
+
+该命令会删除用户gavin在系统文件，如/etc/passwd，/etc/shadow，/etc/group中的相应记录，同时删除用户的主目录。
+查询用户
+whoami
+id
+groups
+切换用户
+su
+切换用户组
+newgrp
+用户组管理
+用户和用户组配置文件
+常用命令总结" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guorou.github.io/2020/02/0005-linux-user-management/" />
+<meta property="article:published_time" content="2020-02-16T23:12:35+08:00" />
+<meta property="article:modified_time" content="2020-02-20T23:12:35+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux文件与用户管理"/>
+<meta name="twitter:description" content="Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。在Linux中每个用户必须至少属于一个组。
+
+用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。
+文件基本属性
+在学习Linux用户管理之前，我们先来了解关于文件的一些基本概念。
+在Linux系统中有一个基本思想，即“一切皆文件”。控制文件的访问权限非常重要，Linux中针对每一个文件都有属主(User/Owner)、属组(Group)和其他组(Other)的概念，藉此可以管理不同用户访问同一文件的权限。
+
+在Linux系统中，我们可以使用ls -l命令来显示一个文件的属性及其所属的用户和组，如：
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+root@guoc:/# ls -l
+total 7
+...
+drwxrw-r-- 1 root root 4096 Otc 18 2020 bin  
+----------   ---- ----                  ---
+ 类型及权限   属主  属组                 文件
+...
+
+
+属性
+首字段drwxrw-r--描述了文件的类型及不同用户的权限(Permission)。
+
+
+
+文件类型
+属主权限
+属组权限
+其他用户权限
+
+
+
+
+d
+r w x
+r w -
+r - -
+
+
+0
+1 2 3
+4 5 6
+7 8 9
+
+
+目录文件
+读写执行
+读写
+读
+
+
+
+其中，首字符表示文件类型：
+d为目录，-为文件，l为链接文档，b为可供存储的接口设备，c为串行端口设备。
+接下来的字符中，rwx三个一组，分别表示read、write和execute权限，-表示没有对应的权限。
+总体来看，第0位确定文件类型，第1-3位确定属主拥有该文件的权限，
+第4-6位确定属组拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。
+属主(User/Owner)
+属主是文件的所有者。默认情况下，属主为该文件的创建者，谁创建了这个文件，谁就自然的成为了该文件的所有者。
+属组(Group)
+在Linux系统中，用户是按组分类的，一个用户属于一个或多个组，属于同一个组的用户对同一文件拥有相同的访问权限。
+当一个用户创建了一个文件后，默认该用户所在的组就是这个文件的属组。通过设定文件的属组，我们可以集中管理属组内所有用户对这个文件的访问权限。
+注意：
+
+默认情况下，文件的属主和属组分别为该文件的创建者及其所在的用户组，但我们也可以更改文件的属主和属组。因此，一些教程中把文件的属组解释为文件属主所在的组，或者把属组用户解释为与属主同组的用户，这种理解并不正确。
+上面的例子中，虽然属主和属组都为root，但是属主字段为用户uid，属组字段为用户组gid，前者代表单个用户账号，后者代表账号的集合。我们在创建新用户时，会默认创建一个同名的用户组，但是两者之间并不等价。
+对每一个文件来说，除属主以外的用户再划分为属组用户和其他用户，三者之间的权限彼此独立。比如：
+
+
+1
+
+
+d---rw-r-- 1 usr usr 4096 Otc 18 2020 bin
+
+
+假设属主usr的gid为usr，此时属主没有读写执行bin文件的权限，但是与属主同组的其他用户拥有读写bin文件的权限。
+
+
+其他组(Other)
+除去文件属主和属组用户以外的用户为其他组用户。
+文件属性管理
+更改文件属主
+Root用户可以使用chown命令更改文件的属主，也可以同时更改文件的属组。
+
+
+1
+
+
+chown [-R] User[:Group] {File|Directory...}
+
+
+[  ]内为可选参数。
+-R 为递归更改，当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属主。
+更改文件属组
+Root用户和文件属主可以使用chgrp命令更改文件属组，前者更改没有限制，后者只可将属组改为自己是其成员的组。
+
+
+1
+
+
+chgrp [-R] User {File|Directory...}
+
+
+-R 为可选参数。当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属组。
+更改文件权限
+Root用户和文件属主可以使用chmod命令更改文件权限。
+更改文件权限有两种方式，分别为数字模式(Numeric Mode)和符号模式(Symbolic Mode)。
+数字模式
+数字模式中r``w``x权限分别用分数表示：
+
+r：4
+w：2
+x：1
+
+三种权限的分数累加之和代表User、Group和Other用户的权限。举个例子，[-rwxrw----]分数计算如下：
+
+User = rwx = 4 &#43; 2 &#43; 1 = 7
+Group = rw- = 4 &#43; 2 &#43; 0 = 6
+Other = --- = 0 &#43; 0 &#43; 0 = 0
+
+因此，该文件的权限数字可以用760表示。
+更改权限的时我们输入如下命令：
+
+
+1
+
+
+chmod [-R] xyz {File|Directory...}
+
+
+其中xyz就是按照上述方法计算出的用户权限。
+符号模式
+符号模式中使用u，g，o分别表示User，Group，Other，用a来表示All，即全部的身份。此外，使用&#43;，-，=分别表示添加、除去和设定权限。
+举个例子，我们设定test文件的权限为-rwxr-xr--，可以使用以下命令：
+
+
+1
+
+
+chmod u=rwx,g=rx,o=r test
+
+
+现在我们使用以下命令，除去test文件所有用户的执行权限：
+
+
+1
+
+
+chmod a-x test
+
+
+用户管理
+用户账号的管理主要涉及到用户账号的添加、修改和删除。
+添加新用户账号
+添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。刚添加的账号是被锁定的，无法使用。
+通过使用useradd命令添加新的用户账号，语法如下：
+
+
+1
+
+
+useradd [option] username
+
+
+选项说明：
+
+-c comment 指定一段注释性描述
+-d 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录
+-g 指定用户所属的用户组 
+-G 指定用户所属的附加组，有多个附加组则用逗号隔开
+-s 指定用户的登录Shell
+-u 指定用户的用户号
+
+举个例子：
+
+
+1
+
+
+useradd -d /home/gavin -m -s /bin/bash -g group -G root,adm gavin
+
+
+该命令添加了一个名为gavin的新用户，-d和-m选项为该用户创建了主目录/home/gavin，登录shell为bash，他属于group用户组，同时也属于root和adm用户组，其中group是他的主用户组。
+
+添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节用户和用户组配置文件。
+指定或修改用户密码
+刚创建的用户没有密码，被系统锁定无法使用，需要为其指定密码后才可以使用，即使是指定空的密码。
+使用passwd命令指定或修改用户密码，语法如下：
+
+
+1
+
+
+passwd [option] username
+
+
+选项说明：
+
+-l 锁定密码，禁用账号
+-u 密码解锁
+-d 使账号没有密码
+-f 强迫用户下次登录时修改密码
+如果username为空，则默认修改当前用户的密码
+
+修改用户
+修改用户账号就是根据实际业务需求更改用户的相关书信，如用户组、登录Shell等。
+使用usermod命令修改用户属性，语法如下：
+
+
+1
+
+
+usermod [option] username
+
+
+选项说明：
+
+-l newname 修改用户名
+其它可参考useradd命令。
+
+删除用户
+我们可以使用userdel命令执行删除用户的操作，语法如下：
+
+
+1
+
+
+userdel [option] username
+
+
+常用的选项是-r，它的作用是将该用户的主目录一起删除，不添加的话会保留该用户的主目录。
+举个例子：
+
+
+1
+
+
+userdel -r gavin
+
+
+该命令会删除用户gavin在系统文件，如/etc/passwd，/etc/shadow，/etc/group中的相应记录，同时删除用户的主目录。
+查询用户
+whoami
+id
+groups
+切换用户
+su
+切换用户组
+newgrp
+用户组管理
+用户和用户组配置文件
+常用命令总结"/>
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Linux文件与用户管理",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/guorou.github.io\/2020\/02\/0005-linux-user-management\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/guorou.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "Linux","wordcount":  2757 ,
+        "url": "https:\/\/guorou.github.io\/2020\/02\/0005-linux-user-management\/","datePublished": "2020-02-16T23:12:35\x2b08:00","dateModified": "2020-02-20T23:12:35\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "Gavin",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/guorou.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
+    }
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script><div class="wrapper"><nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://guorou.github.io/">晨钟暮鼓</a>
+        </div>
+        <div class="navbar-menu"><a class="menu-item" href="https://guorou.github.io/posts" title="">文章</a><a class="menu-item" href="https://guorou.github.io/tags" title="">标签</a><a class="menu-item" href="https://guorou.github.io/categories" title="">分类</a><a class="menu-item" href="https://guorou.github.io/about" title="">关于</a><a class="menu-item" href="https://hugo-loveit-en.netlify.com" title="English"><i class="fas fa-language fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        </div>
+    </div>
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://guorou.github.io/">晨钟暮鼓</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://guorou.github.io/posts" title="">文章</a><a class="menu-item" href="https://guorou.github.io/tags" title="">标签</a><a class="menu-item" href="https://guorou.github.io/categories" title="">分类</a><a class="menu-item" href="https://guorou.github.io/about" title="">关于</a><a class="menu-item" href="https://hugo-loveit-en.netlify.com" title="English"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Linux文件与用户管理</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://guorou.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>晨钟暮鼓
+                </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://guorou.github.io/categories/linux/">Linux</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-16>2020-02-16</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 2757 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 6 分钟&nbsp;</div>
+        </div><div class="post-toc" id="post-toc">
+                <h2 class="post-toc-title">目录</h2>
+                <div class="post-toc-content"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#文件基本属性">文件基本属性</a>
+      <ul>
+        <li><a href="#属性">属性</a></li>
+        <li><a href="#属主userowner">属主(User/Owner)</a></li>
+        <li><a href="#属组group">属组(Group)</a></li>
+        <li><a href="#其他组other">其他组(Other)</a></li>
+      </ul>
+    </li>
+    <li><a href="#文件属性管理">文件属性管理</a>
+      <ul>
+        <li><a href="#更改文件属主">更改文件属主</a></li>
+        <li><a href="#更改文件属组">更改文件属组</a></li>
+        <li><a href="#更改文件权限">更改文件权限</a>
+          <ul>
+            <li><a href="#数字模式">数字模式</a></li>
+            <li><a href="#符号模式">符号模式</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#用户管理">用户管理</a>
+      <ul>
+        <li><a href="#添加新用户账号">添加新用户账号</a></li>
+        <li><a href="#指定或修改用户密码">指定或修改用户密码</a></li>
+        <li><a href="#修改用户">修改用户</a></li>
+        <li><a href="#删除用户">删除用户</a></li>
+        <li><a href="#查询用户">查询用户</a></li>
+        <li><a href="#切换用户">切换用户</a></li>
+        <li><a href="#切换用户组">切换用户组</a></li>
+      </ul>
+    </li>
+    <li><a href="#用户组管理">用户组管理</a></li>
+    <li><a href="#用户和用户组配置文件">用户和用户组配置文件</a></li>
+    <li><a href="#常用命令总结">常用命令总结</a></li>
+  </ul>
+</nav></div>
+            </div>
+            <div class="post-toc-mobile" id="post-toc-mobile">
+                <details>
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>目录</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#文件基本属性">文件基本属性</a>
+      <ul>
+        <li><a href="#属性">属性</a></li>
+        <li><a href="#属主userowner">属主(User/Owner)</a></li>
+        <li><a href="#属组group">属组(Group)</a></li>
+        <li><a href="#其他组other">其他组(Other)</a></li>
+      </ul>
+    </li>
+    <li><a href="#文件属性管理">文件属性管理</a>
+      <ul>
+        <li><a href="#更改文件属主">更改文件属主</a></li>
+        <li><a href="#更改文件属组">更改文件属组</a></li>
+        <li><a href="#更改文件权限">更改文件权限</a>
+          <ul>
+            <li><a href="#数字模式">数字模式</a></li>
+            <li><a href="#符号模式">符号模式</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#用户管理">用户管理</a>
+      <ul>
+        <li><a href="#添加新用户账号">添加新用户账号</a></li>
+        <li><a href="#指定或修改用户密码">指定或修改用户密码</a></li>
+        <li><a href="#修改用户">修改用户</a></li>
+        <li><a href="#删除用户">删除用户</a></li>
+        <li><a href="#查询用户">查询用户</a></li>
+        <li><a href="#切换用户">切换用户</a></li>
+        <li><a href="#切换用户组">切换用户组</a></li>
+      </ul>
+    </li>
+    <li><a href="#用户组管理">用户组管理</a></li>
+    <li><a href="#用户和用户组配置文件">用户和用户组配置文件</a></li>
+    <li><a href="#常用命令总结">常用命令总结</a></li>
+  </ul>
+</nav></div>
+                </details>
+            </div><div class="post-content"><p>Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。在Linux中每个用户必须至少属于一个组。<br>
+<br />
+用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。</p>
+<a class="post-dummy-target" id="文件基本属性"></a><h2>文件基本属性</h2>
+<p>在学习Linux用户管理之前，我们先来了解关于文件的一些基本概念。<br>
+在Linux系统中有一个基本思想，即“一切皆文件”。控制文件的访问权限非常重要，Linux中针对每一个文件都有属主(User/Owner)、属组(Group)和其他组(Other)的概念，藉此可以管理不同用户访问同一文件的权限。<br>
+<br />
+在Linux系统中，我们可以使用<code>ls -l</code>命令来显示一个文件的属性及其所属的用户和组，如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">root@guoc:/# ls -l
+total <span class="m">7</span>
+...
+drwxrw-r-- <span class="m">1</span> root root <span class="m">4096</span> Otc <span class="m">18</span> <span class="m">2020</span> bin  
+----------   ---- ----                  ---
+ 类型及权限   属主  属组                 文件
+...
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="属性"></a><h3>属性</h3>
+<p>首字段<code>drwxrw-r--</code>描述了文件的类型及不同用户的权限(Permission)。</p>
+<table>
+<thead>
+<tr>
+<th align="center">文件类型</th>
+<th align="center">属主权限</th>
+<th align="center">属组权限</th>
+<th align="center">其他用户权限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">d</td>
+<td align="center">r w x</td>
+<td align="center">r w -</td>
+<td align="center">r - -</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">1 2 3</td>
+<td align="center">4 5 6</td>
+<td align="center">7 8 9</td>
+</tr>
+<tr>
+<td align="center">目录文件</td>
+<td align="center">读写执行</td>
+<td align="center">读写</td>
+<td align="center">读</td>
+</tr>
+</tbody>
+</table>
+<p>其中，首字符表示文件类型：<br>
+<code>d</code>为目录，<code>-</code>为文件，<code>l</code>为链接文档，<code>b</code>为可供存储的接口设备，<code>c</code>为串行端口设备。</p>
+<p>接下来的字符中，<code>rwx</code>三个一组，分别表示<code>read</code>、<code>write</code>和<code>execute</code>权限，<code>-</code>表示没有对应的权限。</p>
+<p>总体来看，第0位确定文件类型，第1-3位确定属主拥有该文件的权限，
+第4-6位确定属组拥有该文件的权限，第7-9位确定其他用户拥有该文件的权限。</p>
+<a class="post-dummy-target" id="属主userowner"></a><h3>属主(User/Owner)</h3>
+<p>属主是文件的所有者。默认情况下，属主为该文件的创建者，谁创建了这个文件，谁就自然的成为了该文件的所有者。</p>
+<a class="post-dummy-target" id="属组group"></a><h3>属组(Group)</h3>
+<p>在Linux系统中，用户是按组分类的，一个用户属于一个或多个组，属于同一个组的用户对同一文件拥有相同的访问权限。<br>
+当一个用户创建了一个文件后，默认该用户所在的组就是这个文件的属组。通过设定文件的属组，我们可以集中管理属组内所有用户对这个文件的访问权限。</p>
+<p><strong>注意：</strong></p>
+<ol>
+<li>默认情况下，文件的属主和属组分别为该文件的创建者及其所在的用户组，但我们也可以更改文件的属主和属组。因此，一些教程中把文件的属组解释为文件属主所在的组，或者把属组用户解释为与属主同组的用户，这种理解并不正确。</li>
+<li>上面的例子中，虽然属主和属组都为root，但是属主字段为<strong>用户</strong><code>uid</code>，属组字段为<strong>用户组</strong><code>gid</code>，前者代表单个用户账号，后者代表账号的集合。我们在创建新用户时，会默认创建一个同名的用户组，但是两者之间并不等价。</li>
+<li>对每一个文件来说，除属主以外的用户再划分为属组用户和其他用户，三者之间的权限彼此独立。比如：
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">d---rw-r-- <span class="m">1</span> usr usr <span class="m">4096</span> Otc <span class="m">18</span> <span class="m">2020</span> bin
+</code></pre></td></tr></table>
+</div>
+</div><p>假设属主usr的gid为usr，此时属主没有读写执行bin文件的权限，但是与属主同组的其他用户拥有读写bin文件的权限。</p>
+</li>
+</ol>
+<a class="post-dummy-target" id="其他组other"></a><h3>其他组(Other)</h3>
+<p>除去文件属主和属组用户以外的用户为其他组用户。</p>
+<a class="post-dummy-target" id="文件属性管理"></a><h2>文件属性管理</h2>
+<a class="post-dummy-target" id="更改文件属主"></a><h3>更改文件属主</h3>
+<p><strong>Root用户</strong>可以使用<code>chown</code>命令更改文件的属主，也可以同时更改文件的属组。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chown <span class="o">[</span>-R<span class="o">]</span> User<span class="o">[</span>:Group<span class="o">]</span> <span class="o">{</span>File<span class="p">|</span>Directory...<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>[  ]</code>内为可选参数。<br>
+-R 为递归更改，当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属主。</p>
+<a class="post-dummy-target" id="更改文件属组"></a><h3>更改文件属组</h3>
+<p><strong>Root用户</strong>和<strong>文件属主</strong>可以使用<code>chgrp</code>命令更改文件属组，前者更改没有限制，后者只可将属组改为自己是其成员的组。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chgrp <span class="o">[</span>-R<span class="o">]</span> User <span class="o">{</span>File<span class="p">|</span>Directory...<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>-R 为可选参数。当更改目录文件时，加上该参数可以递归更改目录及目录下所有文件的属组。</p>
+<a class="post-dummy-target" id="更改文件权限"></a><h3>更改文件权限</h3>
+<p><strong>Root用户</strong>和<strong>文件属主</strong>可以使用<code>chmod</code>命令更改文件权限。<br>
+更改文件权限有两种方式，分别为数字模式(Numeric Mode)和符号模式(Symbolic Mode)。</p>
+<a class="post-dummy-target" id="数字模式"></a><h4>数字模式</h4>
+<p>数字模式中<code>r``w``x</code>权限分别用分数表示：</p>
+<ul>
+<li><code>r</code>：4</li>
+<li><code>w</code>：2</li>
+<li><code>x</code>：1</li>
+</ul>
+<p>三种权限的分数累加之和代表User、Group和Other用户的权限。举个例子，<code>[-rwxrw----]</code>分数计算如下：</p>
+<ul>
+<li><code>User = rwx = 4 + 2 + 1 = 7</code></li>
+<li><code>Group = rw- = 4 + 2 + 0 = 6</code></li>
+<li><code>Other = --- = 0 + 0 + 0 = 0</code></li>
+</ul>
+<p>因此，该文件的权限数字可以用<code>760</code>表示。<br>
+更改权限的时我们输入如下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chmod <span class="o">[</span>-R<span class="o">]</span> xyz <span class="o">{</span>File<span class="p">|</span>Directory...<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中xyz就是按照上述方法计算出的用户权限。</p>
+<a class="post-dummy-target" id="符号模式"></a><h4>符号模式</h4>
+<p>符号模式中使用<code>u</code>，<code>g</code>，<code>o</code>分别表示<code>User</code>，<code>Group</code>，<code>Other</code>，用<code>a</code>来表示<code>All</code>，即全部的身份。此外，使用<code>+</code>，<code>-</code>，<code>=</code>分别表示添加、除去和设定权限。</p>
+<p>举个例子，我们设定<code>test</code>文件的权限为<code>-rwxr-xr--</code>，可以使用以下命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chmod <span class="nv">u</span><span class="o">=</span>rwx,g<span class="o">=</span>rx,o<span class="o">=</span>r <span class="nb">test</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>现在我们使用以下命令，除去<code>test</code>文件所有用户的执行权限：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">chmod a-x <span class="nb">test</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="用户管理"></a><h2>用户管理</h2>
+<p>用户账号的管理主要涉及到用户账号的添加、修改和删除。</p>
+<a class="post-dummy-target" id="添加新用户账号"></a><h3>添加新用户账号</h3>
+<p>添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。刚添加的账号是被锁定的，无法使用。<br>
+通过使用<code>useradd</code>命令添加新的用户账号，语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">useradd <span class="o">[</span>option<span class="o">]</span> username
+</code></pre></td></tr></table>
+</div>
+</div><p>选项说明：</p>
+<ul>
+<li>-c comment 指定一段注释性描述</li>
+<li>-d 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录</li>
+<li>-g 指定用户所属的用户组 </li>
+<li>-G 指定用户所属的附加组，有多个附加组则用逗号隔开</li>
+<li>-s 指定用户的登录Shell</li>
+<li>-u 指定用户的用户号</li>
+</ul>
+<p>举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">useradd -d /home/gavin -m -s /bin/bash -g group -G root,adm gavin
+</code></pre></td></tr></table>
+</div>
+</div><p>该命令添加了一个名为<code>gavin</code>的新用户，<code>-d</code>和<code>-m</code>选项为该用户创建了主目录<code>/home/gavin</code>，登录shell为<code>bash</code>，他属于<code>group</code>用户组，同时也属于<code>root</code>和<code>adm</code>用户组，其中<code>group</code>是他的主用户组。<br>
+<br />
+添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节<a href="#%e7%94%a8%e6%88%b7%e5%92%8c%e7%94%a8%e6%88%b7%e7%bb%84%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6">用户和用户组配置文件</a>。</p>
+<a class="post-dummy-target" id="指定或修改用户密码"></a><h3>指定或修改用户密码</h3>
+<p>刚创建的用户没有密码，被系统锁定无法使用，需要为其指定密码后才可以使用，即使是指定空的密码。<br>
+使用<code>passwd</code>命令指定或修改用户密码，语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">passwd <span class="o">[</span>option<span class="o">]</span> username
+</code></pre></td></tr></table>
+</div>
+</div><p>选项说明：</p>
+<ul>
+<li>-l 锁定密码，禁用账号</li>
+<li>-u 密码解锁</li>
+<li>-d 使账号没有密码</li>
+<li>-f 强迫用户下次登录时修改密码</li>
+<li>如果username为空，则默认修改当前用户的密码</li>
+</ul>
+<a class="post-dummy-target" id="修改用户"></a><h3>修改用户</h3>
+<p>修改用户账号就是根据实际业务需求更改用户的相关书信，如用户组、登录Shell等。<br>
+使用<code>usermod</code>命令修改用户属性，语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">usermod <span class="o">[</span>option<span class="o">]</span> username
+</code></pre></td></tr></table>
+</div>
+</div><p>选项说明：</p>
+<ul>
+<li>-l newname 修改用户名</li>
+<li>其它可参考<code>useradd</code>命令。</li>
+</ul>
+<a class="post-dummy-target" id="删除用户"></a><h3>删除用户</h3>
+<p>我们可以使用<code>userdel</code>命令执行删除用户的操作，语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">userdel <span class="o">[</span>option<span class="o">]</span> username
+</code></pre></td></tr></table>
+</div>
+</div><p>常用的选项是<code>-r</code>，它的作用是将该用户的主目录一起删除，不添加的话会保留该用户的主目录。<br>
+举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">userdel -r gavin
+</code></pre></td></tr></table>
+</div>
+</div><p>该命令会删除用户<code>gavin</code>在系统文件，如/etc/passwd，/etc/shadow，/etc/group中的相应记录，同时删除用户的主目录。</p>
+<a class="post-dummy-target" id="查询用户"></a><h3>查询用户</h3>
+<p>whoami
+id
+groups</p>
+<a class="post-dummy-target" id="切换用户"></a><h3>切换用户</h3>
+<p>su</p>
+<a class="post-dummy-target" id="切换用户组"></a><h3>切换用户组</h3>
+<p>newgrp</p>
+<a class="post-dummy-target" id="用户组管理"></a><h2>用户组管理</h2>
+<a class="post-dummy-target" id="用户和用户组配置文件"></a><h2>用户和用户组配置文件</h2>
+<a class="post-dummy-target" id="常用命令总结"></a><h2>常用命令总结</h2></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-02-20 更新</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fguorou.github.io%2f2020%2f02%2f0005-linux-user-management%2f&amp;text=Linux%e6%96%87%e4%bb%b6%e4%b8%8e%e7%94%a8%e6%88%b7%e7%ae%a1%e7%90%86&amp;via=xxxx" target="_blank" title="分享到 Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fguorou.github.io%2f2020%2f02%2f0005-linux-user-management%2f" target="_blank" title="分享到 Facebook">
+            <i class="fab fa-facebook-square fa-fw"></i>
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fguorou.github.io%2f2020%2f02%2f0005-linux-user-management%2f&amp;title=Linux%e6%96%87%e4%bb%b6%e4%b8%8e%e7%94%a8%e6%88%b7%e7%ae%a1%e7%90%86" target="_blank" title="分享到 Reddit">
+            <i class="fab fa-reddit fa-fw"></i>
+        </a></span></div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section><span class="tag">
+                        <a href="https://guorou.github.io/tags/linux/"><i class="fas fa-tag fa-fw"></i>&nbsp;Linux</a>&nbsp;
+                    </span></section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://guorou.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="https://guorou.github.io/2020/02/0004-ssh-introduction/" class="prev" rel="prev" title="SSH简介"><i class="fas fa-angle-left fa-fw"></i>SSH简介</a>
+            <a href="https://guorou.github.io/2020/02/0000-markdown-syntax/" class="next" rel="next" title="Markdown Syntax">Markdown Syntax<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div><div class="post-comment"><div id="disqus_thread"></div>
+        <script type="text/javascript">
+            (function() {
+                
+                
+                if (window.location.hostname == "localhost")
+                    return;
+                var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
+                var disqus_shortname = "gmorn";
+                dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
+                (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+    </article></div>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://guorou.github.io/" target="_blank">晨钟暮鼓</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="copyright-line">
+				&nbsp;|&nbsp;Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt</a>
+			</span>
+		</div>
+    </div>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><script src="/js/blog.min.js"></script></body>
+</html>
