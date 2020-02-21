@@ -1,21 +1,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>晨钟暮鼓 | 晨钟暮鼓</title>
-        <link>https://guorou.github.io/</link>
+        <link>https://47.105.127.66/</link>
         <description>晨钟暮鼓 | 晨钟暮鼓</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 19 Feb 2020 10:42:56 +0800</lastBuildDate><atom:link href="https://guorou.github.io/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 19 Feb 2020 10:42:56 +0800</lastBuildDate><atom:link href="https://47.105.127.66/" rel="self" type="application/rss+xml" /><item>
                 <title>Posts</title>
-                <link>https://guorou.github.io/posts/</link>
-                <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate><guid>https://guorou.github.io/posts/</guid>
+                <link>https://47.105.127.66/posts/</link>
+                <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate><guid>https://47.105.127.66/posts/</guid>
                 <description></description>
             </item><item>
                 <title>About Me</title>
-                <link>https://guorou.github.io/about/</link>
-                <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate><guid>https://guorou.github.io/about/</guid>
+                <link>https://47.105.127.66/about/</link>
+                <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate><guid>https://47.105.127.66/about/</guid>
                 <description>&lt;p&gt;Hello, I am Gavin.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/dillonzq/LoveIt&#34; target=&#34;_blank&#34;&gt;LoveIt :(far fa-heart):&lt;/a&gt; is a &lt;strong&gt;clean&lt;/strong&gt;, &lt;strong&gt;elegant&lt;/strong&gt; but &lt;strong&gt;advanced&lt;/strong&gt; blog theme for &lt;a href=&#34;https://gohugo.io/&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; developed by &lt;a href=&#34;https://dillonzq.com&#34; target=&#34;_blank&#34;&gt;Dillon&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;It is based on the original &lt;a href=&#34;https://github.com/liuzc/LeaveIt/&#34; target=&#34;_blank&#34;&gt;LeaveIt Theme&lt;/a&gt; and &lt;a href=&#34;https://github.com/liuzc/LeaveIt/&#34; target=&#34;_blank&#34;&gt;KeepIt Theme&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;https://guorou.github.io/svg/loading.min.svg&#34; data-sizes=&#34;auto&#34; data-src=&#34;https://guorou.github.io/images/Apple-Devices-Preview.png&#34; alt=&#34;Hugo Theme LoveIt&#34; class=&#34;lazyload&#34;&gt;&lt;figcaption class=&#34;image-caption&#34;&gt;Hugo Theme LoveIt&lt;/figcaption&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;https://47.105.127.66/svg/loading.min.svg&#34; data-sizes=&#34;auto&#34; data-src=&#34;https://47.105.127.66/images/Apple-Devices-Preview.png&#34; alt=&#34;Hugo Theme LoveIt&#34; class=&#34;lazyload&#34;&gt;&lt;figcaption class=&#34;image-caption&#34;&gt;Hugo Theme LoveIt&lt;/figcaption&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;h3 id=&#34;features&#34;&gt;Features&lt;/h3&gt;
 &lt;h4 id=&#34;performance-and-seo&#34;&gt;Performance and SEO&lt;/h4&gt;
 &lt;ul&gt;

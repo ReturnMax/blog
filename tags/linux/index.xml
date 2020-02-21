@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Linux on 晨钟暮鼓</title>
-    <link>https://guorou.github.io/tags/linux/</link>
+    <link>https://47.105.127.66/tags/linux/</link>
     <description>Recent content in Linux on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Sun, 16 Feb 2020 23:12:35 +0800</lastBuildDate>
     
-	<atom:link href="https://guorou.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://47.105.127.66/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Linux文件与用户管理</title>
-      <link>https://guorou.github.io/2020/02/0005-linux-user-management/</link>
+      <link>https://47.105.127.66/2020/02/0005-linux-user-management/</link>
       <pubDate>Sun, 16 Feb 2020 23:12:35 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/0005-linux-user-management/</guid>
+      <guid>https://47.105.127.66/2020/02/0005-linux-user-management/</guid>
       <description>&lt;p&gt;Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。&lt;/p&gt;
 &lt;p&gt;用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。&lt;/p&gt;
 &lt;h2 id=&#34;文件基本属性&#34;&gt;文件基本属性&lt;/h2&gt;
@@ -489,10 +489,10 @@ gavin&amp;#58;x:5:gavin,kavin
     
     <item>
       <title>SSH简介</title>
-      <link>https://guorou.github.io/2020/02/0004-ssh-introduction/</link>
+      <link>https://47.105.127.66/2020/02/0004-ssh-introduction/</link>
       <pubDate>Wed, 12 Feb 2020 21:24:11 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/0004-ssh-introduction/</guid>
+      <guid>https://47.105.127.66/2020/02/0004-ssh-introduction/</guid>
       <description>&lt;p&gt;虽然一直在使用SSH连接服务器，但是对于SSH连接的原理却没有深究，只是大体了解是使用了非对称加密技术对传输信息进行了加密。搜资料的时候顺手翻到了一篇博文，介绍的还比较详细，特转载保存。本文转自&lt;a href=&#34;https://fancyseeker.github.io/2013/12/30/ssh_overview/&#34; target=&#34;_blank&#34;&gt;链接&lt;/a&gt;，作者是FancySeeker。&lt;br&gt;
 本文主要介绍了SSH的连接认证原理以及SSH的配置和使用。&lt;/p&gt;
 &lt;h2 id=&#34;ssh简要介绍&#34;&gt;SSH简要介绍&lt;/h2&gt;

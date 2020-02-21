@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Server on 晨钟暮鼓</title>
-    <link>https://guorou.github.io/categories/server/</link>
+    <link>https://47.105.127.66/categories/server/</link>
     <description>Recent content in Server on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Wed, 12 Feb 2020 19:48:57 +0800</lastBuildDate>
     
-	<atom:link href="https://guorou.github.io/categories/server/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://47.105.127.66/categories/server/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Ali云服务器配置</title>
-      <link>https://guorou.github.io/2020/02/0003-ali-cloud-server/</link>
+      <link>https://47.105.127.66/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/0003-ali-cloud-server/</guid>
+      <guid>https://47.105.127.66/2020/02/0003-ali-cloud-server/</guid>
       <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
 &lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;

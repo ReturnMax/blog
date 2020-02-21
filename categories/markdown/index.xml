@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Markdown on 晨钟暮鼓</title>
-    <link>https://guorou.github.io/categories/markdown/</link>
+    <link>https://47.105.127.66/categories/markdown/</link>
     <description>Recent content in Markdown on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Wed, 19 Feb 2020 10:42:56 +0800</lastBuildDate>
     
-	<atom:link href="https://guorou.github.io/categories/markdown/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://47.105.127.66/categories/markdown/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Markdown Syntax</title>
-      <link>https://guorou.github.io/2020/02/0000-markdown-syntax/</link>
+      <link>https://47.105.127.66/2020/02/0000-markdown-syntax/</link>
       <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate>
       
-      <guid>https://guorou.github.io/2020/02/0000-markdown-syntax/</guid>
+      <guid>https://47.105.127.66/2020/02/0000-markdown-syntax/</guid>
       <description>&lt;p&gt;本文主要收集了一些关于Markdown语法的魔法知识 😂
 &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;空格&#34;&gt;空格&lt;/h2&gt;
