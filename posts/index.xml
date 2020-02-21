@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on 晨钟暮鼓</title>
-    <link>https://47.105.127.66/posts/</link>
+    <link>http://47.105.127.66/posts/</link>
     <description>Recent content in Posts on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Wed, 19 Feb 2020 10:42:56 +0800</lastBuildDate>
     
-	<atom:link href="https://47.105.127.66/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://47.105.127.66/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Markdown Syntax</title>
-      <link>https://47.105.127.66/2020/02/0000-markdown-syntax/</link>
+      <link>http://47.105.127.66/2020/02/0000-markdown-syntax/</link>
       <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0000-markdown-syntax/</guid>
+      <guid>http://47.105.127.66/2020/02/0000-markdown-syntax/</guid>
       <description>&lt;p&gt;本文主要收集了一些关于Markdown语法的魔法知识 😂
 &lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;空格&#34;&gt;空格&lt;/h2&gt;
@@ -61,10 +61,10 @@
     
     <item>
       <title>Linux文件与用户管理</title>
-      <link>https://47.105.127.66/2020/02/0005-linux-user-management/</link>
+      <link>http://47.105.127.66/2020/02/0005-linux-user-management/</link>
       <pubDate>Sun, 16 Feb 2020 23:12:35 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0005-linux-user-management/</guid>
+      <guid>http://47.105.127.66/2020/02/0005-linux-user-management/</guid>
       <description>&lt;p&gt;Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。&lt;/p&gt;
 &lt;p&gt;用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。&lt;/p&gt;
 &lt;h2 id=&#34;文件基本属性&#34;&gt;文件基本属性&lt;/h2&gt;
@@ -536,10 +536,10 @@ gavin&amp;#58;x:5:gavin,kavin
     
     <item>
       <title>SSH简介</title>
-      <link>https://47.105.127.66/2020/02/0004-ssh-introduction/</link>
+      <link>http://47.105.127.66/2020/02/0004-ssh-introduction/</link>
       <pubDate>Wed, 12 Feb 2020 21:24:11 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0004-ssh-introduction/</guid>
+      <guid>http://47.105.127.66/2020/02/0004-ssh-introduction/</guid>
       <description>&lt;p&gt;虽然一直在使用SSH连接服务器，但是对于SSH连接的原理却没有深究，只是大体了解是使用了非对称加密技术对传输信息进行了加密。搜资料的时候顺手翻到了一篇博文，介绍的还比较详细，特转载保存。本文转自&lt;a href=&#34;https://fancyseeker.github.io/2013/12/30/ssh_overview/&#34; target=&#34;_blank&#34;&gt;链接&lt;/a&gt;，作者是FancySeeker。&lt;br&gt;
 本文主要介绍了SSH的连接认证原理以及SSH的配置和使用。&lt;/p&gt;
 &lt;h2 id=&#34;ssh简要介绍&#34;&gt;SSH简要介绍&lt;/h2&gt;
@@ -694,10 +694,10 @@ RSA加密验证方式，充分利用了非对称加密体系的优势，不需�
     
     <item>
       <title>Ali云服务器配置</title>
-      <link>https://47.105.127.66/2020/02/0003-ali-cloud-server/</link>
+      <link>http://47.105.127.66/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0003-ali-cloud-server/</guid>
+      <guid>http://47.105.127.66/2020/02/0003-ali-cloud-server/</guid>
       <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
 &lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
@@ -820,10 +820,10 @@ SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#3
     
     <item>
       <title>Hugo简明教程2</title>
-      <link>https://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</link>
+      <link>http://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</link>
       <pubDate>Tue, 04 Feb 2020 17:46:40 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</guid>
+      <guid>http://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</guid>
       <description>&lt;p&gt;在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。&lt;/p&gt;
 &lt;p&gt;但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！&lt;/p&gt;
 &lt;p&gt;接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！&lt;/p&gt;
@@ -907,10 +907,10 @@ Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&
     
     <item>
       <title>Hugo简明教程1</title>
-      <link>https://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</link>
+      <link>http://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</guid>
+      <guid>http://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;

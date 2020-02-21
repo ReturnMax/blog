@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hugo on 晨钟暮鼓</title>
-    <link>https://47.105.127.66/tags/hugo/</link>
+    <link>http://47.105.127.66/tags/hugo/</link>
     <description>Recent content in Hugo on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Tue, 04 Feb 2020 17:46:40 +0800</lastBuildDate>
     
-	<atom:link href="https://47.105.127.66/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://47.105.127.66/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Hugo简明教程2</title>
-      <link>https://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</link>
+      <link>http://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</link>
       <pubDate>Tue, 04 Feb 2020 17:46:40 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</guid>
+      <guid>http://47.105.127.66/2020/02/0002-hugo-concise-tutorial2/</guid>
       <description>&lt;p&gt;在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。&lt;/p&gt;
 &lt;p&gt;但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！&lt;/p&gt;
 &lt;p&gt;接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！&lt;/p&gt;
@@ -101,10 +101,10 @@ Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&
     
     <item>
       <title>Hugo简明教程1</title>
-      <link>https://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</link>
+      <link>http://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
-      <guid>https://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</guid>
+      <guid>http://47.105.127.66/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;
