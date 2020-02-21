@@ -18,30 +18,45 @@
       <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate>
       
       <guid>https://guorou.github.io/2020/02/0000-markdown-syntax/</guid>
-      <description>&lt;h1 id=&#34;待完成列表&#34;&gt;待完成列表&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
-&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;空格&#34;&gt;空格&lt;/h1&gt;
-&lt;p&gt; 代表半角空格，  代表全角空格&lt;/p&gt;
-&lt;h1 id=&#34;表格&#34;&gt;表格&lt;/h1&gt;
+      <description>&lt;p&gt;本文主要收集了一些关于Markdown语法的魔法知识 😂
+&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;空格&#34;&gt;空格&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;&amp;amp;ensp;&lt;/code&gt;半角空格以及&lt;code&gt;&amp;amp;emsp;&lt;/code&gt;全角空格&lt;/p&gt;
+&lt;h2 id=&#34;表格内换行&#34;&gt;表格内换行&lt;/h2&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Header1&lt;/th&gt;
-&lt;th&gt;Header2&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Header 1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Header 2&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;item 1&lt;/td&gt;
-&lt;td&gt;1. one&lt;br /&gt;2. two&lt;br /&gt;3. three&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;item&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1. one&lt;br /&gt;2. two&lt;br /&gt;3. three&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h1 id=&#34;页面跳转&#34;&gt;页面跳转&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;#%e8%a1%a8%e6%a0%bc&#34;&gt;跳转到表格&lt;/a&gt;&lt;/p&gt;</description>
+&lt;h2 id=&#34;页面内跳转&#34;&gt;页面内跳转&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;#%e6%b7%bb%e5%8a%a0%e6%b3%a8%e9%87%8a&#34;&gt;跳转到可爱&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;任务列表&#34;&gt;任务列表&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;  唱跳&lt;/li&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;  Rap&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;添加emoji&#34;&gt;添加Emoji&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.webfx.com/tools/emoji-cheat-sheet/&#34; target=&#34;_blank&#34;&gt;👻&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;添加注释&#34;&gt;添加注释&lt;/h2&gt;
+&lt;ruby&gt;
+&lt;rb&gt;刘畅&lt;/rb&gt;&lt;rt&gt;so cute&lt;/rt&gt;
+&lt;/ruby&gt;
+&lt;h2 id=&#34;键盘按键&#34;&gt;键盘按键&lt;/h2&gt;
+&lt;kbd&gt;
+	&lt;kbd&gt;Ctrl&lt;/kbd&gt;
+	+
+	&lt;kbd&gt;D&lt;/kbd&gt;
+&lt;/kbd&gt;
+&lt;h2 id=&#34;继续补充中&#34;&gt;继续补充中&amp;hellip;&lt;/h2&gt;</description>
     </item>
     
   </channel>

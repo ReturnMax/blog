@@ -18,30 +18,45 @@
       <pubDate>Wed, 19 Feb 2020 10:42:56 +0800</pubDate>
       
       <guid>https://guorou.github.io/2020/02/0000-markdown-syntax/</guid>
-      <description>&lt;h1 id=&#34;待完成列表&#34;&gt;待完成列表&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
-&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;test&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;空格&#34;&gt;空格&lt;/h1&gt;
-&lt;p&gt; 代表半角空格，  代表全角空格&lt;/p&gt;
-&lt;h1 id=&#34;表格&#34;&gt;表格&lt;/h1&gt;
+      <description>&lt;p&gt;本文主要收集了一些关于Markdown语法的魔法知识 😂
+&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;空格&#34;&gt;空格&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;&amp;amp;ensp;&lt;/code&gt;半角空格以及&lt;code&gt;&amp;amp;emsp;&lt;/code&gt;全角空格&lt;/p&gt;
+&lt;h2 id=&#34;表格内换行&#34;&gt;表格内换行&lt;/h2&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Header1&lt;/th&gt;
-&lt;th&gt;Header2&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Header 1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Header 2&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;item 1&lt;/td&gt;
-&lt;td&gt;1. one&lt;br /&gt;2. two&lt;br /&gt;3. three&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;item&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1. one&lt;br /&gt;2. two&lt;br /&gt;3. three&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h1 id=&#34;页面跳转&#34;&gt;页面跳转&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&#34;#%e8%a1%a8%e6%a0%bc&#34;&gt;跳转到表格&lt;/a&gt;&lt;/p&gt;</description>
+&lt;h2 id=&#34;页面内跳转&#34;&gt;页面内跳转&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;#%e6%b7%bb%e5%8a%a0%e6%b3%a8%e9%87%8a&#34;&gt;跳转到可爱&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;任务列表&#34;&gt;任务列表&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;  唱跳&lt;/li&gt;
+&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;  Rap&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;添加emoji&#34;&gt;添加Emoji&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.webfx.com/tools/emoji-cheat-sheet/&#34; target=&#34;_blank&#34;&gt;👻&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;添加注释&#34;&gt;添加注释&lt;/h2&gt;
+&lt;ruby&gt;
+&lt;rb&gt;刘畅&lt;/rb&gt;&lt;rt&gt;so cute&lt;/rt&gt;
+&lt;/ruby&gt;
+&lt;h2 id=&#34;键盘按键&#34;&gt;键盘按键&lt;/h2&gt;
+&lt;kbd&gt;
+	&lt;kbd&gt;Ctrl&lt;/kbd&gt;
+	+
+	&lt;kbd&gt;D&lt;/kbd&gt;
+&lt;/kbd&gt;
+&lt;h2 id=&#34;继续补充中&#34;&gt;继续补充中&amp;hellip;&lt;/h2&gt;</description>
     </item>
     
     <item>
@@ -50,9 +65,8 @@
       <pubDate>Sun, 16 Feb 2020 23:12:35 +0800</pubDate>
       
       <guid>https://guorou.github.io/2020/02/0005-linux-user-management/</guid>
-      <description>&lt;p&gt;Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。在Linux中每个用户必须至少属于一个组。&lt;br&gt;
-&lt;br /&gt;
-用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。&lt;/p&gt;
+      <description>&lt;p&gt;Linux系统是一个多用户多任务的分时操作系统，每一个需要使用系统资源的用户都需要先由系统管理员创建一个账号，然后以该账号的身份和口令登入系统。&lt;/p&gt;
+&lt;p&gt;用户的账号既有助于系统管理员控制用户对系统资源的访问权限，也有助于帮助用户组织文件，并为用户提供安全性、隐私性的保护。&lt;/p&gt;
 &lt;h2 id=&#34;文件基本属性&#34;&gt;文件基本属性&lt;/h2&gt;
 &lt;p&gt;在学习Linux用户管理之前，我们先来了解关于文件的一些基本概念。&lt;br&gt;
 在Linux系统中有一个基本思想，即“一切皆文件”。控制文件的访问权限非常重要，Linux中针对每一个文件都有属主(User/Owner)、属组(Group)和其他组(Other)的概念，藉此可以管理不同用户访问同一文件的权限。&lt;br&gt;
@@ -210,7 +224,13 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id=&#34;用户管理&#34;&gt;用户管理&lt;/h2&gt;
-&lt;p&gt;用户账号的管理主要涉及到用户账号的添加、修改和删除。&lt;/p&gt;
+&lt;p&gt;Linux是一个多用户的操作系统，支持多个用户同时登录。用户角色可分为三类，分别为root用户、伪用户和普通用户。&lt;br&gt;
+&lt;br /&gt;
+Root用户系统唯一，具有系统的最高权限，可以操作任何的文件和命令。&lt;br&gt;
+伪用户是系统运行必不可少的用户，比如bin、daemon、adm、ftp、mail等用户。这些用户通常都是系统自身拥有的，不具备登录系统的能力。&lt;br&gt;
+普通用户和root用户一样，都是真实用户，可以登录系统。但是普通用户的权限有限，通常都是由系统管理员自行添加。&lt;br&gt;
+&lt;br /&gt;
+用户账号的管理主要涉及到用户账号的添加、修改和删除，我们来分别介绍这几部分的内容。&lt;/p&gt;
 &lt;h3 id=&#34;添加新用户账号&#34;&gt;添加新用户账号&lt;/h3&gt;
 &lt;p&gt;添加用户账号就是在系统中创建一个新账号，然后为新账号分配用户号、用户组、主目录和登录Shell等资源。刚添加的账号是被锁定的，无法使用。&lt;br&gt;
 通过使用&lt;code&gt;useradd&lt;/code&gt;命令添加新的用户账号，语法如下：&lt;/p&gt;
@@ -224,12 +244,12 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;-c comment 指定一段注释性描述&lt;/li&gt;
-&lt;li&gt;-d 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录&lt;/li&gt;
-&lt;li&gt;-g 指定用户所属的用户组 &lt;/li&gt;
-&lt;li&gt;-G 指定用户所属的附加组，有多个附加组则用逗号隔开&lt;/li&gt;
-&lt;li&gt;-s 指定用户的登录Shell&lt;/li&gt;
-&lt;li&gt;-u 指定用户的用户号&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-c&lt;/code&gt; comment 指定一段注释性描述&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-d&lt;/code&gt; 指定用户主目录，如果此目录不存在，添加-m选项可以创建主目录&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-g&lt;/code&gt; 指定用户所属的用户组 &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-G&lt;/code&gt; 指定用户所属的附加组，有多个附加组则用逗号隔开&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-s&lt;/code&gt; 指定用户的登录Shell&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-u&lt;/code&gt; 指定用户的用户号&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;举个例子：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -242,7 +262,7 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;该命令添加了一个名为&lt;code&gt;gavin&lt;/code&gt;的新用户，&lt;code&gt;-d&lt;/code&gt;和&lt;code&gt;-m&lt;/code&gt;选项为该用户创建了主目录&lt;code&gt;/home/gavin&lt;/code&gt;，登录shell为&lt;code&gt;bash&lt;/code&gt;，他属于&lt;code&gt;group&lt;/code&gt;用户组，同时也属于&lt;code&gt;root&lt;/code&gt;和&lt;code&gt;adm&lt;/code&gt;用户组，其中&lt;code&gt;group&lt;/code&gt;是他的主用户组。&lt;br&gt;
 &lt;br /&gt;
-添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节&lt;a href=&#34;#%e7%94%a8%e6%88%b7%e5%92%8c%e7%94%a8%e6%88%b7%e7%bb%84%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6&#34;&gt;用户和用户组配置文件&lt;/a&gt;。&lt;/p&gt;
+添加新用户账号就是系统在/etc/passwd文件中增加一条新纪录，同时更新其他系统文件，如/etc/group和/etc/shadow等，详细介绍见第五节&lt;a href=&#34;#%e7%94%a8%e6%88%b7%e5%92%8c%e7%94%a8%e6%88%b7%e7%bb%84%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6&#34;&gt;「用户和用户组配置文件」&lt;/a&gt;。&lt;/p&gt;
 &lt;h3 id=&#34;指定或修改用户密码&#34;&gt;指定或修改用户密码&lt;/h3&gt;
 &lt;p&gt;刚创建的用户没有密码，被系统锁定无法使用，需要为其指定密码后才可以使用，即使是指定空的密码。&lt;br&gt;
 使用&lt;code&gt;passwd&lt;/code&gt;命令指定或修改用户密码，语法如下：&lt;/p&gt;
@@ -256,10 +276,10 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;-l 锁定密码，禁用账号&lt;/li&gt;
-&lt;li&gt;-u 密码解锁&lt;/li&gt;
-&lt;li&gt;-d 使账号没有密码&lt;/li&gt;
-&lt;li&gt;-f 强迫用户下次登录时修改密码&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-l&lt;/code&gt; 锁定密码，禁用账号&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-u&lt;/code&gt; 密码解锁&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-d&lt;/code&gt; 使账号没有密码&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-f&lt;/code&gt; 强迫用户下次登录时修改密码&lt;/li&gt;
 &lt;li&gt;如果username为空，则默认修改当前用户的密码&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;修改用户&#34;&gt;修改用户&lt;/h3&gt;
@@ -275,8 +295,8 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;-l newname 修改用户名&lt;/li&gt;
-&lt;li&gt;其它可参考&lt;code&gt;useradd&lt;/code&gt;命令。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-l newname&lt;/code&gt; 修改用户名&lt;/li&gt;
+&lt;li&gt;其它可参考&lt;code&gt;useradd&lt;/code&gt;命令，如&lt;code&gt;-d&lt;/code&gt;，&lt;code&gt;-g&lt;/code&gt;，&lt;code&gt;-G&lt;/code&gt;，&lt;code&gt;-s&lt;/code&gt;。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;删除用户&#34;&gt;删除用户&lt;/h3&gt;
 &lt;p&gt;我们可以使用&lt;code&gt;userdel&lt;/code&gt;命令执行删除用户的操作，语法如下：&lt;/p&gt;
@@ -299,17 +319,219 @@ drwxrw-r-- &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; root root &lt;span class
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;该命令会删除用户&lt;code&gt;gavin&lt;/code&gt;在系统文件，如/etc/passwd，/etc/shadow，/etc/group中的相应记录，同时删除用户的主目录。&lt;/p&gt;
-&lt;h3 id=&#34;查询用户&#34;&gt;查询用户&lt;/h3&gt;
-&lt;p&gt;whoami
-id
-groups&lt;/p&gt;
-&lt;h3 id=&#34;切换用户&#34;&gt;切换用户&lt;/h3&gt;
-&lt;p&gt;su&lt;/p&gt;
-&lt;h3 id=&#34;切换用户组&#34;&gt;切换用户组&lt;/h3&gt;
-&lt;p&gt;newgrp&lt;/p&gt;
 &lt;h2 id=&#34;用户组管理&#34;&gt;用户组管理&lt;/h2&gt;
-&lt;h2 id=&#34;用户和用户组配置文件&#34;&gt;用户和用户组配置文件&lt;/h2&gt;
-&lt;h2 id=&#34;常用命令总结&#34;&gt;常用命令总结&lt;/h2&gt;</description>
+&lt;p&gt;用户组是具有相同权限的一组用户，通过用户组我们可以集中管理用户组中所有用户的权限。&lt;br&gt;
+默认情况下，Linux系统中创建的用户属于与它同名的用户组，这个用户组在创建用户时同时建立。&lt;br&gt;
+用户组的管理主要包括用户组的添加、删除和修改，本质上是对/etc/group文件的更新。&lt;/p&gt;
+&lt;h3 id=&#34;增加用户组&#34;&gt;增加用户组&lt;/h3&gt;
+&lt;p&gt;使用&lt;code&gt;groupadd&lt;/code&gt;命令增加新的用户组，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupadd &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-g&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; groupname
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupadd -g &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt; gavin
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们在系统中添加了一个名为&lt;code&gt;gavin&lt;/code&gt;的新用户组，并指定新组的组标识号gid为100；如果不添加-g参数，那么新组的组标识号是在当前已有的最大组标识号的基础上加1。&lt;/p&gt;
+&lt;h3 id=&#34;修改用户组&#34;&gt;修改用户组&lt;/h3&gt;
+&lt;p&gt;修改用户组属性使用&lt;code&gt;groupmod&lt;/code&gt;命令，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupmod &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; group
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;选项说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-g&lt;/code&gt; 为用户指定新的组标识号&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-n newgroup&lt;/code&gt; 将用户组名改为新名字&lt;br&gt;
+举个例子：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupmod -g &lt;span class=&#34;m&#34;&gt;2020&lt;/span&gt; -n kavin gavin
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令将gavin用户组更名为kavin，并将组标识号改为2020。&lt;/p&gt;
+&lt;h3 id=&#34;删除用户组&#34;&gt;删除用户组&lt;/h3&gt;
+&lt;p&gt;删除用户组使用&lt;code&gt;groupdel&lt;/code&gt;命令，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupdel group
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;用户和用户组配置文件&#34;&gt;用户和用户组配置文件&lt;/h2&gt;
+&lt;p&gt;在Linux系统中，与用户和用户组相关的信息保存在一些系统文件中，主要包括以下三个文件:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/passwd&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/group&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/shadow&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而前文所述的针对用户与用户组的管理，本质上是对这些文件中的相应信息进行修改，接下来让我们详细介绍一下这几个文件。&lt;/p&gt;
+&lt;h3 id=&#34;passwd文件&#34;&gt;passwd文件&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/etc/passwd&lt;/code&gt;文件存储了当前系统中所有用户的信息。文件的每一行记录都对应着系统中的一个用户，记录了这个用户的一些基本属性。&lt;/p&gt;
+&lt;p&gt;文件的内容类似于下面的例子：&lt;/p&gt;
+&lt;pre&gt;
+root&amp;#58;x:0:0:root:/root:/bin/bash  
+daemon&amp;#58;x:1:1:daemon:/usr/sbin:/usr/sbin/nologin  
+bin&amp;#58;x:2:2:bin:/bin:/usr/sbin/nologin  
+sys&amp;#58;x:3:3:sys:/dev:/usr/sbin/nologin  
+···
+&lt;/pre&gt;  
+&lt;p&gt;文件中每个用户的信息格式是固定的，每行记录用（:）分隔为七个字段，每个字段的说明如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;user:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;x:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;123:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;456:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;xxx:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;/home/user:&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;/bin/bash&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;用户名&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;密码占位符&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;UID&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;GID&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;注释性描述&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;主目录&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;登录Shell&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;shadow文件&#34;&gt;shadow文件&lt;/h3&gt;
+&lt;p&gt;由于/etc/passwd文件所有用户都可读，用户的密码太简单或规律比较明显会被轻易破解。因此Linux系统中把加密后的密码分离出来，单独保存放在&lt;code&gt;/etc/shadow&lt;/code&gt;文件中。只超级用户才拥有该文件的读取权限，保证了用户密码的安全性。&lt;/p&gt;
+&lt;p&gt;shadow文件中的记录与passwd中的用户记录一一对应，记录格式也类似，由（:）分割成的多个字段组成。&lt;/p&gt;
+&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;pre&gt;
+root:Dnakfw28zf38w:8764:0:168:7:::
+daemon:*::0:0::::
+bin:*::0:0::::
+sys:*::0:0::::  
+&lt;/pre&gt;
+&lt;p&gt;字段说明如下：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;登录名:加密密码:最后一次修改时间:最小时间间隔:最大时间间隔:警告时间:不活动时间:失效时间:标志&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;group文件&#34;&gt;group文件&lt;/h3&gt;
+&lt;p&gt;用户和用户组之间存在一对一、一对多和多对一的关系。&lt;br&gt;
+在&lt;code&gt;passwd&lt;/code&gt;文件中记录的是用户所属的主组，即登录时所属的默认组。除主组以外，用户也可以属于其他多个组，这些组称为用户的附加组。&lt;br&gt;
+用户组的信息保存在&lt;code&gt;/etc/group&lt;/code&gt;文件中，文件内容的格式与&lt;code&gt;passwd&lt;/code&gt;相似，也是由（:）隔开的字段组成，举个例子：&lt;/p&gt;
+&lt;pre&gt;
+root&amp;#58;x:0:root
+bin&amp;#58;x:2:root,bin
+sys&amp;#58;x:3:root,uucp
+···
+gavin&amp;#58;x:5:gavin,kavin 
+&lt;/pre&gt;  
+&lt;p&gt;各个字段的说明如下：&lt;br&gt;
+&lt;code&gt;组名:密码:组标识号(GID):组内用户列表&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;此外，用户组也有一个对应的&lt;code&gt;/etc/gshadow&lt;/code&gt;文件保存用户组密码，在此不作具体介绍。&lt;/p&gt;
+&lt;h2 id=&#34;常用命令总结&#34;&gt;常用命令总结&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;命令&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;chmod [option] file&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;修改文件权限&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;chown user file&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;修改文件属主&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;chgrp group file&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;修改文件属组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;whoami&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;查询当前登录用户名&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;id user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;查询指定用户信息，包括&lt;code&gt;uid&lt;/code&gt;、&lt;code&gt;gid&lt;/code&gt;和&lt;code&gt;groups&lt;/code&gt;&lt;br /&gt;如果不指定用户名则显示当前登录用户信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;groups user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;查询指定用户所属的组，显示的第一个组是当前用户的主要组&lt;br /&gt;如果不指定用户名则显示当前登录用户所属的组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;newgrp group&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;如果用户同时属于多个用户组，该命令用于当前登录用户在不同组间切换，&lt;br/&gt;以便具有其他用户组的权限，切换的组必须是当前用户的主组或附加组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;su user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;切换登录用户，不指定用户名则切换为root用户&lt;br /&gt;切换后$表示普通用户，#表示超级用户&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;useradd [option] user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;添加新用户&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;passwd [option] user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;指定或修改用户密码，添加新用户后需指定密码后才可使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;usermod [option] user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;修改用户信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;userdel [-r] user&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;删除指定用户，-r删除用户主目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;groupadd group&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;添加新用户组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;groupdel group&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;删除指定用户组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;groupmod group&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;修改指定用户组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;细节补充&#34;&gt;细节补充&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;添加新用户后，切换到该用户只显示一个&lt;code&gt;$&lt;/code&gt;符号，而不是常见的&lt;code&gt;user@***&lt;/code&gt;的格式；而且一些命令，如&lt;code&gt;ll&lt;/code&gt;也无法使用，请问为什么？&lt;/p&gt;
+&lt;p&gt;解决办法：将用户登录Shell设置为/bin/bash即可。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从权限高的用户切换到权限低的用户不需要输入密码，反之需要。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.runoob.com/linux/linux-user-manage.html&#34; target=&#34;_blank&#34;&gt;菜鸟教程&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     
     <item>
