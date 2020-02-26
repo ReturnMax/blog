@@ -79,4 +79,93 @@ SSH不是本文介绍的重点，详细请看这篇[文章](daibuchong)，本文
 * 如果使用SSH密钥对登录Linux实例，将会禁用密码登录，以提高安全性。  
 	如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。  
 * 基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。  
+
+### 安全优化
+#### 修改22端口
+Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。  
+<ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是`/etc/ssh/sshd_config`。  
+修改之前，我们先备份原配置文件，然后用`Vim`进行编辑：  
+```bash
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+vim /etc/ssh/sshd_config
+```
+打开后可以看到如下内容：  
+<pre>
+	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
+
+	# This is the sshd server system-wide configuration file.  See
+	# sshd_config(5) for more information.
+
+	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+	# The strategy used for options in the default sshd_config shipped with
+	# OpenSSH is to specify options with their default value where
+	# possible, but leave them commented.  Uncommented options override the
+	# default value.
+
+	#Port 22
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+</pre>
+其中22端口被注释掉了。  
+为了防止后续端口修改错误导致无法登录，我们先删除`#`保留`Port 22`端口，然后另起一行添加`Port 2222`，修改后的文件如下：
+<pre>
+	Port 22
+	Port 2222
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+</pre>
+修改完成后我们保存退出，重启sshd服务使配置生效：  
+```bash
+systemctl restart sshd
+```
+或
+```bash
+service sshd restart
+```
+
+重启完成后，我们可以通过`netstat -ntl`或`ss -ntl`命令查看一下端口。  
+
+配置完成后，记得在防火墙和安全组中放行`2222`端口，然后用新端口重新登录。  
+如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的`22`端口了。  
+
+需要注意的是，在`/etc/ssh/`目录下还有一个`ssh_config`文件，它是`ssh`的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了`ssh`的配置文件。  
+
+#### SSH禁止root登录
+#### SSH密钥登录
+#### UFW防火墙
+**特别提醒**  
+<u>远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上</u>  
+<br />
+UFW，即<ruby><rb>简单防火墙</rb><rt>uncomplicated firewall</rt></ruby>，是Ubuntu下的一个简易防火墙配置工具。  
+UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：  
+```bash
+ufw enable
+ufw default deny
+```
+其中第一条命令是启动ufw，并将其设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。  
+我们也可以关闭ufw防火墙及开机启动，命令如下：
+```bash
+ufw disable
+```  
+我们可以使用allow命令打开指定的端口，举个例子，我们打开22和80端口：  
+```bash
+ufw allow 22
+ufw allow 80
+```
+也可以使用`delete allow`删除已经添加过的规则，举个例子，我们禁用80端口：  
+```bash
+ufw delete allow 80
+```
+规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效），命令如下：
+```bash
+ufw reload
+```
+现在可以通过以下命令查看防火墙的状态：
+```bash
+ufw status
+```
+
 <!--more-->
