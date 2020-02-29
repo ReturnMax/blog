@@ -136,7 +136,7 @@ Root用户
 修改22端口
 Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。
 SSH服务ssh daemon是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是/etc/ssh/sshd_config。
-修改之前，我们先备份原配置文件，然后用Vim进行编辑：
+修改之前我们先备份配置文件，然后再进行编辑：
 
 
 1
@@ -201,7 +201,7 @@ SSH禁止root登录
 SSH密钥登录
 UFW防火墙
 特别提醒
-远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上
+远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上
 
 UFW，即简单防火墙uncomplicated firewall，是Ubuntu下的一个简易防火墙配置工具。
 UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：
@@ -263,6 +263,9 @@ ufw reload
 ufw status
 
 
+
+禁止root用户登录
+禁止使用口令验证
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://belldrum.com/2020/02/0003-ali-cloud-server/" />
@@ -392,7 +395,7 @@ Root用户
 修改22端口
 Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。
 SSH服务ssh daemon是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是/etc/ssh/sshd_config。
-修改之前，我们先备份原配置文件，然后用Vim进行编辑：
+修改之前我们先备份配置文件，然后再进行编辑：
 
 
 1
@@ -457,7 +460,7 @@ SSH禁止root登录
 SSH密钥登录
 UFW防火墙
 特别提醒
-远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上
+远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上
 
 UFW，即简单防火墙uncomplicated firewall，是Ubuntu下的一个简易防火墙配置工具。
 UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：
@@ -519,6 +522,9 @@ ufw reload
 ufw status
 
 
+
+禁止root用户登录
+禁止使用口令验证
 "/>
 <script type="application/ld+json">
     {
@@ -533,7 +539,7 @@ ufw status
                 "url": "http:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Server, Ubuntu","wordcount":  3565 ,
+            },"genre": "posts","keywords": "Server, Ubuntu","wordcount":  3580 ,
         "url": "http:\/\/belldrum.com\/2020\/02\/0003-ali-cloud-server\/","datePublished": "2020-02-12T19:48:57\x2b08:00","dateModified": "2020-02-12T19:48:57\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "Gavin",
@@ -576,7 +582,7 @@ ufw status
                     <i class="fas fa-user-circle fa-fw"></i>Gavin
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="http://belldrum.com/categories/server/">Server</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=0001-01-01>0001-01-01</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 3565 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 3580 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;<span id="/2020/02/0003-ali-cloud-server/" class="leancloud_visitors" data-flag-title="Ali云服务器配置">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
@@ -782,7 +788,7 @@ SSH不是本文介绍的重点，详细请看这篇<a href="daibuchong">文章</
 <a class="post-dummy-target" id="修改22端口"></a><h4>修改22端口</h4>
 <p>Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。<br>
 <ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是<code>/etc/ssh/sshd_config</code>。<br>
-修改之前，我们先备份原配置文件，然后用<code>Vim</code>进行编辑：</p>
+修改之前我们先备份配置文件，然后再进行编辑：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -847,7 +853,7 @@ vim /etc/ssh/sshd_config
 <a class="post-dummy-target" id="ssh密钥登录"></a><h4>SSH密钥登录</h4>
 <a class="post-dummy-target" id="ufw防火墙"></a><h4>UFW防火墙</h4>
 <p><strong>特别提醒</strong><br>
-<u>远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
+<u>远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
 <br />
 UFW，即<ruby><rb>简单防火墙</rb><rt>uncomplicated firewall</rt></ruby>，是Ubuntu下的一个简易防火墙配置工具。<br>
 UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：</p>
@@ -909,7 +915,10 @@ ufw allow <span class="m">80</span>
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw status
 </code></pre></td></tr></table>
 </div>
-</div></div><div class="post-footer" id="post-footer">
+</div><ul>
+<li><i class="far fa-check-square fa-fw"></i>禁止root用户登录</li>
+<li><i class="far fa-check-square fa-fw"></i>禁止使用口令验证</li>
+</ul></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">

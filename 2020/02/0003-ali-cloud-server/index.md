@@ -84,7 +84,7 @@ SSH不是本文介绍的重点，详细请看这篇[文章](daibuchong)，本文
 #### 修改22端口
 Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。  
 <ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是`/etc/ssh/sshd_config`。  
-修改之前，我们先备份原配置文件，然后用`Vim`进行编辑：  
+修改之前我们先备份配置文件，然后再进行编辑：  
 ```bash
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 vim /etc/ssh/sshd_config
@@ -137,7 +137,7 @@ service sshd restart
 #### SSH密钥登录
 #### UFW防火墙
 **特别提醒**  
-<u>远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上</u>  
+<u>远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上</u>  
 <br />
 UFW，即<ruby><rb>简单防火墙</rb><rt>uncomplicated firewall</rt></ruby>，是Ubuntu下的一个简易防火墙配置工具。  
 UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：  
@@ -167,5 +167,10 @@ ufw reload
 ```bash
 ufw status
 ```
+ 
+- [ ] 禁止root用户登录  
+- [ ] 禁止使用口令验证
+
+
 
 <!--more-->

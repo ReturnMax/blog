@@ -879,7 +879,7 @@ SSH不是本文介绍的重点，详细请看这篇<a href="daibuchong">文章</
 <a class="post-dummy-target" id="修改22端口"></a><h4>修改22端口</h4>
 <p>Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。<br>
 <ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是<code>/etc/ssh/sshd_config</code>。<br>
-修改之前，我们先备份原配置文件，然后用<code>Vim</code>进行编辑：</p>
+修改之前我们先备份配置文件，然后再进行编辑：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -944,7 +944,7 @@ vim /etc/ssh/sshd_config
 <a class="post-dummy-target" id="ssh密钥登录"></a><h4>SSH密钥登录</h4>
 <a class="post-dummy-target" id="ufw防火墙"></a><h4>UFW防火墙</h4>
 <p><strong>特别提醒</strong><br>
-<u>远程使用ufw需要注意开启远程连接的端口或设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
+<u>远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
 <br />
 UFW，即<ruby><rb>简单防火墙</rb><rt>uncomplicated firewall</rt></ruby>，是Ubuntu下的一个简易防火墙配置工具。<br>
 UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：</p>
@@ -1006,7 +1006,10 @@ ufw allow <span class="m">80</span>
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw status
 </code></pre></td></tr></table>
 </div>
-</div></div><div class="post-footer">
+</div><ul>
+<li><i class="far fa-check-square fa-fw"></i>禁止root用户登录</li>
+<li><i class="far fa-check-square fa-fw"></i>禁止使用口令验证</li>
+</ul></div><div class="post-footer">
         <a href="http://belldrum.com/2020/02/0003-ali-cloud-server/">阅读全文</a><div class="post-tags"><span class="tag">
                         &nbsp;<a href="http://belldrum.com/tags/server/"><i class="fas fa-tag fa-fw"></i>&nbsp;Server</a>
                     </span><span class="tag">
