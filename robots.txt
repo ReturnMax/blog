@@ -61,4 +61,4 @@ Disallow: /
 User-agent: ZoominfoBot
 Disallow: /
 
-Sitemap: http://belldrum.com/sitemap.xml
+Sitemap: https://belldrum.com/sitemap.xml

@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tutorial on 晨钟暮鼓</title>
-    <link>http://belldrum.com/tags/tutorial/</link>
+    <link>https://belldrum.com/tags/tutorial/</link>
     <description>Recent content in Tutorial on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Mon, 03 Feb 2020 17:23:08 +0800</lastBuildDate>
     
-	<atom:link href="http://belldrum.com/tags/tutorial/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://belldrum.com/tags/tutorial/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Hugo&#43;Github=?</title>
-      <link>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
+      <link>https://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
+      <guid>https://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;

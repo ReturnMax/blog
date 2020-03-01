@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>server on 晨钟暮鼓</title>
-    <link>http://belldrum.com/categories/server/</link>
+    <link>https://belldrum.com/categories/server/</link>
     <description>Recent content in server on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Fri, 28 Feb 2020 00:25:28 +0800</lastBuildDate>
     
-	<atom:link href="http://belldrum.com/categories/server/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://belldrum.com/categories/server/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>SSH 原理 &amp; 实践</title>
-      <link>http://belldrum.com/2020/02/0009-ssh-intro2/</link>
+      <link>https://belldrum.com/2020/02/0009-ssh-intro2/</link>
       <pubDate>Fri, 28 Feb 2020 00:25:28 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0009-ssh-intro2/</guid>
+      <guid>https://belldrum.com/2020/02/0009-ssh-intro2/</guid>
       <description>&lt;p&gt;本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章&lt;a href=&#34;https://www.cnblogs.com/f-ck-need-u/p/7129122.html&#34; target=&#34;_blank&#34;&gt;SSH系列&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。&lt;br&gt;
 &lt;br /&gt;
@@ -254,10 +254,10 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
     
     <item>
       <title>Nginx之配置介绍</title>
-      <link>http://belldrum.com/2020/02/0007-nginx/</link>
+      <link>https://belldrum.com/2020/02/0007-nginx/</link>
       <pubDate>Fri, 21 Feb 2020 23:25:34 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0007-nginx/</guid>
+      <guid>https://belldrum.com/2020/02/0007-nginx/</guid>
       <description>&lt;p&gt;Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。&lt;/p&gt;
 &lt;p&gt;说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。&lt;/p&gt;
 &lt;p&gt;本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。&lt;/p&gt;
@@ -427,10 +427,10 @@ server {	//设置www.belldrum.com跳转belldrum.com
     
     <item>
       <title>Ali 云服务器配置</title>
-      <link>http://belldrum.com/2020/02/0003-ali-cloud-server/</link>
+      <link>https://belldrum.com/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0003-ali-cloud-server/</guid>
+      <guid>https://belldrum.com/2020/02/0003-ali-cloud-server/</guid>
       <description>&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
 &lt;h2 id=&#34;密码&#34;&gt;密码&lt;/h2&gt;
@@ -684,10 +684,10 @@ ufw allow &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;
     
     <item>
       <title>Hugo&#43;Github=?</title>
-      <link>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
+      <link>https://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
+      <guid>https://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;

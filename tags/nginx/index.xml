@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>nginx on 晨钟暮鼓</title>
-    <link>http://belldrum.com/tags/nginx/</link>
+    <link>https://belldrum.com/tags/nginx/</link>
     <description>Recent content in nginx on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Fri, 21 Feb 2020 23:25:34 +0800</lastBuildDate>
     
-	<atom:link href="http://belldrum.com/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://belldrum.com/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Nginx之配置介绍</title>
-      <link>http://belldrum.com/2020/02/0007-nginx/</link>
+      <link>https://belldrum.com/2020/02/0007-nginx/</link>
       <pubDate>Fri, 21 Feb 2020 23:25:34 +0800</pubDate>
       
-      <guid>http://belldrum.com/2020/02/0007-nginx/</guid>
+      <guid>https://belldrum.com/2020/02/0007-nginx/</guid>
       <description>&lt;p&gt;Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。&lt;/p&gt;
 &lt;p&gt;说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。&lt;/p&gt;
 &lt;p&gt;本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。&lt;/p&gt;
