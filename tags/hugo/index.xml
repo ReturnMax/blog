@@ -7,100 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 04 Feb 2020 17:46:40 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 03 Feb 2020 17:23:08 +0800</lastBuildDate>
     
 	<atom:link href="http://belldrum.com/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hugo简明教程2</title>
-      <link>http://belldrum.com/2020/02/0002-hugo-concise-tutorial2/</link>
-      <pubDate>Tue, 04 Feb 2020 17:46:40 +0800</pubDate>
-      
-      <guid>http://belldrum.com/2020/02/0002-hugo-concise-tutorial2/</guid>
-      <description>&lt;p&gt;在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。&lt;/p&gt;
-&lt;p&gt;但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！&lt;/p&gt;
-&lt;p&gt;接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！&lt;/p&gt;
-&lt;h2 id=&#34;content-management&#34;&gt;Content Management&lt;/h2&gt;
-&lt;h3 id=&#34;basic-concepts&#34;&gt;Basic Concepts&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Content&lt;br&gt;
-内容就是我们自己以markdown格式撰写的文章，通常我们把单独的文章放到content目录下，将同一类型的文章放到content的子目录下。&lt;br&gt;
-文章可以通过命令行，如&lt;code&gt;hugo new about.md&lt;/code&gt;生成，也可以手动创建后放入content目录下。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Template&lt;br&gt;
-模板保存在两个地方，分别为&lt;code&gt;site/layouts&lt;/code&gt;目录中和&lt;code&gt;site/themes/themename/layouts&lt;/code&gt;目录中，其中前者的优先级高于后者，当前者为空时才去寻找后一个目录下的设置。&lt;br&gt;
-模板主要分为以下几种，分别为基础模板（），单页模板（），列表模板（），局部模板（），首页模板以及404页面模板。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Static Page&lt;br&gt;
-Static Page = Content + Template&lt;br&gt;
-页面是通过&lt;code&gt;hugo&lt;/code&gt;命令生成的静态网站中的html页面。Hugo会根据文章的kind属性和固定的规则去找到相应的模板，然后根据模板生成最终的html页面。&lt;br&gt;
-最终我们自己创建的文章和Hugo自动创建的文件的路径会转换成对应的网站的url，文章、页面和url的对应关系为：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;└── content
-    ├── _index.md          // [home]            &amp;lt;- https://example.com/**
-    ├── about.md           // [page]            &amp;lt;- https://example.com/about/
-    ├── posts               
-    |   ├── _index.md      // [section]         &amp;lt;- https://example.com/posts/**         
-    |   ├── firstpost.md   // [page]            &amp;lt;- https://example.com/posts/firstpost/
-    |   ├── happy           
-    |   |   ├── _index.md  // [section]         &amp;lt;- https://example.com/posts/happy/**
-    |   |   └── ness.md    // [page]            &amp;lt;- https://example.com/posts/happy/ness/
-    |   └── secondpost.md  // [page]            &amp;lt;- https://example.com/posts/secondpost/
-    └── quote   
-        ├── _index.md      // [section]         &amp;lt;- https://example.com/quote/**           
-        ├── first.md       // [page]            &amp;lt;- https://example.com/quote/first/
-        └── second.md      // [page]            &amp;lt;- https://example.com/quote/second/
-// hugo默认生成的页面, 没有对应的markdown文章
-分类列表页面               // [taxonomyTerm]    &amp;lt;- https://example.com/categories/**
-某个分类下的所有文章的列表  // [taxonomy]        &amp;lt;- https://example.com/categories/one-category **
-标签列表页面               // [taxonomyTerm]    &amp;lt;- https://example.com/tags/**
-某个标签下的所有文章的列表  // [taxonomy]        &amp;lt;- https://example.com/tags/one-tag **
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;strong&gt;&lt;em&gt;&lt;small&gt;注意：_index.md不是必须的, 如果没有找到_index.md，hugo会使用一些默认值。&lt;/small&gt;&lt;/em&gt;&lt;/strong&gt;&lt;br&gt;
-页面总体分为两种，分别为&lt;code&gt;单页(signle page)&lt;/code&gt;和&lt;code&gt;列表页(list page)&lt;/code&gt;，根据&lt;code&gt;[]&lt;/code&gt;中标注的页面&lt;code&gt;属性(kind)&lt;/code&gt;，&lt;code&gt;single&lt;/code&gt;包括&lt;code&gt;page&lt;/code&gt;，&lt;code&gt;list&lt;/code&gt;包括&lt;code&gt;home&lt;/code&gt;, &lt;code&gt;section&lt;/code&gt;, &lt;code&gt;taxonomyTerm&lt;/code&gt;和&lt;code&gt;taxonomy&lt;/code&gt;。其中，单页为用户撰写的文章，列表为Hugo自动创建的文件。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;LoveIt模板：&lt;br&gt;
-_default/&lt;br&gt;
-home page - baseof.html + summary.html&lt;br&gt;
-posts - baseof.html + section.html&lt;br&gt;
-post - baseof.html + patrial/&lt;br&gt;
-about - baseof.html + single.html&lt;/p&gt;
-&lt;p&gt;posts/&lt;br&gt;
-single.html&lt;/p&gt;
-&lt;p&gt;在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。&lt;br&gt;
-Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hugo简明教程1</title>
+      <title>Hugo&#43;Github=?</title>
       <link>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
       <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
       
@@ -108,12 +21,12 @@ Hugo默认的基础模板页是&lt;code&gt;_default/baseof.html&lt;/code&gt;。&
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;
-&lt;h2 id=&#34;step-1-install-hugo-for-win&#34;&gt;Step 1: Install Hugo for Win&lt;/h2&gt;
+&lt;h2 id=&#34;step-1-install-hugo&#34;&gt;Step 1: Install Hugo&lt;/h2&gt;
 &lt;p&gt;在release&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;下载&lt;/u&gt;&lt;/a&gt; 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。&lt;/p&gt;
 &lt;p&gt;添加成功后，在cmd中输入&lt;code&gt;hugo version&lt;/code&gt;检查是否安装成功，如果安装成功会输出&lt;br&gt;
 &lt;code&gt;Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;我们也可以通过执行&lt;code&gt;hugo -help&lt;/code&gt;查看命令帮助。&lt;/p&gt;
-&lt;h2 id=&#34;step-2-create-a-new-site&#34;&gt;Step 2: Create a New Site&lt;/h2&gt;
+&lt;h2 id=&#34;step-2-create-a-site&#34;&gt;Step 2: Create a Site&lt;/h2&gt;
 &lt;p&gt;创建一个新的hugo站点：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -206,7 +119,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;或直接用文本编辑器打开config.toml修改相应的配置。&lt;/p&gt;
 &lt;p&gt;一个快速简便的配置方法是用&lt;code&gt;themes/loveit/exampleSite&lt;/code&gt;下的&lt;code&gt;config.toml&lt;/code&gt;替换&lt;code&gt;/site&lt;/code&gt;站点目录下默认生成的&lt;code&gt;config.tmol&lt;/code&gt;。&lt;/p&gt;
-&lt;h2 id=&#34;step-4-add-some-content&#34;&gt;Step 4: Add Some Content&lt;/h2&gt;
+&lt;h2 id=&#34;step-4-add-content&#34;&gt;Step 4: Add Content&lt;/h2&gt;
 &lt;p&gt;我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
@@ -217,7 +130,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;在&lt;code&gt;content/posts&lt;/code&gt;目录中会生成一篇名为&lt;code&gt;my-first-post.md&lt;/code&gt;的文章草稿，并自动添加&lt;code&gt;archetypes/default.md&lt;/code&gt;中的内容。&lt;/p&gt;
-&lt;h2 id=&#34;step-5-hosting-hugo-site-locally&#34;&gt;Step 5: Hosting Hugo Site Locally&lt;/h2&gt;
+&lt;h2 id=&#34;step-5-hosting-site-locally&#34;&gt;Step 5: Hosting Site Locally&lt;/h2&gt;
 &lt;p&gt;在站点目录下执行：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

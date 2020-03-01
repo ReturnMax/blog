@@ -19,7 +19,7 @@
 <meta property="og:description" content="Gavin&#39;s Blog" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="http://belldrum.com/" />
-<meta property="og:updated_time" content="2020-02-19T10:42:56+08:00" />
+<meta property="og:updated_time" content="2020-02-28T00:25:28+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="晨钟暮鼓"/>
 <meta name="twitter:description" content="Gavin&#39;s Blog"/>
@@ -73,54 +73,422 @@
     </a></div>
 </div>
 <article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0000-markdown-syntax/">Markdown Syntax</a>
+        <a href="http://belldrum.com/2020/02/0009-ssh-intro2/">SSH 原理 &amp; 实践</a>
     </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
             <i class="fas fa-user-circle fa-fw"></i>Gavin
-        </a>发布于  <time datetime=2020-02-19>2020-02-19</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
-                        <a href="http://belldrum.com/categories/markdown/">Markdown</a></span></div><div class="post-content"><p>本文主要收集了一些关于Markdown语法的魔法知识 😂
-<br /></p>
-<a class="post-dummy-target" id="空格"></a><h2>空格</h2>
-<p><code>&amp;ensp;</code>半角空格以及<code>&amp;emsp;</code>全角空格</p>
-<a class="post-dummy-target" id="表格内换行"></a><h2>表格内换行</h2>
-<table>
-<thead>
-<tr>
-<th align="left">Header 1</th>
-<th align="left">Header 2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">item</td>
-<td align="left">1. one<br />2. two<br />3. three</td>
-</tr>
-</tbody>
-</table>
-<a class="post-dummy-target" id="页面内跳转"></a><h2>页面内跳转</h2>
-<p><a href="#%e6%b7%bb%e5%8a%a0%e6%b3%a8%e9%87%8a">跳转到可爱</a></p>
-<a class="post-dummy-target" id="任务列表"></a><h2>任务列表</h2>
+        </a>发布于  <time datetime=2020-02-28>2020-02-28</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="http://belldrum.com/categories/server/">Server</a></span></div><div class="post-content"><p>本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章<a href="https://www.cnblogs.com/f-ck-need-u/p/7129122.html" target="_blank">SSH系列</a>。</p>
+<p>OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。<br>
+<br />
+OpenSSH套件主要包含以下几种工具：</p>
 <ul>
-<li><i class="far fa-check-square fa-fw"></i>  唱跳</li>
-<li><i class="far fa-square fa-fw"></i>  Rap</li>
+<li>服务器端由SSH服务(sshd)、sftp-server和ssh-agent组成</li>
+<li>客户端使用ssh-keygen、ssh-add、ssh-kyesign、ssh-keyscan等管理密钥</li>
+<li>远程操作使用ssh、scp和sftp完成</li>
 </ul>
-<a class="post-dummy-target" id="添加emoji"></a><h2>添加Emoji</h2>
-<p><a href="https://www.webfx.com/tools/emoji-cheat-sheet/" target="_blank">👻</a></p>
-<a class="post-dummy-target" id="添加注释"></a><h2>添加注释</h2>
-<ruby>
-<rb>刘畅</rb><rt>so cute</rt>
-</ruby>
-<a class="post-dummy-target" id="键盘按键"></a><h2>键盘按键</h2>
-<kbd>
-	<kbd>Ctrl</kbd>
-	+
-	<kbd>D</kbd>
-</kbd>
-<a class="post-dummy-target" id="继续补充中"></a><h2>继续补充中&hellip;</h2></div><div class="post-footer">
-        <a href="http://belldrum.com/2020/02/0000-markdown-syntax/">阅读全文</a><div class="post-tags"><span class="tag">
-                        &nbsp;<a href="http://belldrum.com/tags/markdown/"><i class="fas fa-tag fa-fw"></i>&nbsp;Markdown</a>
+<a class="post-dummy-target" id="认证过程"></a><h2>认证过程</h2>
+<p>SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：</p>
+<ol>
+<li>在客户端进行服务器验证</li>
+<li>生成会话密钥(session key)加密所有通信</li>
+<li>客户认证</li>
+</ol>
+<a class="post-dummy-target" id="服务器验证"></a><h3>服务器验证</h3>
+<p>首先客户端向服务器发送连接请求，服务器端的SSH服务(sshd)默认监听22端口的SSH连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：</p>
+<p><strong>1. 首次连接</strong><br>
+如果客户端是第一次连接服务器，则要求客户端通过验证服务器的公钥来手动认证服务器。服务器的公钥一般保存在<code>/etc/ssh/host_key*</code>，也可以使用ssh-keyscan命令找到。一旦服务器密钥被接受，那么将会被添加到客户端<code>~/.ssh/know_hosts</code>文件中。<code> known_hosts</code>文件包含有关客户端所有已验证服务器的信息。<br>
+<strong>2. 再次连接</strong><br>
+如果客户端不是第一次访问要连接的服务器，则将服务器的身份与<code>known_hosts</code>文件中先前记录的信息进行匹配以进行验证。</p>
+<p>我们可以发现，服务器身份需要用户手动进行验证，这样做的目的是为了防止中间人攻击(Man-in-the-middle attack, MITM)。</p>
+<a class="post-dummy-target" id="生成会话密钥"></a><h3>生成会话密钥</h3>
+<p>验证服务器后，服务器端和客户端使用<code>Diffie-Hellman</code>算法生成会话密钥(session key)。 该算法的设计方式是，双方在会话密钥的生成中会做出同等贡献。 生成的会话密钥是在客户端和服务器端共享的对称密钥，即双方使用相同的密钥加密和解密。</p>
+<a class="post-dummy-target" id="客户端认证"></a><h3>客户端认证</h3>
+<p>最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，如下所示：</p>
+<ol>
+<li>客户端首先向服务器发送要验证的密钥对的ID。</li>
+<li>服务器检查客户端尝试登录的帐户的authorized_keys文件中的密钥ID。</li>
+<li>如果在文件中找到匹配该ID的公钥，那么服务器将生成一个随机数，然后使用客户端公钥对随机数进行加密并将加密的消息发送给客户端。</li>
+<li>如果客户端拥有正确的私钥，它将解密该消息以获得服务器生成的随机数。</li>
+<li>客户端将获得的随机数与共享的会话密钥结合在一起，并计算该值的MD5哈希值。</li>
+<li>然后，客户端将此MD5哈希发送回服务器，作为对加密号码消息的答复。</li>
+<li>服务器使用相同的共享会话密钥和发送给客户端的原始号码自行计算MD5值。它将自己的计算结果与客户端发回的计算结果进行比较。如果这两个值匹配，则证明该客户端拥有私钥，并且该客户端已通过身份验证。</li>
+</ol>
+<p>不对称密钥允许服务器对客户端进行身份验证，因为客户端只有在拥有正确的关联私钥的情况下才能解密消息。<br>
+此外，SSH支持多种身份验证机制，最常见的是<strong>密码认证</strong>和<strong>公钥认证</strong>。上文只说明了公钥认证过程，当公钥认证未通过时，会再进行密码认证，此处不再赘述。</p>
+<a class="post-dummy-target" id="对称加密"></a><h2>对称加密</h2>
+<p>我们在前文中介绍过，SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。<br>
+大部分教程对非对称密钥的作用有详细的介绍，但在对称密钥介绍时往往语焉不详，造成很多人的误解。本节主要是希望大家了解一点，<strong>SSH使用对称密钥来加密整个连接，非对称密钥仅用于身份验证</strong>。</p>
+<p>对称加密是一种加密类型，使用同一个密钥加密发给对方的消息、解密从另一方收到的消息。这意味着拥有密钥的任何人都可以加密和解密发送给拥有密钥的其他人的消息。这种加密模式通常称为“shared secret”加密或“secret key”加密。通常，只有一个密钥用于所有操作，或者只有一对密钥，它们之间的关系很容易发现，或者很容易根据一个密钥推导出另一个密钥。</p>
+<p>SSH使用对称密钥来加密整个连接。与一些人的假设相反，我们创建的公有/私有非对称密钥对仅用于身份验证，而不用于加密连接。对称加密甚至可以保护密码验证免遭监听。</p>
+<p>客户端和服务端为生成对称密钥做出了同等的贡献，并且最终生成的密钥永远不会为外界所知。这个密钥是通过密钥交换算法创建的，这种算法允许服务器和客户端共享某些公共数据，然后使用各自保留的秘密数据进行处理，最终两者独立地到达相同的目的：生成同一密钥。更详细地说明可参考这篇<a href="https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process" target="_blank">文章</a>。</p>
+<p>通过此过程创建的对称加密密钥是基于会话的(session-bassed)，并且构成了服务器与客户端之间发送的数据的实际加密。一旦建立，必须使用此共享密钥对其余数据进行加密。这个阶段完成之后，服务端和客户端的加密会话就被建立了，然后开始进行客户端的验证。</p>
+<p>SSH可以使用多种对称密码系统，包括AES，Blowfish，3DES，CAST128和Arcfour等。服务器和客户端都可以决定其支持的密码列表，按优先顺序排序。最终两者进行协商，客户端列表中的第一个在服务器上可用的选项将被用作两个方向上的加密算法。</p>
+<a class="post-dummy-target" id="文件介绍"></a><h2>文件介绍</h2>
+<p>SSH密钥验证过程涉及客户端和服务器端的多个文件，为了避免混淆，我们来总结一下各个文件的作用。</p>
+<p><strong>服务端：</strong></p>
+<ul>
+<li><code>/etc/ssh/sshd_config</code><br>
+ssh服务程序(sshd)的配置文件<br>
+<br /></li>
+<li><code>etc/ssh/ssh_host_*</code><br>
+ssh服务程序(sshd)启动时自动生成的服务端公钥和私钥文件，也可以通过<code>dpkg-reconfigure openssh-server</code>命令重新生成。共有八个文件，包括四种加密类型：<code>rsa</code>、<code>dsa</code>、<code>ecdsa</code>和<code>ed25519</code>（实际使用时服务器会选择其中一种加密类型）。其中<code>.pub</code>结尾的是公钥，将写入到客户端的<code>~/.ssh/known_hosts</code>文件中，用于验证服务器身份。<br>
+其中私钥文件严格要求权限为600，若不是则sshd服务可能会拒绝启动。<br>
+<br /></li>
+<li><code>~/.ssh/authorized_keys</code><br>
+保存的是基于公钥认证机制时客户端用户的公钥。在进行客户端认证时，服务端将读取对应用户目录下的<code>authorized_keys</code>文件。<br>
+<br /></li>
+</ul>
+<p><strong>客户端：</strong></p>
+<ul>
+<li><code>/etc/ssh/ssh_config</code><br>
+客户端的全局配置文件。<br>
+<br /></li>
+<li><code>~/.ssh/config</code><br>
+客户端的用户配置文件，生效优先级高于全局配置文件。一般该文件默认不存在，可自行创建。该文件对权限有严格要求，只对所有者有读/写权限，对其他人完全拒绝写权限。<br>
+<br /></li>
+<li><code>~/.ssh/known_hosts</code><br>
+保存服务器验证时服务端<code>host key</code>的文件，文件内容来源于服务端的<code>ssh_host_*_key.pub</code>文件。<br>
+<br /></li>
+<li><code>/etc/ssh/known_hosts</code><br>
+全局<code>host key</code>保存文件，作用等同于<code>~/.ssh/known_hosts</code>。<br>
+<br /></li>
+<li><code>~/.ssh/id_rsa</code><br>
+客户端生成的私钥。由ssh-keygen生成。该文件严格要求权限，文件权限不得大于<code>711</code>，一般设置为<code>600</code>。<br>
+<br /></li>
+<li><code>~/.ssh/id_rsa.pub</code><br>
+私钥<code>id_rsa</code>的配对公钥。对权限不敏感。当采用公钥认证机制时，该文件内容需要提前复制到服务端的<code>~/.ssh/authorized_keys</code>文件中。<br>
+<br /></li>
+<li><code>~/.ssh/rc</code><br>
+保存的是命令列表，这些命令在ssh连接到远程主机成功时将第一时间执行，执行完这些命令之后才开始登陆或执行ssh命令行中的命令。<br>
+<br /></li>
+<li><code>/etc/ssh/rc</code><br>
+作用等同于<code>~/.ssh/rc</code></li>
+</ul>
+<p><strong>注意：</strong><br>
+配置文件主要包括服务端配置文件<code>/etc/ssh/sshd_config</code>和客户端配置文件<code>/etc/ssh/ssh_config</code>。这两个文件中有很多同名的配置项，但前者是sshd启动时开关性的设置，后者是请求连接时客户端采取的配置。例如，两配置文件都有GSSAPIAuthentication项，在客户端将其设置为no，表示连接时将直接跳过该身份验证机制，而在服务端设置为no则表示sshd启动时不开启GSSAPI身份验证的机制。即使客户端使用了GSSAPI认证机制，只要服务端没有开启，就绝对不可能认证通过。</p>
+<a class="post-dummy-target" id="认证实现"></a><h2>认证实现</h2>
+<p>前文介绍了公钥认证的过程以及涉及到的文件，接下来主要介绍公钥认证的具体实现步骤。<br>
+公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发密钥对。</p>
+<a class="post-dummy-target" id="生成密钥对"></a><h3>生成密钥对</h3>
+<p>OpenSSH提供了密钥生成工具ssh-keygen。我们在客户端（服务端也行，无所谓在哪生成）执行<code>ssh-keygen</code>指令会出现如下提示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa 	<span class="c1">#-t参数指定算法，通常使用rsa或dsa</span>
+Generating public/private rsa key pair.
+Enter file in which to save the key <span class="o">(</span>/root/.ssh/id_rsa<span class="o">)</span>:  <span class="c1"># 输入密钥对保存路径，与-f参数作用相同</span>
+Enter passphrase <span class="o">(</span>empty <span class="k">for</span> no passphrase<span class="o">)</span>:               <span class="c1"># 输入私钥密码，可留空，与-P参数作用相同</span>
+Enter same passphrase again:            
+Your identification has been saved in /root/.ssh/id_rsa. 
+Your public key has been saved in /root/.ssh/id_rsa.pub. 
+</code></pre></td></tr></table>
+</div>
+</div><p>如不指定保存路径，那么生成的密钥对默认保存在<code>~/.ssh/</code>目录下。其中，私钥的权限设置为<code>600</code>，如果权限过大会导致公钥认证失败。</p>
+<a class="post-dummy-target" id="分发公钥"></a><h3>分发公钥</h3>
+<p>密钥生成后，我们要将公钥发送到远程服务器对应用户的家目录下，可以使用<code>ssh-copy-id</code>命令实现，语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh-copy-id <span class="o">[</span>-i <span class="o">[</span>identity_file<span class="o">]</span><span class="o">]</span> <span class="o">[</span>user@<span class="o">]</span>host
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>-i 指定要分发的公钥文件</li>
+<li>user 指定对应的用户名</li>
+</ul>
+<p>举个例子，我们将公钥分发到服务器<code>114.55.93.224</code>上的<code>gavin</code>用户家目录下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ssh-copy-id -i .ssh/id_rsa.pub gavin@114.55.93.224
+</code></pre></td></tr></table>
+</div>
+</div><p>而如果ssh服务端的端口不是22，还需要给<code>ssh-copy-id</code>传递端口号，格式为<code>&quot;-p port_num [user@]hostname&quot;</code>，如 <code>&quot;-p 2222 gavin@114.55.93.224&quot;</code>。</p>
+<p><code>ssh-copy-id</code>命令的作用是在目标主机的指定用户的家目录下，检测是否有<code>~/.ssh</code>目录，如果没有，则以700权限创建该目录，然后将本地的公钥追加到目标主机指定用户家目录下的<code>~/.ssh/authorized_keys</code>文件中。<code>authorized_keys</code>文件可以保存多个公钥信息，每个公钥以换行分开。<br>
+<br />
+因此，我们也可以直接将公钥文件传输到服务器上，然后手动将公钥追加到对应用户家目录下的<code>.ssh/authorized_keys</code>文件中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">cat id_rsa &gt;&gt; authorized_keys
+</code></pre></td></tr></table>
+</div>
+</div><p>公钥分发完成后，我们就可以远程连接服务器了。</p>
+<a class="post-dummy-target" id="最佳实践"></a><h2>最佳实践</h2>
+<a class="post-dummy-target" id="更改默认端口"></a><h3>更改默认端口</h3>
+<p>Linux默认使用22端口进行远程登录，一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，通过更改22端口可以过滤掉大部分暴力破解的访问。<br>
+<ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，它的配置文件是<code>/etc/ssh/sshd_config</code>，在配置文件中可以修改守护进程监听的端口。</p>
+<p>在修改之前我们先对配置文件进行备份，然后用文本编辑工具打开：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+vim /etc/ssh/sshd_config
+</code></pre></td></tr></table>
+</div>
+</div><p>打开后可以看到如下内容：</p>
+<pre>
+	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
+
+	# This is the sshd server system-wide configuration file.  See
+	# sshd_config(5) for more information.
+
+	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+	# The strategy used for options in the default sshd_config shipped with
+	# OpenSSH is to specify options with their default value where
+	# possible, but leave them commented.  Uncommented options override the
+	# default value.
+
+	#Port 22
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+</pre>
+<p>其中22端口被注释掉了。<br>
+为了防止后续端口修改错误导致无法登录，我们先删除<code>#</code>保留<code>Port 22</code>端口，然后另起一行添加<code>Port 2222</code>，修改后的文件如下：</p>
+<pre>
+	Port 22
+	Port 2222
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+</pre>
+<p>修改完成后我们保存退出，重启sshd服务使配置生效：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">systemctl restart sshd
+</code></pre></td></tr></table>
+</div>
+</div><p>或</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">service sshd restart
+</code></pre></td></tr></table>
+</div>
+</div><p>重启完成后，我们可以通过<code>netstat -ntl</code>或<code>ss -ntl</code>命令查看一下端口。</p>
+<p>配置完成后，记得在防火墙和安全组中放行<code>2222</code>端口，然后用新端口重新登录。<br>
+如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的<code>22</code>端口了。</p>
+<a class="post-dummy-target" id="禁止root登录"></a><h3>禁止root登录</h3>
+<p>修改<code>/etc/ssh/sshd_config</code>文件：</p>
+<pre>
+PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+</pre>
+<a class="post-dummy-target" id="禁止口令登录"></a><h3>禁止口令登录</h3>
+<p>修改<code>/etc/ssh/sshd_config</code>文件：</p>
+<pre>
+PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+</pre>
+<a class="post-dummy-target" id="待补充"></a><h3>待补充</h3>
+<a class="post-dummy-target" id="参考资料"></a><h2>参考资料</h2>
+<ol>
+<li><a href="https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process" target="_blank">Understanding the SSH Encryption and Connection Process</a></li>
+<li><a href="https://medium.com/@Magical_Mudit/understanding-ssh-workflow-66a0e8d4bf65" target="_blank">Understanding SSH workflow</a></li>
+<li><a href="https://www.cnblogs.com/f-ck-need-u/p/7129122.html" target="_blank">SSH命令和SSH服务详解</a></li>
+</ol></div><div class="post-footer">
+        <a href="http://belldrum.com/2020/02/0009-ssh-intro2/">阅读全文</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="http://belldrum.com/tags/ssh/"><i class="fas fa-tag fa-fw"></i>&nbsp;ssh</a>
+                    </span><span class="tag">
+                        &nbsp;<a href="http://belldrum.com/tags/server/"><i class="fas fa-tag fa-fw"></i>&nbsp;server</a>
                     </span></div></div>
 </article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0005-linux-user-management/">Linux文件与用户管理</a>
+        <a href="http://belldrum.com/2020/02/0007-nginx/">Nginx之配置介绍</a>
+    </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>Gavin
+        </a>发布于  <time datetime=2020-02-21>2020-02-21</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
+                        <a href="http://belldrum.com/categories/server/">Server</a></span></div><div class="post-content"><p>Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。</p>
+<p>说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。</p>
+<p>本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。</p>
+<a class="post-dummy-target" id="软件安装"></a><h2>软件安装</h2>
+<p>在Debian下可以使用<code>apt-get</code>安装nginx：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">apt-get install nginx
+</code></pre></td></tr></table>
+</div>
+</div><p>默认安装位置在<code>/etc/nginx</code>。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。<br>
+<br />
+我们通过<code>ps -aux</code>命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。<br>
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU个数相关（有利于进程切换），配置几个就有几个Worker进程。</p>
+<p>如果nginx没有启动，我们可以执行<code>nginx</code>命令手动启动。</p>
+<p>安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。<br>
+接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。</p>
+<a class="post-dummy-target" id="配置文件"></a><h2>配置文件</h2>
+<p>默认情况下，nginx的配置文件是<code>/etc/nginx/nginx.conf</code>。配置文件里大部分内容是注释掉的，文件内容如下：</p>
+<pre>
+user www-data www-data;				//配置用户和用户组，用户组可以为空
+worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
+pid /run/nginx.pid;				//指定nginx进程运行文件存放地址
+include /etc/nginx/modules-enabled/*.conf;
+//引入modules-enabled目录下.conf配置文件，会跳转到nginx的默认欢迎页
+
+events {					//events块，配置影响nginx服务器或与用户的网络连接
+	worker_connections 768;			//设置最大连接数
+	# multi_accept on;			//设置一个进程是否同时接受多个网络连接
+}
+
+http {						//http块，可以嵌套多个server
+	...
+	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
+	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
+	...
+	server {				//server块，配置虚拟主机的参数
+		listen 80;			//server监听端口
+		server_name belldrum.com	//监听的主机ip地址或域名
+		location {			//配置请求的路由和页面的处理
+
+		}
+	}
+
+}
+</pre>
+<a class="post-dummy-target" id="部署网站"></a><h2>部署网站</h2>
+<p>首先我们在服务器上建立一个保存网站的目录，假设为<code>/home/gavin/blog</code>。
+接下来我们对nginx的配置文件进行修改，主要是修改server块，修改后内容如下：</p>
+<pre>
+http {
+	server {
+		listen 80;
+		server_name belldrum.com;	// 域名或者主机ip
+		root /home/gavin/blog;		// 网站资源根目录路，nginx需要有该目录的读取权限
+		index index.html;		// 显示首页
+		location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+    	root /home/gavin/blog;
+		}				// 访问网站的入口
+	}
+}
+</pre>
+<p>修改完成后保存退出，执行<code>nginx -s reload</code>重启nginx服务，便可以通过域名或ip地址访问自己的网站了。<br>
+<br />
+其实在实践中，我们并不需要频繁的修改<code>nginx.conf</code>文件，而是通过在该文件中使用<code>include</code>指令引入额外的配置文件。一般情况下，<code>nginx.conf</code>中已经通过<code>include</code>指令引入了<code>conf.d</code>、<code>sites-enable</code>、<code>modules-enabled</code>三个目录下的配置文件。我们可以在这些目录下新建配置文件，或者在任意目录下新建配置文件，然后在<code>nginx.conf</code>的http块内用<code>include</code>指令引入新建的配置文件。<br>
+<br />
+举个例子：<br>
+我们在conf.d目录下新建一个名为<code>belldrum.conf</code>的配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /etc/nginx/conf.d
+vim belldrum.conf
+</code></pre></td></tr></table>
+</div>
+</div><p>我们在文件中写入以下内容，然后保存退出：</p>
+<pre>
+server {
+	listen 80;
+	server_name belldrum.com;
+	root /home/gavin/blog;
+	index index.html;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+    root /home/gavin/blog;
+	}
+</pre>  
+<p>最后检查<code>nginx.conf</code>的http块内是否已经正确引入这个配置文件：</p>
+<pre>
+http {
+	include /etc/nginx/conf.d/*.conf;
+}
+</pre>
+<a class="post-dummy-target" id="配置ssl"></a><h2>配置SSL</h2>
+<p>目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。<br>
+<br />
+在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为<code>belldrum.com.key</code>和<code>belldrum.com.pem</code>。<br>
+我们在<code>/etc/nginx</code>目录下新建一个<code>cert</code>文件夹用于存放密钥和证书，然后修改之前创建的<code>belldrum.conf</code>配置文件，修改后的内容如下：</p>
+<pre>
+server {
+	listen 443 ssl;						//监听443端口
+	server_name belldrum.com; 
+	root /home/gavin/blog;
+	index index.html;
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
+	ssl_session_timeout 5m;					//会话过期时间
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+</pre>
+<p>修改完成后保存退出，然后重启nginx服务即可通过<code>https://belldrum.com</code>访问网站了。<br>
+<br />
+此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。</p>
+<a class="post-dummy-target" id="设置跳转"></a><h2>设置跳转</h2>
+<p>我们希望当用户访问<code>http://belldrum.com</code>时能够自动跳转到<code>https://belldrum.com</code>，或者更进一步，能够同时实现<code>http://www.belldrum.com</code>和<code>https://www.belldrum.com</code>到<code>https://belldrum.com</code>的跳转。<br>
+<br />
+我们可以使用<code>rewrite</code>或者<code>301</code>重定向实现这种跳转，在这里只介绍<code>301</code>重定向的方法。<br>
+我们将<code>belldrum.conf</code>配置文件修改如下：</p>
+<pre>
+server {
+	listen 443 ssl;
+	server_name belldrum.com; 
+	root /home/gavin/blog;
+	index index.html;
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+	ssl_session_timeout 5m;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+
+server {	//设置http跳转https
+	listen 80;
+	server_name belldrum.com;
+	return 301 https://$server_name$request_uri;
+}
+
+server {	//设置www.belldrum.com跳转belldrum.com
+        listen 80;
+        listen 443 ssl;  
+        server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+        return 301 https://belldrum.com$request_uri;
+}
+
+</pre>
+<p>如果是多个域名的话，<code>server_name</code>选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。</p>
+<a class="post-dummy-target" id="使用hsts"></a><h2>使用HSTS</h2>
+<a class="post-dummy-target" id="其他设置"></a><h2>其他设置</h2></div><div class="post-footer">
+        <a href="http://belldrum.com/2020/02/0007-nginx/">阅读全文</a><div class="post-tags"><span class="tag">
+                        &nbsp;<a href="http://belldrum.com/tags/nginx/"><i class="fas fa-tag fa-fw"></i>&nbsp;nginx</a>
+                    </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="http://belldrum.com/2020/02/0005-linux-user-management/">Linux之用户管理</a>
     </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
             <i class="fas fa-user-circle fa-fw"></i>Gavin
         </a>发布于  <time datetime=2020-02-16>2020-02-16</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
@@ -595,172 +963,13 @@ gavin&#58;x:5:gavin,kavin
                         &nbsp;<a href="http://belldrum.com/tags/linux/"><i class="fas fa-tag fa-fw"></i>&nbsp;Linux</a>
                     </span></div></div>
 </article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0004-ssh-introduction/">SSH简介</a>
-    </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
-            <i class="fas fa-user-circle fa-fw"></i>Gavin
-        </a>发布于  <time datetime=2020-02-12>2020-02-12</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
-                        <a href="http://belldrum.com/categories/linux/">Linux</a></span></div><div class="post-content"><p>虽然一直在使用SSH连接服务器，但是对于SSH连接的原理却没有深究，只是大体了解是使用了非对称加密技术对传输信息进行了加密。搜资料的时候顺手翻到了一篇博文，介绍的还比较详细，特转载保存。本文转自<a href="https://fancyseeker.github.io/2013/12/30/ssh_overview/" target="_blank">链接</a>，作者是FancySeeker。<br>
-本文主要介绍了SSH的连接认证原理以及SSH的配置和使用。</p>
-<a class="post-dummy-target" id="ssh简要介绍"></a><h2>SSH简要介绍</h2>
-<p>SSH的英文全称为Secure Shell，是IETF（Internet Engineering Task Force）的Network Working Group所制定的一族协议，其目的是要在非安全网络上提供安全的远程登录和其他安全网络服务。用于在主机之间建立起安全连接, 并加密传输内容, 以达到安全的远程访问, 操作以及数据传输的目的。</p>
-<p>SSH主要有两个特点: 1. 安全性 2. 传输速度快</p>
-<p>为什么要强调SSH的安全特性, 因为传统的网络服务程序，如 FTP、POP 和 Telnet 其本质上都是不安全的；因为它们在网络上用明文传送数据、用户帐号和用户口令，很容易受到中间人（man-in-the-middle）攻击方式的攻击。就是存在另一个人或者一台机器冒充真正的服务器接收用户传给服务器的数据，然后再冒充用户把数据传给真正的服务器。 而 SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。透过 SSH 可以对所有传输的数据进行加密，也能够防止 DNS 欺骗和 IP 欺骗。</p>
-<p>SSH的传输速度快是因为SSH传输的数据都是经过压缩的, 自然传输速度快。</p>
-<a class="post-dummy-target" id="ssh认证原理"></a><h2>SSH认证原理</h2>
-<p>在介绍SSH具体的认证原理之前, 先简单的介绍下关于公钥和密钥加密的概念。所谓的公钥加密（public-key cryptography），或非对称密钥加密（asymmetric key cryptography） 是一类广泛使用的加密算法。这类算法使用一对（pair）密钥即公钥（public key）和私钥（private key）。 其中公钥可以随便分发，只用于加密（encryption），私钥则只由一人持有，只用于解密。通过公钥加密过的密文使用密钥可以轻松解密, 但根据公钥来猜测私钥却十分困难。</p>
-<p>因此, 我们可以很容易的发现这么一个事实, 一个消息在用公钥加密后, 哪怕在传输中被人截获, 如果没有私钥, 是无法解密获得其内容的, 只有拥有私钥的人才能成功解密消息。所以私钥应该由消息的接收方紧紧攥在手里, 不应让他人得知。</p>
-<p>公钥加密的关键点在于，一方面，公钥加密是可逆的，但是不能用公钥推断出私钥。显然数学上，已知一个公钥是能够算出对应私钥的，但是只要设计足够好的加密算法（以及使用足够复杂的密钥对），使得不能在可以接受的时间内破译即可。</p>
-<p>RSA是一种常见的公钥加密算法。RSA的工作原理依赖于如下事实：破译RSA私钥需要对某些极大的整数进行因数分解，而目前尚未找到快速的对极大整数作因数分解的算法。换言之，如果有人找到了这样的算法，那么全世界的 RSA 加密都会失效。</p>
-<p>RSA是由Ron Rivest，Adi Shamir, Leonard Adleman三人在1978年首次提出的。三人并因此项工作荣获了2002年Turing Award。Rivest还是算法导论的作者之一，书中在31章对RSA系统的原理进行了简要说明，系统实现中利用到了数论中的Euler-Fermat theorem。</p>
-<p>一个基于RSA的公钥大概如下</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvSkEZ0fKXRqQ/DkjCfsAETsQgV8OR/RVQmwBk/J5IWoknf8Dr
-y5kOs+1bnx9zaf8oIcVuXf0jRxTccLBOXiReFJE4aD2rWO33sqA0M4qP1ESYhsU4yokRA0IMDJ62JUv2cWVJg
-GpeQriol2t7mH8E6aB8OiJ+NgRbh6+/0LbtQs40VA2+W5PtaBwT4sjv9LOHIdzQcsEeCM8MIHqmXHst7/JuVI
-i7wLCxB7Ur8qtwZ2/Ii8Ckjfo6mikWmSh6mRMq9qn0FkMkPCcpm8o4f1zJWOuf+RnjPpopFTqIa8JssMHJMuQ
-cCm3EHDkBHjLk/SkidWOzqOtSvUeGKieWiijuw== username@localhost.localdomain
-</code></pre></td></tr></table>
-</div>
-</div><p>与之配对的私钥形如下</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">-----BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEAvSkEZ0fKXRqQ/DkjCfsAETsQgV8OR/RVQmwBk/J5IWoknf8D
-ry5kOs+1bnx9zaf8oIcVuXf0jRxTccLBOXiReFJE4aD2rWO33sqA0M4qP1ESYhsU
-4yokRA0IMDJ62JUv2cWVJgGpeQriol2t7mH8E6aB8OiJ+NgRbh6+/0LbtQs40VA2
-+W5PtaBwT4sjv9LOHIdzQcsEeCM8MIHqmXHst7/JuVIi7wLCxB7Ur8qtwZ2/Ii8C
-kjfo6mikWmSh6mRMq9qn0FkMkPCcpm8o4f1zJWOuf+RnjPpopFTqIa8JssMHJMuQ
-cCm3EHDkBHjLk/SkidWOzqOtSvUeGKieWiijuwIBIwKCAQEAjITesx9jIJdkY5go
-qFQOrbbZD6Wy1l27ra9RoRqF3k7ZX2z7bDEXQaGcuHm8iiUEzwVDVpOfuUg9/LyP
-icdHffP4p5wk9dUMPxoWjHvk3pP/BwzNsBCtOd3LkYSVxXYji9SaroTkS0nqL3jK
-WVAaV72FGVxJPINAJer0SJgQ7OJ7f0kZJYoPwG0VpMTLOsmulH7/M5e9i+kwDLmH
-+TMvJ3y8gXjc/Sj5UqN/JQIY+h07UxYGvoju/isqFHh8OmahsjJ3Nb3QsUEkC/Kj
-cKG2K+mUzTe/4/XQuqMadrjX82QF2b2gL+cdvUAwLn55boXmrtUzxEPo4xxiDNzY
-AbYxSwKBgQDxIkaa+EPSJXYej/5YzJLJLVsnb9ygqe/0fM0x022J6Z+0Yq9AIwJ7
-N7dvMgNSROLoJ17Oij/N7aoiAZy1KHg1vOoqx6T6BClay8I1+dOsbY6Fi0QbkZeI
-Rr6CDueq5PBR8j/oghNhQeFfJUEICBFU6Z7+uFwxuAtQqqdFHyDhSwKBgQDI0nX6
-Jz9oW+Y+dXAvhpL8Yln0R45ufiqatkTQgGbeZ70XlKeR7VzQiXecy/XDteJCMlnv
-4BhjHL967nSAmrCza13I3eXIYxbzypeNC57bVVXM9BBTg5f4nWwTN+I8Gd/BA5Y8
-mekQPBuSyAOp7ULAecjKZrD9Jhw1vybT/aYxUQKBgQDcdxv7ZqRoXMPEK+E7PrIX
-BOWgZkYPPEkaC7RKz+8fAXwSo15mhmirK6BlqhGqTZxB+BwqjQcirWhZmxLuxeo/
-wqo1vdiqEm7z7X5dPC8+kA1G5bqc3OJQtbV+OYNaaupZjQc6+pVgPDvEtFi24s4E
-fdMyB6S/vjY7H67gHHXVSwKBgQC3m9mUQSQHpHq8wyS9vN4olG+AQWxHw88uXYC+
-oUgbzI+gh+mp/ZawCKff0GurnvrALgkV1DON0SQYn4B1lL7P7SKLw5BCLrXmNZHg
-Cp/eeegL19RpnOK3a1t/SQlbhV7cWw0ENPJX/HD7OocBwvszoouxvPmW/kWte5E2
-</code></pre></td></tr></table>
-</div>
-</div><p>SSH 连接是<code>C/S</code>模型，客户端发出连接申请，服务器对客户端进行验证，再考虑是否接受连接申请。</p>
-<a class="post-dummy-target" id="ssh认证过程"></a><h2>SSH认证过程</h2>
-<p>SSH提供了两种认证的方式, 分别为:</p>
-<a class="post-dummy-target" id="password认证"></a><h3>Password认证</h3>
-<p>即账号口令验证，SSH的实现方式是，</p>
-<ol>
-<li>客户端向 ssh 服务器发出请求，服务器将自己的公钥返回给客户端；</li>
-<li>客户端用服务器的公钥加密自己的登录密码，再将信息发送给服务器；</li>
-<li>服务器接收到客户端传送的密码，用自己的私钥解码，如果结果正确，则同意登录，建立起连接。</li>
-</ol>
-<p>这种方式还是存在漏洞，中间人可以假扮成服务器，骗取客户端的密码。而且在每次登陆的时候都需要输入密码，所以一般不采用该验证方式。</p>
-<a class="post-dummy-target" id="public-key认证"></a><h3>Public Key认证</h3>
-<p>Public Key认证利用公钥私钥对进行认证，在请求连接时不需要输入密码，并且由于整个请求连接和通信过程全程加密，因此安全性高。<br>
-SSH协议第二版中有RSA和DSA两种算法认证，其中RSA加密验证比较常用。<br>
-RSA加密验证方式，充分利用了非对称加密体系的优势，不需要在网络传输密码，完全杜绝了中间人攻击的可能。<br>
-认证的具体步骤如下:</p>
-<ul>
-<li><strong>准备工作</strong></li>
-</ul>
-<ol>
-<li>客户端先使用 ssh-keygen 命令，生成公钥和私钥。按照默认配置，私钥会被保存在<code>~/.ssh/id_rsa</code>中，公钥则在<code>~/.ssh/id_rsa.pub</code>中。</li>
-<li>客户端通过安全的方式（一般通过scp/Secure Copy Protocol）方式或者U盘拷贝的方式)将公钥发送给服务器。在服务器端, 将客户端发的公钥写入到<code>~/.ssh/authorized_keys</code>文件末尾。（其实公钥和私钥不是必须在客户端生成, 在服务器端生成也是可以的, 在哪生成的对公钥和私钥并没有任何影响, 重要的是二者是配对的, 而准备阶段其实是要保证这么一个事实, 即服务器端握有公钥, 并在对应账户的家目录下的<code>.ssh/authorized_keys</code>文件中保存以便验证程序访问。请求端握有私钥。 至于为什么要将公钥和私钥这么分配, 接下来将会解释）</li>
-</ol>
-<ul>
-<li><strong>建立连接</strong><br>
-在建立连接的时候，涉及到2对密钥，其中一对为准备阶段产生并分配好的密钥对，另一对为服务器在接收到一个连接请求时生成的密钥对。为了讲述方便，我们将这两组密钥对表示如下<br>
-|Symbol|Description|<br>
-|:-:|:-:|<br>
-|PubC|客户端密钥对应的公钥|<br>
-|PrvC|客户端握有的私钥|<br>
-|PubS|服务器端产生的公钥|<br>
-|PrvS|服务器端产生的私钥|</li>
-</ul>
-<ol>
-<li>
-<p><strong>认证</strong></p>
-<ol>
-<li>服务器生成随机数（称之为challenge）<code>x</code>，并用<code>PubC</code>加密后生成结果<code>s(x)</code>，发送给客户端；</li>
-<li>客户端使用<code>PrvC</code>解密<code>s(x)</code>得到<code>x</code>，再将<code>x</code>用<code>PubS</code>加密发送回服务器端；</li>
-<li>服务器端使用<code>PrvS</code>解密得到<code>x</code>，进行核对, 如果正确则链接正式成立。</li>
-</ol>
-</li>
-<li>
-<p><strong>通信加密</strong><br>
-在请求连接前，服务器端和客户端拥有的密钥为<br>
-|Server|Client|<br>
-|:-:|:-:|<br>
-|PubC|PrvC|</p>
-<ol>
-<li>客户端发出申请。服务器会产生一组<code>session</code>密钥对，即<code>PubS</code>和<code>PrvS</code>。<br>
-此时服务器端和客户端拥有的密钥如下<br>
-|Server|Client|<br>
-|:-:|:-:|<br>
-|PubC|PrvC|<br>
-|PubS||<br>
-|PrvS||</li>
-<li>服务器端利用客户端的公钥<code>PubC</code>对<code>session</code>公钥<code>PubS</code>进行加密后发送给客户端；</li>
-<li>客户端用自己的密钥<code>PrvC</code>解密信息，得到<code>session</code>公钥<code>PubS</code>，此时服务器端和客户端拥有的密钥如下<br>
-|Server|Client|<br>
-|:-:|:-:|<br>
-|PubC|PubS|<br>
-|PubS|PrvC|<br>
-|PrvS||</li>
-<li>之后的数据交互，都通过对方方公钥加密，对方收到信息后，用其私钥解密，实现安全加密过程。</li>
-</ol>
-</li>
-</ol></div><div class="post-footer">
-        <a href="http://belldrum.com/2020/02/0004-ssh-introduction/">阅读全文</a><div class="post-tags"><span class="tag">
-                        &nbsp;<a href="http://belldrum.com/tags/linux/"><i class="fas fa-tag fa-fw"></i>&nbsp;Linux</a>
-                    </span></div></div>
-</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0003-ali-cloud-server/">Ali云服务器配置</a>
+        <a href="http://belldrum.com/2020/02/0003-ali-cloud-server/">Ali 云服务器配置</a>
     </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
             <i class="fas fa-user-circle fa-fw"></i>Gavin
         </a>发布于  <time datetime=0001-01-01>0001-01-01</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
-                        <a href="http://belldrum.com/categories/server/">Server</a></span></div><div class="post-content"><a class="post-dummy-target" id="阿里云ecs服务器配置"></a><h2>阿里云ECS服务器配置</h2>
-<p>趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！</p>
+                        <a href="http://belldrum.com/categories/server/">Server</a></span></div><div class="post-content"><p>趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！</p>
 <p>但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。</p>
-<a class="post-dummy-target" id="密码"></a><h3>密码</h3>
+<a class="post-dummy-target" id="密码"></a><h2>密码</h2>
 <p>管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&ldquo;woc&hellip;马什么梅来?&quot;。<br>
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。</p>
 <ul>
@@ -861,7 +1070,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 </tr>
 </tbody>
 </table>
-<a class="post-dummy-target" id="ssh连接实例"></a><h2>SSH连接实例</h2>
+<a class="post-dummy-target" id="ssh连接"></a><h2>SSH连接</h2>
 <p>Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。<br>
 SSH不是本文介绍的重点，详细请看这篇<a href="daibuchong">文章</a>，本文主要介绍阿里云SSH配置。</p>
 <a class="post-dummy-target" id="root用户"></a><h3>Root用户</h3>
@@ -875,8 +1084,8 @@ SSH不是本文介绍的重点，详细请看这篇<a href="daibuchong">文章</
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。</li>
 <li>基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。</li>
 </ul>
-<a class="post-dummy-target" id="安全优化"></a><h3>安全优化</h3>
-<a class="post-dummy-target" id="修改22端口"></a><h4>修改22端口</h4>
+<a class="post-dummy-target" id="安全优化"></a><h2>安全优化</h2>
+<a class="post-dummy-target" id="修改22端口"></a><h3>修改22端口</h3>
 <p>Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。<br>
 <ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是<code>/etc/ssh/sshd_config</code>。<br>
 修改之前我们先备份配置文件，然后再进行编辑：</p>
@@ -940,9 +1149,9 @@ vim /etc/ssh/sshd_config
 <p>配置完成后，记得在防火墙和安全组中放行<code>2222</code>端口，然后用新端口重新登录。<br>
 如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的<code>22</code>端口了。</p>
 <p>需要注意的是，在<code>/etc/ssh/</code>目录下还有一个<code>ssh_config</code>文件，它是<code>ssh</code>的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了<code>ssh</code>的配置文件。</p>
-<a class="post-dummy-target" id="ssh禁止root登录"></a><h4>SSH禁止root登录</h4>
-<a class="post-dummy-target" id="ssh密钥登录"></a><h4>SSH密钥登录</h4>
-<a class="post-dummy-target" id="ufw防火墙"></a><h4>UFW防火墙</h4>
+<a class="post-dummy-target" id="ssh禁止root登录"></a><h3>SSH禁止root登录</h3>
+<a class="post-dummy-target" id="ssh密钥登录"></a><h3>SSH密钥登录</h3>
+<a class="post-dummy-target" id="ufw防火墙"></a><h3>UFW防火墙</h3>
 <p><strong>特别提醒</strong><br>
 <u>远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
 <br />
@@ -1006,118 +1215,26 @@ ufw allow <span class="m">80</span>
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw status
 </code></pre></td></tr></table>
 </div>
-</div><ul>
-<li><i class="far fa-check-square fa-fw"></i>禁止root用户登录</li>
-<li><i class="far fa-check-square fa-fw"></i>禁止使用口令验证</li>
-</ul></div><div class="post-footer">
+</div></div><div class="post-footer">
         <a href="http://belldrum.com/2020/02/0003-ali-cloud-server/">阅读全文</a><div class="post-tags"><span class="tag">
                         &nbsp;<a href="http://belldrum.com/tags/server/"><i class="fas fa-tag fa-fw"></i>&nbsp;Server</a>
                     </span><span class="tag">
                         &nbsp;<a href="http://belldrum.com/tags/ubuntu/"><i class="fas fa-tag fa-fw"></i>&nbsp;Ubuntu</a>
                     </span></div></div>
 </article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0002-hugo-concise-tutorial2/">Hugo简明教程2</a>
-    </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
-            <i class="fas fa-user-circle fa-fw"></i>Gavin
-        </a>发布于  <time datetime=2020-02-04>2020-02-04</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
-                        <a href="http://belldrum.com/categories/hugo/">Hugo</a></span></div><div class="post-content"><p>在上篇文章中，我们介绍了如何使用预创建的主题快速生成自己的静态网页并利用Github免费托管。</p>
-<p>但是使用预创建的主题怎么能满足我们的需求，作为一个geek我们要的是随心所欲为所欲为！</p>
-<p>接下来的教程就让我们从零开始，学习如何撸出一款高度定制化的Hugo主题吧！</p>
-<a class="post-dummy-target" id="content-management"></a><h2>Content Management</h2>
-<a class="post-dummy-target" id="basic-concepts"></a><h3>Basic Concepts</h3>
-<ul>
-<li>
-<p>Content<br>
-内容就是我们自己以markdown格式撰写的文章，通常我们把单独的文章放到content目录下，将同一类型的文章放到content的子目录下。<br>
-文章可以通过命令行，如<code>hugo new about.md</code>生成，也可以手动创建后放入content目录下。</p>
-</li>
-<li>
-<p>Template<br>
-模板保存在两个地方，分别为<code>site/layouts</code>目录中和<code>site/themes/themename/layouts</code>目录中，其中前者的优先级高于后者，当前者为空时才去寻找后一个目录下的设置。<br>
-模板主要分为以下几种，分别为基础模板（），单页模板（），列表模板（），局部模板（），首页模板以及404页面模板。</p>
-</li>
-<li>
-<p>Static Page<br>
-Static Page = Content + Template<br>
-页面是通过<code>hugo</code>命令生成的静态网站中的html页面。Hugo会根据文章的kind属性和固定的规则去找到相应的模板，然后根据模板生成最终的html页面。<br>
-最终我们自己创建的文章和Hugo自动创建的文件的路径会转换成对应的网站的url，文章、页面和url的对应关系为：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">└── content
-    ├── _index.md          // [home]            &lt;- https://example.com/**
-    ├── about.md           // [page]            &lt;- https://example.com/about/
-    ├── posts               
-    |   ├── _index.md      // [section]         &lt;- https://example.com/posts/**         
-    |   ├── firstpost.md   // [page]            &lt;- https://example.com/posts/firstpost/
-    |   ├── happy           
-    |   |   ├── _index.md  // [section]         &lt;- https://example.com/posts/happy/**
-    |   |   └── ness.md    // [page]            &lt;- https://example.com/posts/happy/ness/
-    |   └── secondpost.md  // [page]            &lt;- https://example.com/posts/secondpost/
-    └── quote   
-        ├── _index.md      // [section]         &lt;- https://example.com/quote/**           
-        ├── first.md       // [page]            &lt;- https://example.com/quote/first/
-        └── second.md      // [page]            &lt;- https://example.com/quote/second/
-// hugo默认生成的页面, 没有对应的markdown文章
-分类列表页面               // [taxonomyTerm]    &lt;- https://example.com/categories/**
-某个分类下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/categories/one-category **
-标签列表页面               // [taxonomyTerm]    &lt;- https://example.com/tags/**
-某个标签下的所有文章的列表  // [taxonomy]        &lt;- https://example.com/tags/one-tag **
-</code></pre></td></tr></table>
-</div>
-</div><p><strong><em><small>注意：_index.md不是必须的, 如果没有找到_index.md，hugo会使用一些默认值。</small></em></strong><br>
-页面总体分为两种，分别为<code>单页(signle page)</code>和<code>列表页(list page)</code>，根据<code>[]</code>中标注的页面<code>属性(kind)</code>，<code>single</code>包括<code>page</code>，<code>list</code>包括<code>home</code>, <code>section</code>, <code>taxonomyTerm</code>和<code>taxonomy</code>。其中，单页为用户撰写的文章，列表为Hugo自动创建的文件。</p>
-</li>
-</ul>
-<p>LoveIt模板：<br>
-_default/<br>
-home page - baseof.html + summary.html<br>
-posts - baseof.html + section.html<br>
-post - baseof.html + patrial/<br>
-about - baseof.html + single.html</p>
-<p>posts/<br>
-single.html</p>
-<p>在编写模板的时候，一般会先编写一个基础模板。然后将一些常用的公用模板，如导航栏、页首、页脚等，做成单独的子模板，在需要的时候将这些子模板导入基础模板。<br>
-Hugo默认的基础模板页是<code>_default/baseof.html</code>。</p></div><div class="post-footer">
-        <a href="http://belldrum.com/2020/02/0002-hugo-concise-tutorial2/">阅读全文</a><div class="post-tags"><span class="tag">
-                        &nbsp;<a href="http://belldrum.com/tags/hugo/"><i class="fas fa-tag fa-fw"></i>&nbsp;Hugo</a>
-                    </span><span class="tag">
-                        &nbsp;<a href="http://belldrum.com/tags/tutorial/"><i class="fas fa-tag fa-fw"></i>&nbsp;Tutorial</a>
-                    </span></div></div>
-</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
-        <a href="http://belldrum.com/2020/02/0001-hugo-concise-tutorial/">Hugo简明教程1</a>
+        <a href="http://belldrum.com/2020/02/0001-hugo-concise-tutorial/">Hugo&#43;Github=?</a>
     </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
             <i class="fas fa-user-circle fa-fw"></i>GUO Chen
         </a>发布于  <time datetime=2020-02-03>2020-02-03</time>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i>
-                        <a href="http://belldrum.com/categories/hugo/">Hugo</a></span></div><div class="post-content"><p>Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。</p>
+                        <a href="http://belldrum.com/categories/server/">Server</a></span></div><div class="post-content"><p>Hugo是由GO语言实现的静态网站生成器，自称“The world&rsquo;s fastest framework for building websites”。</p>
 <p>静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。<br>
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。</p>
-<a class="post-dummy-target" id="step-1-install-hugo-for-win"></a><h2>Step 1: Install Hugo for Win</h2>
+<a class="post-dummy-target" id="step-1-install-hugo"></a><h2>Step 1: Install Hugo</h2>
 <p>在release<a href="https://github.com/gohugoio/hugo/releases" target="_blank"><u>下载</u></a> 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。</p>
 <p>添加成功后，在cmd中输入<code>hugo version</code>检查是否安装成功，如果安装成功会输出<br>
 <code>Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z</code>。</p>
 <p>我们也可以通过执行<code>hugo -help</code>查看命令帮助。</p>
-<a class="post-dummy-target" id="step-2-create-a-new-site"></a><h2>Step 2: Create a New Site</h2>
+<a class="post-dummy-target" id="step-2-create-a-site"></a><h2>Step 2: Create a Site</h2>
 <p>创建一个新的hugo站点：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1210,7 +1327,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 </div>
 </div><p>或直接用文本编辑器打开config.toml修改相应的配置。</p>
 <p>一个快速简便的配置方法是用<code>themes/loveit/exampleSite</code>下的<code>config.toml</code>替换<code>/site</code>站点目录下默认生成的<code>config.tmol</code>。</p>
-<a class="post-dummy-target" id="step-4-add-some-content"></a><h2>Step 4: Add Some Content</h2>
+<a class="post-dummy-target" id="step-4-add-content"></a><h2>Step 4: Add Content</h2>
 <p>我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1221,7 +1338,7 @@ git clone https://github.com/xx/xx.git themes/LoveIt
 </code></pre></td></tr></table>
 </div>
 </div><p>在<code>content/posts</code>目录中会生成一篇名为<code>my-first-post.md</code>的文章草稿，并自动添加<code>archetypes/default.md</code>中的内容。</p>
-<a class="post-dummy-target" id="step-5-hosting-hugo-site-locally"></a><h2>Step 5: Hosting Hugo Site Locally</h2>
+<a class="post-dummy-target" id="step-5-hosting-site-locally"></a><h2>Step 5: Hosting Site Locally</h2>
 <p>在站点目录下执行：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1275,6 +1392,13 @@ git push origin master
                     </span><span class="tag">
                         &nbsp;<a href="http://belldrum.com/tags/tutorial/"><i class="fas fa-tag fa-fw"></i>&nbsp;Tutorial</a>
                     </span></div></div>
+</article><article class="post" itemscope itemtype="http://schema.org/Article"><h1 class="post-title post-list-title" itemprop="name headline">
+        <a href="http://belldrum.com/2019/12/0000-foreword/">未至之事，皆为惊喜</a>
+    </h1><div class="post-meta"><a class="author" href="http://belldrum.com/" rel="author" target="_blank">
+            <i class="fas fa-user-circle fa-fw"></i>Gavin
+        </a>发布于  <time datetime=2019-12-31>2019-12-31</time>&nbsp;</div><div class="post-content"><p>未至之事，皆为惊喜。</p>
+<p>Hello, world.</p></div><div class="post-footer">
+        <a href="http://belldrum.com/2019/12/0000-foreword/">阅读全文</a></div>
 </article></div></div>
             </main><footer class="footer">
     <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="http://belldrum.com/" target="_blank">Gavin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>

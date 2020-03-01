@@ -1,4 +1,4 @@
-# Hugo简明教程1
+# Hugo+Github=?
 
   
 Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。
@@ -6,7 +6,7 @@ Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest 
 静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
 本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。  
 
-## Step 1: Install Hugo for Win  
+## Step 1: Install Hugo  
 在release[<u>下载</u>](https://github.com/gohugoio/hugo/releases) 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。  
 
 添加成功后，在cmd中输入`hugo version`检查是否安装成功，如果安装成功会输出  
@@ -14,7 +14,7 @@ Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest 
   
 我们也可以通过执行`hugo -help`查看命令帮助。  
 
-## Step 2: Create a New Site
+## Step 2: Create a Site
 创建一个新的hugo站点：  
 
 ```bash
@@ -81,14 +81,14 @@ echo 'theme = "LoveIt"' >> config.toml
   
 一个快速简便的配置方法是用`themes/loveit/exampleSite`下的`config.toml`替换`/site`站点目录下默认生成的`config.tmol`。  
 
-## Step 4: Add Some Content
+## Step 4: Add Content
 我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：  
 ```bash
 hugo new posts/my-first-post.md
 ```  
 在`content/posts`目录中会生成一篇名为`my-first-post.md`的文章草稿，并自动添加`archetypes/default.md`中的内容。    
 
-## Step 5: Hosting Hugo Site Locally  
+## Step 5: Hosting Site Locally  
 在站点目录下执行：  
 ```bash
 hugo server

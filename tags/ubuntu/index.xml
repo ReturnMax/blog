@@ -13,15 +13,14 @@
     
     
     <item>
-      <title>Ali云服务器配置</title>
+      <title>Ali 云服务器配置</title>
       <link>http://belldrum.com/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
       <guid>http://belldrum.com/2020/02/0003-ali-cloud-server/</guid>
-      <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
-&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
+      <description>&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
-&lt;h3 id=&#34;密码&#34;&gt;密码&lt;/h3&gt;
+&lt;h2 id=&#34;密码&#34;&gt;密码&lt;/h2&gt;
 &lt;p&gt;管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&amp;ldquo;woc&amp;hellip;马什么梅来?&amp;quot;。&lt;br&gt;
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。&lt;/p&gt;
 &lt;ul&gt;
@@ -122,7 +121,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;ssh连接实例&#34;&gt;SSH连接实例&lt;/h2&gt;
+&lt;h2 id=&#34;ssh连接&#34;&gt;SSH连接&lt;/h2&gt;
 &lt;p&gt;Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。&lt;br&gt;
 SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#34;&gt;文章&lt;/a&gt;，本文主要介绍阿里云SSH配置。&lt;/p&gt;
 &lt;h3 id=&#34;root用户&#34;&gt;Root用户&lt;/h3&gt;
@@ -136,8 +135,8 @@ SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#3
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。&lt;/li&gt;
 &lt;li&gt;基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;安全优化&#34;&gt;安全优化&lt;/h3&gt;
-&lt;h4 id=&#34;修改22端口&#34;&gt;修改22端口&lt;/h4&gt;
+&lt;h2 id=&#34;安全优化&#34;&gt;安全优化&lt;/h2&gt;
+&lt;h3 id=&#34;修改22端口&#34;&gt;修改22端口&lt;/h3&gt;
 &lt;p&gt;Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。&lt;br&gt;
 &lt;ruby&gt;&lt;rb&gt;SSH服务&lt;/rb&gt;&lt;rt&gt;ssh daemon&lt;/rt&gt;&lt;/ruby&gt;是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;。&lt;br&gt;
 修改之前我们先备份配置文件，然后再进行编辑：&lt;/p&gt;
@@ -201,9 +200,9 @@ vim /etc/ssh/sshd_config
 &lt;p&gt;配置完成后，记得在防火墙和安全组中放行&lt;code&gt;2222&lt;/code&gt;端口，然后用新端口重新登录。&lt;br&gt;
 如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的&lt;code&gt;22&lt;/code&gt;端口了。&lt;/p&gt;
 &lt;p&gt;需要注意的是，在&lt;code&gt;/etc/ssh/&lt;/code&gt;目录下还有一个&lt;code&gt;ssh_config&lt;/code&gt;文件，它是&lt;code&gt;ssh&lt;/code&gt;的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了&lt;code&gt;ssh&lt;/code&gt;的配置文件。&lt;/p&gt;
-&lt;h4 id=&#34;ssh禁止root登录&#34;&gt;SSH禁止root登录&lt;/h4&gt;
-&lt;h4 id=&#34;ssh密钥登录&#34;&gt;SSH密钥登录&lt;/h4&gt;
-&lt;h4 id=&#34;ufw防火墙&#34;&gt;UFW防火墙&lt;/h4&gt;
+&lt;h3 id=&#34;ssh禁止root登录&#34;&gt;SSH禁止root登录&lt;/h3&gt;
+&lt;h3 id=&#34;ssh密钥登录&#34;&gt;SSH密钥登录&lt;/h3&gt;
+&lt;h3 id=&#34;ufw防火墙&#34;&gt;UFW防火墙&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;特别提醒&lt;/strong&gt;&lt;br&gt;
 &lt;u&gt;远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上&lt;/u&gt;&lt;br&gt;
 &lt;br /&gt;
@@ -267,10 +266,7 @@ ufw allow &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ufw status
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;禁止root用户登录&lt;/li&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;禁止使用口令验证&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;/div&gt;</description>
     </item>
     
   </channel>

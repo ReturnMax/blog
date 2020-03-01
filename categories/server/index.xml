@@ -1,27 +1,439 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Server on 晨钟暮鼓</title>
+    <title>server on 晨钟暮鼓</title>
     <link>http://belldrum.com/categories/server/</link>
-    <description>Recent content in Server on 晨钟暮鼓</description>
+    <description>Recent content in server on 晨钟暮鼓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 12 Feb 2020 19:48:57 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 28 Feb 2020 00:25:28 +0800</lastBuildDate>
     
 	<atom:link href="http://belldrum.com/categories/server/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Ali云服务器配置</title>
+      <title>SSH 原理 &amp; 实践</title>
+      <link>http://belldrum.com/2020/02/0009-ssh-intro2/</link>
+      <pubDate>Fri, 28 Feb 2020 00:25:28 +0800</pubDate>
+      
+      <guid>http://belldrum.com/2020/02/0009-ssh-intro2/</guid>
+      <description>&lt;p&gt;本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章&lt;a href=&#34;https://www.cnblogs.com/f-ck-need-u/p/7129122.html&#34; target=&#34;_blank&#34;&gt;SSH系列&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。&lt;br&gt;
+&lt;br /&gt;
+OpenSSH套件主要包含以下几种工具：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;服务器端由SSH服务(sshd)、sftp-server和ssh-agent组成&lt;/li&gt;
+&lt;li&gt;客户端使用ssh-keygen、ssh-add、ssh-kyesign、ssh-keyscan等管理密钥&lt;/li&gt;
+&lt;li&gt;远程操作使用ssh、scp和sftp完成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;认证过程&#34;&gt;认证过程&lt;/h2&gt;
+&lt;p&gt;SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在客户端进行服务器验证&lt;/li&gt;
+&lt;li&gt;生成会话密钥(session key)加密所有通信&lt;/li&gt;
+&lt;li&gt;客户认证&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;服务器验证&#34;&gt;服务器验证&lt;/h3&gt;
+&lt;p&gt;首先客户端向服务器发送连接请求，服务器端的SSH服务(sshd)默认监听22端口的SSH连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 首次连接&lt;/strong&gt;&lt;br&gt;
+如果客户端是第一次连接服务器，则要求客户端通过验证服务器的公钥来手动认证服务器。服务器的公钥一般保存在&lt;code&gt;/etc/ssh/host_key*&lt;/code&gt;，也可以使用ssh-keyscan命令找到。一旦服务器密钥被接受，那么将会被添加到客户端&lt;code&gt;~/.ssh/know_hosts&lt;/code&gt;文件中。&lt;code&gt; known_hosts&lt;/code&gt;文件包含有关客户端所有已验证服务器的信息。&lt;br&gt;
+&lt;strong&gt;2. 再次连接&lt;/strong&gt;&lt;br&gt;
+如果客户端不是第一次访问要连接的服务器，则将服务器的身份与&lt;code&gt;known_hosts&lt;/code&gt;文件中先前记录的信息进行匹配以进行验证。&lt;/p&gt;
+&lt;p&gt;我们可以发现，服务器身份需要用户手动进行验证，这样做的目的是为了防止中间人攻击(Man-in-the-middle attack, MITM)。&lt;/p&gt;
+&lt;h3 id=&#34;生成会话密钥&#34;&gt;生成会话密钥&lt;/h3&gt;
+&lt;p&gt;验证服务器后，服务器端和客户端使用&lt;code&gt;Diffie-Hellman&lt;/code&gt;算法生成会话密钥(session key)。 该算法的设计方式是，双方在会话密钥的生成中会做出同等贡献。 生成的会话密钥是在客户端和服务器端共享的对称密钥，即双方使用相同的密钥加密和解密。&lt;/p&gt;
+&lt;h3 id=&#34;客户端认证&#34;&gt;客户端认证&lt;/h3&gt;
+&lt;p&gt;最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，如下所示：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端首先向服务器发送要验证的密钥对的ID。&lt;/li&gt;
+&lt;li&gt;服务器检查客户端尝试登录的帐户的authorized_keys文件中的密钥ID。&lt;/li&gt;
+&lt;li&gt;如果在文件中找到匹配该ID的公钥，那么服务器将生成一个随机数，然后使用客户端公钥对随机数进行加密并将加密的消息发送给客户端。&lt;/li&gt;
+&lt;li&gt;如果客户端拥有正确的私钥，它将解密该消息以获得服务器生成的随机数。&lt;/li&gt;
+&lt;li&gt;客户端将获得的随机数与共享的会话密钥结合在一起，并计算该值的MD5哈希值。&lt;/li&gt;
+&lt;li&gt;然后，客户端将此MD5哈希发送回服务器，作为对加密号码消息的答复。&lt;/li&gt;
+&lt;li&gt;服务器使用相同的共享会话密钥和发送给客户端的原始号码自行计算MD5值。它将自己的计算结果与客户端发回的计算结果进行比较。如果这两个值匹配，则证明该客户端拥有私钥，并且该客户端已通过身份验证。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;不对称密钥允许服务器对客户端进行身份验证，因为客户端只有在拥有正确的关联私钥的情况下才能解密消息。&lt;br&gt;
+此外，SSH支持多种身份验证机制，最常见的是&lt;strong&gt;密码认证&lt;/strong&gt;和&lt;strong&gt;公钥认证&lt;/strong&gt;。上文只说明了公钥认证过程，当公钥认证未通过时，会再进行密码认证，此处不再赘述。&lt;/p&gt;
+&lt;h2 id=&#34;对称加密&#34;&gt;对称加密&lt;/h2&gt;
+&lt;p&gt;我们在前文中介绍过，SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。&lt;br&gt;
+大部分教程对非对称密钥的作用有详细的介绍，但在对称密钥介绍时往往语焉不详，造成很多人的误解。本节主要是希望大家了解一点，&lt;strong&gt;SSH使用对称密钥来加密整个连接，非对称密钥仅用于身份验证&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;对称加密是一种加密类型，使用同一个密钥加密发给对方的消息、解密从另一方收到的消息。这意味着拥有密钥的任何人都可以加密和解密发送给拥有密钥的其他人的消息。这种加密模式通常称为“shared secret”加密或“secret key”加密。通常，只有一个密钥用于所有操作，或者只有一对密钥，它们之间的关系很容易发现，或者很容易根据一个密钥推导出另一个密钥。&lt;/p&gt;
+&lt;p&gt;SSH使用对称密钥来加密整个连接。与一些人的假设相反，我们创建的公有/私有非对称密钥对仅用于身份验证，而不用于加密连接。对称加密甚至可以保护密码验证免遭监听。&lt;/p&gt;
+&lt;p&gt;客户端和服务端为生成对称密钥做出了同等的贡献，并且最终生成的密钥永远不会为外界所知。这个密钥是通过密钥交换算法创建的，这种算法允许服务器和客户端共享某些公共数据，然后使用各自保留的秘密数据进行处理，最终两者独立地到达相同的目的：生成同一密钥。更详细地说明可参考这篇&lt;a href=&#34;https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process&#34; target=&#34;_blank&#34;&gt;文章&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;通过此过程创建的对称加密密钥是基于会话的(session-bassed)，并且构成了服务器与客户端之间发送的数据的实际加密。一旦建立，必须使用此共享密钥对其余数据进行加密。这个阶段完成之后，服务端和客户端的加密会话就被建立了，然后开始进行客户端的验证。&lt;/p&gt;
+&lt;p&gt;SSH可以使用多种对称密码系统，包括AES，Blowfish，3DES，CAST128和Arcfour等。服务器和客户端都可以决定其支持的密码列表，按优先顺序排序。最终两者进行协商，客户端列表中的第一个在服务器上可用的选项将被用作两个方向上的加密算法。&lt;/p&gt;
+&lt;h2 id=&#34;文件介绍&#34;&gt;文件介绍&lt;/h2&gt;
+&lt;p&gt;SSH密钥验证过程涉及客户端和服务器端的多个文件，为了避免混淆，我们来总结一下各个文件的作用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;服务端：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;&lt;br&gt;
+ssh服务程序(sshd)的配置文件&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;etc/ssh/ssh_host_*&lt;/code&gt;&lt;br&gt;
+ssh服务程序(sshd)启动时自动生成的服务端公钥和私钥文件，也可以通过&lt;code&gt;dpkg-reconfigure openssh-server&lt;/code&gt;命令重新生成。共有八个文件，包括四种加密类型：&lt;code&gt;rsa&lt;/code&gt;、&lt;code&gt;dsa&lt;/code&gt;、&lt;code&gt;ecdsa&lt;/code&gt;和&lt;code&gt;ed25519&lt;/code&gt;（实际使用时服务器会选择其中一种加密类型）。其中&lt;code&gt;.pub&lt;/code&gt;结尾的是公钥，将写入到客户端的&lt;code&gt;~/.ssh/known_hosts&lt;/code&gt;文件中，用于验证服务器身份。&lt;br&gt;
+其中私钥文件严格要求权限为600，若不是则sshd服务可能会拒绝启动。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt;&lt;br&gt;
+保存的是基于公钥认证机制时客户端用户的公钥。在进行客户端认证时，服务端将读取对应用户目录下的&lt;code&gt;authorized_keys&lt;/code&gt;文件。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;客户端：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/ssh/ssh_config&lt;/code&gt;&lt;br&gt;
+客户端的全局配置文件。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;br&gt;
+客户端的用户配置文件，生效优先级高于全局配置文件。一般该文件默认不存在，可自行创建。该文件对权限有严格要求，只对所有者有读/写权限，对其他人完全拒绝写权限。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/known_hosts&lt;/code&gt;&lt;br&gt;
+保存服务器验证时服务端&lt;code&gt;host key&lt;/code&gt;的文件，文件内容来源于服务端的&lt;code&gt;ssh_host_*_key.pub&lt;/code&gt;文件。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/ssh/known_hosts&lt;/code&gt;&lt;br&gt;
+全局&lt;code&gt;host key&lt;/code&gt;保存文件，作用等同于&lt;code&gt;~/.ssh/known_hosts&lt;/code&gt;。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/id_rsa&lt;/code&gt;&lt;br&gt;
+客户端生成的私钥。由ssh-keygen生成。该文件严格要求权限，文件权限不得大于&lt;code&gt;711&lt;/code&gt;，一般设置为&lt;code&gt;600&lt;/code&gt;。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;&lt;br&gt;
+私钥&lt;code&gt;id_rsa&lt;/code&gt;的配对公钥。对权限不敏感。当采用公钥认证机制时，该文件内容需要提前复制到服务端的&lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt;文件中。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.ssh/rc&lt;/code&gt;&lt;br&gt;
+保存的是命令列表，这些命令在ssh连接到远程主机成功时将第一时间执行，执行完这些命令之后才开始登陆或执行ssh命令行中的命令。&lt;br&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/ssh/rc&lt;/code&gt;&lt;br&gt;
+作用等同于&lt;code&gt;~/.ssh/rc&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;&lt;br&gt;
+配置文件主要包括服务端配置文件&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;和客户端配置文件&lt;code&gt;/etc/ssh/ssh_config&lt;/code&gt;。这两个文件中有很多同名的配置项，但前者是sshd启动时开关性的设置，后者是请求连接时客户端采取的配置。例如，两配置文件都有GSSAPIAuthentication项，在客户端将其设置为no，表示连接时将直接跳过该身份验证机制，而在服务端设置为no则表示sshd启动时不开启GSSAPI身份验证的机制。即使客户端使用了GSSAPI认证机制，只要服务端没有开启，就绝对不可能认证通过。&lt;/p&gt;
+&lt;h2 id=&#34;认证实现&#34;&gt;认证实现&lt;/h2&gt;
+&lt;p&gt;前文介绍了公钥认证的过程以及涉及到的文件，接下来主要介绍公钥认证的具体实现步骤。&lt;br&gt;
+公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发密钥对。&lt;/p&gt;
+&lt;h3 id=&#34;生成密钥对&#34;&gt;生成密钥对&lt;/h3&gt;
+&lt;p&gt;OpenSSH提供了密钥生成工具ssh-keygen。我们在客户端（服务端也行，无所谓在哪生成）执行&lt;code&gt;ssh-keygen&lt;/code&gt;指令会出现如下提示：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ssh-keygen -t rsa 	&lt;span class=&#34;c1&#34;&gt;#-t参数指定算法，通常使用rsa或dsa&lt;/span&gt;
+Generating public/private rsa key pair.
+Enter file in which to save the key &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;/root/.ssh/id_rsa&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;:  &lt;span class=&#34;c1&#34;&gt;# 输入密钥对保存路径，与-f参数作用相同&lt;/span&gt;
+Enter passphrase &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;empty &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; no passphrase&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;:               &lt;span class=&#34;c1&#34;&gt;# 输入私钥密码，可留空，与-P参数作用相同&lt;/span&gt;
+Enter same passphrase again:            
+Your identification has been saved in /root/.ssh/id_rsa. 
+Your public key has been saved in /root/.ssh/id_rsa.pub. 
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如不指定保存路径，那么生成的密钥对默认保存在&lt;code&gt;~/.ssh/&lt;/code&gt;目录下。其中，私钥的权限设置为&lt;code&gt;600&lt;/code&gt;，如果权限过大会导致公钥认证失败。&lt;/p&gt;
+&lt;h3 id=&#34;分发公钥&#34;&gt;分发公钥&lt;/h3&gt;
+&lt;p&gt;密钥生成后，我们要将公钥发送到远程服务器对应用户的家目录下，可以使用&lt;code&gt;ssh-copy-id&lt;/code&gt;命令实现，语法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ssh-copy-id &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-i &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;identity_file&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;user@&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;host
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;-i 指定要分发的公钥文件&lt;/li&gt;
+&lt;li&gt;user 指定对应的用户名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;举个例子，我们将公钥分发到服务器&lt;code&gt;114.55.93.224&lt;/code&gt;上的&lt;code&gt;gavin&lt;/code&gt;用户家目录下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ssh-copy-id -i .ssh/id_rsa.pub gavin@114.55.93.224
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;而如果ssh服务端的端口不是22，还需要给&lt;code&gt;ssh-copy-id&lt;/code&gt;传递端口号，格式为&lt;code&gt;&amp;quot;-p port_num [user@]hostname&amp;quot;&lt;/code&gt;，如 &lt;code&gt;&amp;quot;-p 2222 gavin@114.55.93.224&amp;quot;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh-copy-id&lt;/code&gt;命令的作用是在目标主机的指定用户的家目录下，检测是否有&lt;code&gt;~/.ssh&lt;/code&gt;目录，如果没有，则以700权限创建该目录，然后将本地的公钥追加到目标主机指定用户家目录下的&lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt;文件中。&lt;code&gt;authorized_keys&lt;/code&gt;文件可以保存多个公钥信息，每个公钥以换行分开。&lt;br&gt;
+&lt;br /&gt;
+因此，我们也可以直接将公钥文件传输到服务器上，然后手动将公钥追加到对应用户家目录下的&lt;code&gt;.ssh/authorized_keys&lt;/code&gt;文件中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat id_rsa &amp;gt;&amp;gt; authorized_keys
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;公钥分发完成后，我们就可以远程连接服务器了。&lt;/p&gt;
+&lt;h2 id=&#34;最佳实践&#34;&gt;最佳实践&lt;/h2&gt;
+&lt;h3 id=&#34;更改默认端口&#34;&gt;更改默认端口&lt;/h3&gt;
+&lt;p&gt;Linux默认使用22端口进行远程登录，一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，通过更改22端口可以过滤掉大部分暴力破解的访问。&lt;br&gt;
+&lt;ruby&gt;&lt;rb&gt;SSH服务&lt;/rb&gt;&lt;rt&gt;ssh daemon&lt;/rt&gt;&lt;/ruby&gt;是OpenSSH软件套件中运行在服务器端的守护进程，它的配置文件是&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;，在配置文件中可以修改守护进程监听的端口。&lt;/p&gt;
+&lt;p&gt;在修改之前我们先对配置文件进行备份，然后用文本编辑工具打开：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+vim /etc/ssh/sshd_config
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;打开后可以看到如下内容：&lt;/p&gt;
+&lt;pre&gt;
+	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
+
+	# This is the sshd server system-wide configuration file.  See
+	# sshd_config(5) for more information.
+
+	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+	# The strategy used for options in the default sshd_config shipped with
+	# OpenSSH is to specify options with their default value where
+	# possible, but leave them commented.  Uncommented options override the
+	# default value.
+
+	#Port 22
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+&lt;/pre&gt;
+&lt;p&gt;其中22端口被注释掉了。&lt;br&gt;
+为了防止后续端口修改错误导致无法登录，我们先删除&lt;code&gt;#&lt;/code&gt;保留&lt;code&gt;Port 22&lt;/code&gt;端口，然后另起一行添加&lt;code&gt;Port 2222&lt;/code&gt;，修改后的文件如下：&lt;/p&gt;
+&lt;pre&gt;
+	Port 22
+	Port 2222
+	#AddressFamily any
+	#ListenAddress 0.0.0.0
+	#ListenAddress ::
+&lt;/pre&gt;
+&lt;p&gt;修改完成后我们保存退出，重启sshd服务使配置生效：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;systemctl restart sshd
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;或&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;service sshd restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重启完成后，我们可以通过&lt;code&gt;netstat -ntl&lt;/code&gt;或&lt;code&gt;ss -ntl&lt;/code&gt;命令查看一下端口。&lt;/p&gt;
+&lt;p&gt;配置完成后，记得在防火墙和安全组中放行&lt;code&gt;2222&lt;/code&gt;端口，然后用新端口重新登录。&lt;br&gt;
+如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的&lt;code&gt;22&lt;/code&gt;端口了。&lt;/p&gt;
+&lt;h3 id=&#34;禁止root登录&#34;&gt;禁止root登录&lt;/h3&gt;
+&lt;p&gt;修改&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;文件：&lt;/p&gt;
+&lt;pre&gt;
+PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+&lt;/pre&gt;
+&lt;h3 id=&#34;禁止口令登录&#34;&gt;禁止口令登录&lt;/h3&gt;
+&lt;p&gt;修改&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;文件：&lt;/p&gt;
+&lt;pre&gt;
+PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+&lt;/pre&gt;
+&lt;h3 id=&#34;待补充&#34;&gt;待补充&lt;/h3&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process&#34; target=&#34;_blank&#34;&gt;Understanding the SSH Encryption and Connection Process&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@Magical_Mudit/understanding-ssh-workflow-66a0e8d4bf65&#34; target=&#34;_blank&#34;&gt;Understanding SSH workflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/f-ck-need-u/p/7129122.html&#34; target=&#34;_blank&#34;&gt;SSH命令和SSH服务详解&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Nginx之配置介绍</title>
+      <link>http://belldrum.com/2020/02/0007-nginx/</link>
+      <pubDate>Fri, 21 Feb 2020 23:25:34 +0800</pubDate>
+      
+      <guid>http://belldrum.com/2020/02/0007-nginx/</guid>
+      <description>&lt;p&gt;Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。&lt;/p&gt;
+&lt;p&gt;说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。&lt;/p&gt;
+&lt;p&gt;本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。&lt;/p&gt;
+&lt;h2 id=&#34;软件安装&#34;&gt;软件安装&lt;/h2&gt;
+&lt;p&gt;在Debian下可以使用&lt;code&gt;apt-get&lt;/code&gt;安装nginx：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;apt-get install nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;默认安装位置在&lt;code&gt;/etc/nginx&lt;/code&gt;。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。&lt;br&gt;
+&lt;br /&gt;
+我们通过&lt;code&gt;ps -aux&lt;/code&gt;命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。&lt;br&gt;
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU个数相关（有利于进程切换），配置几个就有几个Worker进程。&lt;/p&gt;
+&lt;p&gt;如果nginx没有启动，我们可以执行&lt;code&gt;nginx&lt;/code&gt;命令手动启动。&lt;/p&gt;
+&lt;p&gt;安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。&lt;br&gt;
+接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。&lt;/p&gt;
+&lt;h2 id=&#34;配置文件&#34;&gt;配置文件&lt;/h2&gt;
+&lt;p&gt;默认情况下，nginx的配置文件是&lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt;。配置文件里大部分内容是注释掉的，文件内容如下：&lt;/p&gt;
+&lt;pre&gt;
+user www-data www-data;				//配置用户和用户组，用户组可以为空
+worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
+pid /run/nginx.pid;				//指定nginx进程运行文件存放地址
+include /etc/nginx/modules-enabled/*.conf;
+//引入modules-enabled目录下.conf配置文件，会跳转到nginx的默认欢迎页
+
+events {					//events块，配置影响nginx服务器或与用户的网络连接
+	worker_connections 768;			//设置最大连接数
+	# multi_accept on;			//设置一个进程是否同时接受多个网络连接
+}
+
+http {						//http块，可以嵌套多个server
+	...
+	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
+	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
+	...
+	server {				//server块，配置虚拟主机的参数
+		listen 80;			//server监听端口
+		server_name belldrum.com	//监听的主机ip地址或域名
+		location {			//配置请求的路由和页面的处理
+
+		}
+	}
+
+}
+&lt;/pre&gt;
+&lt;h2 id=&#34;部署网站&#34;&gt;部署网站&lt;/h2&gt;
+&lt;p&gt;首先我们在服务器上建立一个保存网站的目录，假设为&lt;code&gt;/home/gavin/blog&lt;/code&gt;。
+接下来我们对nginx的配置文件进行修改，主要是修改server块，修改后内容如下：&lt;/p&gt;
+&lt;pre&gt;
+http {
+	server {
+		listen 80;
+		server_name belldrum.com;	// 域名或者主机ip
+		root /home/gavin/blog;		// 网站资源根目录路，nginx需要有该目录的读取权限
+		index index.html;		// 显示首页
+		location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+    	root /home/gavin/blog;
+		}				// 访问网站的入口
+	}
+}
+&lt;/pre&gt;
+&lt;p&gt;修改完成后保存退出，执行&lt;code&gt;nginx -s reload&lt;/code&gt;重启nginx服务，便可以通过域名或ip地址访问自己的网站了。&lt;br&gt;
+&lt;br /&gt;
+其实在实践中，我们并不需要频繁的修改&lt;code&gt;nginx.conf&lt;/code&gt;文件，而是通过在该文件中使用&lt;code&gt;include&lt;/code&gt;指令引入额外的配置文件。一般情况下，&lt;code&gt;nginx.conf&lt;/code&gt;中已经通过&lt;code&gt;include&lt;/code&gt;指令引入了&lt;code&gt;conf.d&lt;/code&gt;、&lt;code&gt;sites-enable&lt;/code&gt;、&lt;code&gt;modules-enabled&lt;/code&gt;三个目录下的配置文件。我们可以在这些目录下新建配置文件，或者在任意目录下新建配置文件，然后在&lt;code&gt;nginx.conf&lt;/code&gt;的http块内用&lt;code&gt;include&lt;/code&gt;指令引入新建的配置文件。&lt;br&gt;
+&lt;br /&gt;
+举个例子：&lt;br&gt;
+我们在conf.d目录下新建一个名为&lt;code&gt;belldrum.conf&lt;/code&gt;的配置文件：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /etc/nginx/conf.d
+vim belldrum.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们在文件中写入以下内容，然后保存退出：&lt;/p&gt;
+&lt;pre&gt;
+server {
+	listen 80;
+	server_name belldrum.com;
+	root /home/gavin/blog;
+	index index.html;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+    root /home/gavin/blog;
+	}
+&lt;/pre&gt;  
+&lt;p&gt;最后检查&lt;code&gt;nginx.conf&lt;/code&gt;的http块内是否已经正确引入这个配置文件：&lt;/p&gt;
+&lt;pre&gt;
+http {
+	include /etc/nginx/conf.d/*.conf;
+}
+&lt;/pre&gt;
+&lt;h2 id=&#34;配置ssl&#34;&gt;配置SSL&lt;/h2&gt;
+&lt;p&gt;目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。&lt;br&gt;
+&lt;br /&gt;
+在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为&lt;code&gt;belldrum.com.key&lt;/code&gt;和&lt;code&gt;belldrum.com.pem&lt;/code&gt;。&lt;br&gt;
+我们在&lt;code&gt;/etc/nginx&lt;/code&gt;目录下新建一个&lt;code&gt;cert&lt;/code&gt;文件夹用于存放密钥和证书，然后修改之前创建的&lt;code&gt;belldrum.conf&lt;/code&gt;配置文件，修改后的内容如下：&lt;/p&gt;
+&lt;pre&gt;
+server {
+	listen 443 ssl;						//监听443端口
+	server_name belldrum.com; 
+	root /home/gavin/blog;
+	index index.html;
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
+	ssl_session_timeout 5m;					//会话过期时间
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+&lt;/pre&gt;
+&lt;p&gt;修改完成后保存退出，然后重启nginx服务即可通过&lt;code&gt;https://belldrum.com&lt;/code&gt;访问网站了。&lt;br&gt;
+&lt;br /&gt;
+此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。&lt;/p&gt;
+&lt;h2 id=&#34;设置跳转&#34;&gt;设置跳转&lt;/h2&gt;
+&lt;p&gt;我们希望当用户访问&lt;code&gt;http://belldrum.com&lt;/code&gt;时能够自动跳转到&lt;code&gt;https://belldrum.com&lt;/code&gt;，或者更进一步，能够同时实现&lt;code&gt;http://www.belldrum.com&lt;/code&gt;和&lt;code&gt;https://www.belldrum.com&lt;/code&gt;到&lt;code&gt;https://belldrum.com&lt;/code&gt;的跳转。&lt;br&gt;
+&lt;br /&gt;
+我们可以使用&lt;code&gt;rewrite&lt;/code&gt;或者&lt;code&gt;301&lt;/code&gt;重定向实现这种跳转，在这里只介绍&lt;code&gt;301&lt;/code&gt;重定向的方法。&lt;br&gt;
+我们将&lt;code&gt;belldrum.conf&lt;/code&gt;配置文件修改如下：&lt;/p&gt;
+&lt;pre&gt;
+server {
+	listen 443 ssl;
+	server_name belldrum.com; 
+	root /home/gavin/blog;
+	index index.html;
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+	ssl_session_timeout 5m;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+
+server {	//设置http跳转https
+	listen 80;
+	server_name belldrum.com;
+	return 301 https://$server_name$request_uri;
+}
+
+server {	//设置www.belldrum.com跳转belldrum.com
+        listen 80;
+        listen 443 ssl;  
+        server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+        return 301 https://belldrum.com$request_uri;
+}
+
+&lt;/pre&gt;
+&lt;p&gt;如果是多个域名的话，&lt;code&gt;server_name&lt;/code&gt;选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。&lt;/p&gt;
+&lt;h2 id=&#34;使用hsts&#34;&gt;使用HSTS&lt;/h2&gt;
+&lt;h2 id=&#34;其他设置&#34;&gt;其他设置&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>Ali 云服务器配置</title>
       <link>http://belldrum.com/2020/02/0003-ali-cloud-server/</link>
       <pubDate>Wed, 12 Feb 2020 19:48:57 +0800</pubDate>
       
       <guid>http://belldrum.com/2020/02/0003-ali-cloud-server/</guid>
-      <description>&lt;h2 id=&#34;阿里云ecs服务器配置&#34;&gt;阿里云ECS服务器配置&lt;/h2&gt;
-&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
+      <description>&lt;p&gt;趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！&lt;/p&gt;
 &lt;p&gt;但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。&lt;/p&gt;
-&lt;h3 id=&#34;密码&#34;&gt;密码&lt;/h3&gt;
+&lt;h2 id=&#34;密码&#34;&gt;密码&lt;/h2&gt;
 &lt;p&gt;管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&amp;ldquo;woc&amp;hellip;马什么梅来?&amp;quot;。&lt;br&gt;
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。&lt;/p&gt;
 &lt;ul&gt;
@@ -122,7 +534,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;ssh连接实例&#34;&gt;SSH连接实例&lt;/h2&gt;
+&lt;h2 id=&#34;ssh连接&#34;&gt;SSH连接&lt;/h2&gt;
 &lt;p&gt;Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。&lt;br&gt;
 SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#34;&gt;文章&lt;/a&gt;，本文主要介绍阿里云SSH配置。&lt;/p&gt;
 &lt;h3 id=&#34;root用户&#34;&gt;Root用户&lt;/h3&gt;
@@ -136,8 +548,8 @@ SSH不是本文介绍的重点，详细请看这篇&lt;a href=&#34;daibuchong&#3
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。&lt;/li&gt;
 &lt;li&gt;基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;安全优化&#34;&gt;安全优化&lt;/h3&gt;
-&lt;h4 id=&#34;修改22端口&#34;&gt;修改22端口&lt;/h4&gt;
+&lt;h2 id=&#34;安全优化&#34;&gt;安全优化&lt;/h2&gt;
+&lt;h3 id=&#34;修改22端口&#34;&gt;修改22端口&lt;/h3&gt;
 &lt;p&gt;Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。&lt;br&gt;
 &lt;ruby&gt;&lt;rb&gt;SSH服务&lt;/rb&gt;&lt;rt&gt;ssh daemon&lt;/rt&gt;&lt;/ruby&gt;是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;。&lt;br&gt;
 修改之前我们先备份配置文件，然后再进行编辑：&lt;/p&gt;
@@ -201,9 +613,9 @@ vim /etc/ssh/sshd_config
 &lt;p&gt;配置完成后，记得在防火墙和安全组中放行&lt;code&gt;2222&lt;/code&gt;端口，然后用新端口重新登录。&lt;br&gt;
 如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的&lt;code&gt;22&lt;/code&gt;端口了。&lt;/p&gt;
 &lt;p&gt;需要注意的是，在&lt;code&gt;/etc/ssh/&lt;/code&gt;目录下还有一个&lt;code&gt;ssh_config&lt;/code&gt;文件，它是&lt;code&gt;ssh&lt;/code&gt;的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了&lt;code&gt;ssh&lt;/code&gt;的配置文件。&lt;/p&gt;
-&lt;h4 id=&#34;ssh禁止root登录&#34;&gt;SSH禁止root登录&lt;/h4&gt;
-&lt;h4 id=&#34;ssh密钥登录&#34;&gt;SSH密钥登录&lt;/h4&gt;
-&lt;h4 id=&#34;ufw防火墙&#34;&gt;UFW防火墙&lt;/h4&gt;
+&lt;h3 id=&#34;ssh禁止root登录&#34;&gt;SSH禁止root登录&lt;/h3&gt;
+&lt;h3 id=&#34;ssh密钥登录&#34;&gt;SSH密钥登录&lt;/h3&gt;
+&lt;h3 id=&#34;ufw防火墙&#34;&gt;UFW防火墙&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;特别提醒&lt;/strong&gt;&lt;br&gt;
 &lt;u&gt;远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上&lt;/u&gt;&lt;br&gt;
 &lt;br /&gt;
@@ -267,10 +679,176 @@ ufw allow &lt;span class=&#34;m&#34;&gt;80&lt;/span&gt;
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ufw status
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;禁止root用户登录&lt;/li&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;禁止使用口令验证&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hugo&#43;Github=?</title>
+      <link>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</link>
+      <pubDate>Mon, 03 Feb 2020 17:23:08 +0800</pubDate>
+      
+      <guid>http://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
+      <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
+&lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
+本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;
+&lt;h2 id=&#34;step-1-install-hugo&#34;&gt;Step 1: Install Hugo&lt;/h2&gt;
+&lt;p&gt;在release&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;下载&lt;/u&gt;&lt;/a&gt; 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。&lt;/p&gt;
+&lt;p&gt;添加成功后，在cmd中输入&lt;code&gt;hugo version&lt;/code&gt;检查是否安装成功，如果安装成功会输出&lt;br&gt;
+&lt;code&gt;Hugo Static Site Generator v0.63.2-934EE21F windows/amd64 BuildDate: 2020-01-27T12:14:15Z&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;我们也可以通过执行&lt;code&gt;hugo -help&lt;/code&gt;查看命令帮助。&lt;/p&gt;
+&lt;h2 id=&#34;step-2-create-a-site&#34;&gt;Step 2: Create a Site&lt;/h2&gt;
+&lt;p&gt;创建一个新的hugo站点：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo new site path/to/site
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令会在site目录下创建一个新的hugo站点，文件目录结构如下：&lt;br&gt;
+site/ &lt;br&gt;
+├─ archetypes&lt;br&gt;
+│  └─ default.md&lt;br&gt;
+├─ config.toml &lt;br&gt;
+├─ content&lt;br&gt;
+├─ data&lt;br&gt;
+├─ layouts&lt;br&gt;
+├─ static&lt;br&gt;
+└─ themes&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;config.toml&lt;br&gt;
+站点的全局参数配置文件&lt;/li&gt;
+&lt;li&gt;archetypes&lt;br&gt;
+存放default.md文件，该文件定义了Hugo的markdown文件&lt;code&gt;前置数据(Front Matter)&lt;/code&gt;的结构，可以理解为markdown的metadata。我们可以自定义该结构文件，然后在config.toml中指定自定义的结构文件。Front Matter支持三种格式，分别为yaml，toml和json。默认生成的default.md文件为yaml格式，至少包括以下3项：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-YAML&#34; data-lang=&#34;YAML&#34;&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;--- &lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;{{ replace .Name &amp;#34;&lt;/span&gt;-&lt;span class=&#34;s2&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34; | title }}&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;date&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;{{&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;.Date&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;}}&lt;span class=&#34;w&#34;&gt;  
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;draft&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;	&lt;/span&gt;--- &lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;  &lt;code&gt;draft&lt;/code&gt;为&lt;code&gt;true&lt;/code&gt;表示该文章处于草稿状态，不会被渲染和显示，发布时需要改为&lt;code&gt;false&lt;/code&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;content&lt;br&gt;
+存放网页内容的目录，我们编写的markdown文件都存放在该目录中，是Hugo的默认源目录。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;data&lt;br&gt;
+data目录用来存放数据文件，一般是json文件，Hugo提供了相关命令可以从data目录下读取相关的文件数据，然后渲染到HTML页面中，将业务数据与模板分离。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;layouts&lt;br&gt;
+存放自定义的模板文件，Hugo优先使用layouts目录下的模板，未发现再去themes目录下查找。模板是以&lt;code&gt;.html&lt;/code&gt;文件指明如何将内容视图渲染为静态页面。&lt;br&gt;
+模板包括列表页面、主页、分类模板、partals、单页模板等。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;static&lt;br&gt;
+存放所有的静态内容，如images, css、js、CNAME等。Hugo在渲染时，会将static目录下的文件直接复制到public目录下，不会做任何渲染。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;themes&lt;br&gt;
+存放网站主题，可以下载多个主题，themes目录下的每个子目录代表了一个主题。可以通过在config.toml中通过参数theme指定主题，即theme目录下的子目录名字，也可以在执行hugo命令渲染时通过增加flag参数–theme=xx指定。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;step-3-add-a-theme&#34;&gt;Step 3: Add a Theme&lt;/h2&gt;
+&lt;p&gt;Hugo允许我们创建自己的主题或者使用预创建的开源主题。使用预创建的主题可以为我们节约大量的时间，避免关注不必要的技术细节而专注于内容的输出。让我们使用预创建的主题快速开始吧！&lt;/p&gt;
+&lt;p&gt;首先我们挑选一个喜欢的 &lt;a href=&#34;https://themes.gohugo.io/&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;hugo主题&lt;/u&gt;&lt;/a&gt; ，例如 &lt;a href=&#34;https://themes.gohugo.io/loveit/&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;LoveIt&lt;/u&gt;&lt;/a&gt;，然后将主题下载到themes目录下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site
+git init
+git clone https://github.com/xx/xx.git themes/LoveIt
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;执行成功后，会在themesm目录下生成主题目录LoveIt。&lt;br&gt;
+添加主题到配置文件中：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;theme = &amp;#34;LoveIt&amp;#34;&amp;#39;&lt;/span&gt; &amp;gt;&amp;gt; config.toml
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;或直接用文本编辑器打开config.toml修改相应的配置。&lt;/p&gt;
+&lt;p&gt;一个快速简便的配置方法是用&lt;code&gt;themes/loveit/exampleSite&lt;/code&gt;下的&lt;code&gt;config.toml&lt;/code&gt;替换&lt;code&gt;/site&lt;/code&gt;站点目录下默认生成的&lt;code&gt;config.tmol&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;step-4-add-content&#34;&gt;Step 4: Add Content&lt;/h2&gt;
+&lt;p&gt;我们可以手动创建内容文件（content files），然后添加metadata，如title和data等。也可以通过下面的命令自动创建草稿：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo new posts/my-first-post.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在&lt;code&gt;content/posts&lt;/code&gt;目录中会生成一篇名为&lt;code&gt;my-first-post.md&lt;/code&gt;的文章草稿，并自动添加&lt;code&gt;archetypes/default.md&lt;/code&gt;中的内容。&lt;/p&gt;
+&lt;h2 id=&#34;step-5-hosting-site-locally&#34;&gt;Step 5: Hosting Site Locally&lt;/h2&gt;
+&lt;p&gt;在站点目录下执行：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo server
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动服务器后，可以通过&lt;a href=&#34;http://localhost:1313/&#34; target=&#34;_blank&#34;&gt;http://localhost:1313/&lt;/a&gt;访问站点并调试。Hugo支持所谓的LiveReload，相应配置及内容的修改会即刻生效并在浏览器中加载。&lt;/p&gt;
+&lt;h2 id=&#34;step-6-build-static-pages&#34;&gt;Step 6: Build Static Pages&lt;/h2&gt;
+&lt;p&gt;在创建静态页面之前，我们需要对&lt;code&gt;config.toml&lt;/code&gt;进行配置。因为我们准备将该网页托管到github pages上，需要将baseURL修改为&amp;quot;https://yourgithubusername.github.io/&amp;quot;。&lt;br&gt;
+调试无误后，我们在站点目录下执行：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该命令会在站点目录下新建一个public子目录，然后将渲染后的全部站点文件输出到该目录中。&lt;br&gt;
+我们可以将public目录中的文件直接提交到github上以Githbu Pages方式发布，也可以部署到自己的服务器上。&lt;/p&gt;
+&lt;h2 id=&#34;step-7-hosting-on-github-pages&#34;&gt;Step 7: Hosting on Github Pages&lt;/h2&gt;
+&lt;p&gt;我们在github中新建一个repo，命名为&lt;code&gt;yourgithubusername.github.io&lt;/code&gt;，然后将public中的文件push到该仓库中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; path/to/site/public
+git init
+git remote add origin https://github.com/yourgithubusername/yourgithubusername.github.io
+git add.
+git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;your message&amp;#34;&lt;/span&gt;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;叮！ 通过&lt;u&gt;&lt;a href=&#34;http://yourgitubusername.github.io&#34;&gt;http://yourgitubusername.github.io&lt;/a&gt;&lt;/u&gt; 访问你的网站吧。&lt;/p&gt;
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://s0gohugo0io.icopy.site/documentation/&#34; target=&#34;_blank&#34;&gt;Hugo Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
     
   </channel>
