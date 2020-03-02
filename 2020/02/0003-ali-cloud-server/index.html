@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Ali 云服务器配置 | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>阿里ECS实例配置 | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Gavin&#39;s Blog"><link rel="prev" href="https://belldrum.com/2020/02/0001-hugo-concise-tutorial/" /><link rel="next" href="https://belldrum.com/2020/02/0005-linux-user-management/" /><link rel="canonical" href="https://belldrum.com/2020/02/0003-ali-cloud-server/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -13,9 +13,9 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Ali 云服务器配置" />
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="阿里ECS实例配置" />
 <meta property="og:description" content="趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！
-但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。
+但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的踩坑记录。
 密码
 管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&ldquo;woc&hellip;马什么梅来?&quot;。
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。
@@ -34,7 +34,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 专有网络
 是指逻辑隔离的私有网络，您可以自定义网络拓扑和 ip 地址，支持通过专线连接。适合于熟悉网络管理的用户。
 
-我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。
+我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。官方推荐使用专有网络。
 带宽
 
 入网带宽（上行带宽）
@@ -55,10 +55,12 @@ FTP客户端下载云服务器ECS内部资源
 安全组
 安全组是ECS实例的虚拟防火墙，用于设置实例的网络访问控制，允许或拒绝公网请求和内网请求。
 安全组具备状态检测和数据包过滤功能，可以设置单台或多台云服务器的网络访问控制。
+
 每个实例必须属于至少一个安全组，一个安全组可以包括多个实例。同一安全组内的实例之间默认内网互通，不同安全组的实例之间默认内网不通，可以授权两个安全组之间互访。
 在创建实例时，系统会提供一个默认安全组，默认安全组中的默认规则仅设置针对ICMP协议、SSH 22端口、RDP 3389端口、HTTP 80端口和HTTPS 443端口的入方向规则。
-我们也可以自行创建一个安全组并添加能满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。
-添加安全组规则
+
+我们也可以自行创建一个安全组并添加满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。
+添加规则
 一般场景下我们需要设置的选项主要有两个：端口范围和授权对象，其他可参考默认设置。
 
 端口范围
@@ -76,7 +78,7 @@ FTP客户端下载云服务器ECS内部资源
 选择开放具体的端口，如80/80端口，不要设置为端口范围。
 添加安全组规则时，谨慎授权0.0.0.0/0（全网段）访问源。
 
-案例
+一个例子
 如果您在实例上架设了一个网站，希望您的用户能通过HTTPS服务访问到您的网站，您需要在实例所在安全组中添加以下安全组规则。
 
 
@@ -117,93 +119,25 @@ HTTPS
 
 
 
-SSH连接
-Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。
-SSH不是本文介绍的重点，详细请看这篇文章，本文主要介绍阿里云SSH配置。
-Root用户
-首先，我们需要在安全组中开放入方向的22端口（默认已经开启），确认开启之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云的SSH密钥设置也非常简便，直接在控制台中即可完成。
-首先我们在 云服务控制台 &gt; 网络与安全 &gt; 密钥对 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动保存在实例中，我们把私钥保存到本地，然后便可通过Xshell等工具连接实例了。
-非Root用户
-实践注意事项
-使用SSH密钥需要注意两点：
+远程连接
+Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统，详细请戳「SSH 原理 &amp; 实践」。
+
+连接之前我们需要确认安全组中已开放22端口，确认之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云密钥验证的设置也非常简便，直接在控制台中即可一键完成，因此我们推荐使用密钥认证的方式连接服务器。
+
+首先在 云服务控制台 &gt; 网络与安全 &gt; 密钥对 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动分发给绑定的实例，我们只需要把私钥保存到本地，然后便可通过XShell等工具连接实例了。
+
+绑定和解绑密钥时需要注意：
 
 如果使用SSH密钥对登录Linux实例，将会禁用密码登录，以提高安全性。
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。
-基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。
+基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，我们需要重启实例使操作生效。
 
-安全优化
-修改22端口
-Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。
-SSH服务ssh daemon是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是/etc/ssh/sshd_config。
-修改之前我们先备份配置文件，然后再进行编辑：
-
-
-1
-2
-
-
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-vim /etc/ssh/sshd_config
-
-
-打开后可以看到如下内容：
-
-	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
-
-	# This is the sshd server system-wide configuration file.  See
-	# sshd_config(5) for more information.
-
-	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
-
-	# The strategy used for options in the default sshd_config shipped with
-	# OpenSSH is to specify options with their default value where
-	# possible, but leave them commented.  Uncommented options override the
-	# default value.
-
-	#Port 22
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-
-其中22端口被注释掉了。
-为了防止后续端口修改错误导致无法登录，我们先删除#保留Port 22端口，然后另起一行添加Port 2222，修改后的文件如下：
-
-	Port 22
-	Port 2222
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-
-修改完成后我们保存退出，重启sshd服务使配置生效：
-
-
-1
-
-
-systemctl restart sshd
-
-
-或
-
-
-1
-
-
-service sshd restart
-
-
-重启完成后，我们可以通过netstat -ntl或ss -ntl命令查看一下端口。
-配置完成后，记得在防火墙和安全组中放行2222端口，然后用新端口重新登录。
-如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的22端口了。
-需要注意的是，在/etc/ssh/目录下还有一个ssh_config文件，它是ssh的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了ssh的配置文件。
-SSH禁止root登录
-SSH密钥登录
-UFW防火墙
+防火墙
 特别提醒
-远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上
+远程使用ufw注意开启远程连接的端口，或者在测试时设置定时关闭防火墙的脚本，防止自己连接不上
 
 UFW，即简单防火墙uncomplicated firewall，是Ubuntu下的一个简易防火墙配置工具。
-UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：
+UFW是iptables的前端，简化了iptables复杂的配置过程，使用起来很方便。默认情况下UFW是没有开启的，我们通过以下命令可以启动UFW：
 
 
 1
@@ -214,8 +148,8 @@ ufw enable
 ufw default deny
 
 
-其中第一条命令是启动ufw，并将其设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。
-我们也可以关闭ufw防火墙及开机启动，命令如下：
+其中第一条命令是启动ufw，并设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。
+我们也可以关闭ufw和开机启动，命令如下：
 
 
 1
@@ -224,7 +158,7 @@ ufw default deny
 ufw disable
 
 
-我们可以使用allow命令打开指定的端口，举个例子，我们打开22和80端口：
+使用allow命令打开指定的端口，举个例子，我们打开22和80端口：
 
 
 1
@@ -235,7 +169,16 @@ ufw allow 22
 ufw allow 80
 
 
-也可以使用delete allow删除已经添加过的规则，举个例子，我们禁用80端口：
+指定允许来自某一个ip或网段的连接：
+
+
+1
+
+
+ufw allow from 192.168.1.1/24
+
+
+使用delete allow删除已经添加过的规则，举个例子，我们禁用80端口：
 
 
 1
@@ -244,7 +187,7 @@ ufw allow 80
 ufw delete allow 80
 
 
-规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效），命令如下：
+规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效?），命令如下：
 
 
 1
@@ -262,15 +205,24 @@ ufw reload
 ufw status
 
 
-" />
+我们配置了很多规则，但是现在需要抛弃它们重新配置，我们可以这么做：
+
+
+1
+
+
+ufw reset
+
+
+更多配置选项可以参考UFW手册 man ufw。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://belldrum.com/2020/02/0003-ali-cloud-server/" />
 <meta property="article:published_time" content="2020-02-12T19:48:57+08:00" />
 <meta property="article:modified_time" content="2020-02-12T19:48:57+08:00" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Ali 云服务器配置"/>
+<meta name="twitter:title" content="阿里ECS实例配置"/>
 <meta name="twitter:description" content="趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！
-但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。
+但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的踩坑记录。
 密码
 管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&ldquo;woc&hellip;马什么梅来?&quot;。
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。
@@ -289,7 +241,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 专有网络
 是指逻辑隔离的私有网络，您可以自定义网络拓扑和 ip 地址，支持通过专线连接。适合于熟悉网络管理的用户。
 
-我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。
+我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。官方推荐使用专有网络。
 带宽
 
 入网带宽（上行带宽）
@@ -310,10 +262,12 @@ FTP客户端下载云服务器ECS内部资源
 安全组
 安全组是ECS实例的虚拟防火墙，用于设置实例的网络访问控制，允许或拒绝公网请求和内网请求。
 安全组具备状态检测和数据包过滤功能，可以设置单台或多台云服务器的网络访问控制。
+
 每个实例必须属于至少一个安全组，一个安全组可以包括多个实例。同一安全组内的实例之间默认内网互通，不同安全组的实例之间默认内网不通，可以授权两个安全组之间互访。
 在创建实例时，系统会提供一个默认安全组，默认安全组中的默认规则仅设置针对ICMP协议、SSH 22端口、RDP 3389端口、HTTP 80端口和HTTPS 443端口的入方向规则。
-我们也可以自行创建一个安全组并添加能满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。
-添加安全组规则
+
+我们也可以自行创建一个安全组并添加满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。
+添加规则
 一般场景下我们需要设置的选项主要有两个：端口范围和授权对象，其他可参考默认设置。
 
 端口范围
@@ -331,7 +285,7 @@ FTP客户端下载云服务器ECS内部资源
 选择开放具体的端口，如80/80端口，不要设置为端口范围。
 添加安全组规则时，谨慎授权0.0.0.0/0（全网段）访问源。
 
-案例
+一个例子
 如果您在实例上架设了一个网站，希望您的用户能通过HTTPS服务访问到您的网站，您需要在实例所在安全组中添加以下安全组规则。
 
 
@@ -372,93 +326,25 @@ HTTPS
 
 
 
-SSH连接
-Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。
-SSH不是本文介绍的重点，详细请看这篇文章，本文主要介绍阿里云SSH配置。
-Root用户
-首先，我们需要在安全组中开放入方向的22端口（默认已经开启），确认开启之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云的SSH密钥设置也非常简便，直接在控制台中即可完成。
-首先我们在 云服务控制台 &gt; 网络与安全 &gt; 密钥对 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动保存在实例中，我们把私钥保存到本地，然后便可通过Xshell等工具连接实例了。
-非Root用户
-实践注意事项
-使用SSH密钥需要注意两点：
+远程连接
+Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统，详细请戳「SSH 原理 &amp; 实践」。
+
+连接之前我们需要确认安全组中已开放22端口，确认之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云密钥验证的设置也非常简便，直接在控制台中即可一键完成，因此我们推荐使用密钥认证的方式连接服务器。
+
+首先在 云服务控制台 &gt; 网络与安全 &gt; 密钥对 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动分发给绑定的实例，我们只需要把私钥保存到本地，然后便可通过XShell等工具连接实例了。
+
+绑定和解绑密钥时需要注意：
 
 如果使用SSH密钥对登录Linux实例，将会禁用密码登录，以提高安全性。
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。
-基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。
+基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，我们需要重启实例使操作生效。
 
-安全优化
-修改22端口
-Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。
-SSH服务ssh daemon是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是/etc/ssh/sshd_config。
-修改之前我们先备份配置文件，然后再进行编辑：
-
-
-1
-2
-
-
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-vim /etc/ssh/sshd_config
-
-
-打开后可以看到如下内容：
-
-	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
-
-	# This is the sshd server system-wide configuration file.  See
-	# sshd_config(5) for more information.
-
-	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
-
-	# The strategy used for options in the default sshd_config shipped with
-	# OpenSSH is to specify options with their default value where
-	# possible, but leave them commented.  Uncommented options override the
-	# default value.
-
-	#Port 22
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-
-其中22端口被注释掉了。
-为了防止后续端口修改错误导致无法登录，我们先删除#保留Port 22端口，然后另起一行添加Port 2222，修改后的文件如下：
-
-	Port 22
-	Port 2222
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-
-修改完成后我们保存退出，重启sshd服务使配置生效：
-
-
-1
-
-
-systemctl restart sshd
-
-
-或
-
-
-1
-
-
-service sshd restart
-
-
-重启完成后，我们可以通过netstat -ntl或ss -ntl命令查看一下端口。
-配置完成后，记得在防火墙和安全组中放行2222端口，然后用新端口重新登录。
-如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的22端口了。
-需要注意的是，在/etc/ssh/目录下还有一个ssh_config文件，它是ssh的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了ssh的配置文件。
-SSH禁止root登录
-SSH密钥登录
-UFW防火墙
+防火墙
 特别提醒
-远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上
+远程使用ufw注意开启远程连接的端口，或者在测试时设置定时关闭防火墙的脚本，防止自己连接不上
 
 UFW，即简单防火墙uncomplicated firewall，是Ubuntu下的一个简易防火墙配置工具。
-UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：
+UFW是iptables的前端，简化了iptables复杂的配置过程，使用起来很方便。默认情况下UFW是没有开启的，我们通过以下命令可以启动UFW：
 
 
 1
@@ -469,8 +355,8 @@ ufw enable
 ufw default deny
 
 
-其中第一条命令是启动ufw，并将其设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。
-我们也可以关闭ufw防火墙及开机启动，命令如下：
+其中第一条命令是启动ufw，并设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。
+我们也可以关闭ufw和开机启动，命令如下：
 
 
 1
@@ -479,7 +365,7 @@ ufw default deny
 ufw disable
 
 
-我们可以使用allow命令打开指定的端口，举个例子，我们打开22和80端口：
+使用allow命令打开指定的端口，举个例子，我们打开22和80端口：
 
 
 1
@@ -490,7 +376,16 @@ ufw allow 22
 ufw allow 80
 
 
-也可以使用delete allow删除已经添加过的规则，举个例子，我们禁用80端口：
+指定允许来自某一个ip或网段的连接：
+
+
+1
+
+
+ufw allow from 192.168.1.1/24
+
+
+使用delete allow删除已经添加过的规则，举个例子，我们禁用80端口：
 
 
 1
@@ -499,7 +394,7 @@ ufw allow 80
 ufw delete allow 80
 
 
-规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效），命令如下：
+规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效?），命令如下：
 
 
 1
@@ -517,12 +412,21 @@ ufw reload
 ufw status
 
 
-"/>
+我们配置了很多规则，但是现在需要抛弃它们重新配置，我们可以这么做：
+
+
+1
+
+
+ufw reset
+
+
+更多配置选项可以参考UFW手册 man ufw。"/>
 <script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "Ali 云服务器配置",
+        "headline": "阿里ECS实例配置",
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/belldrum.com\/2020\/02\/0003-ali-cloud-server\/"
@@ -531,7 +435,7 @@ ufw status
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Server, Ubuntu","wordcount":  3549 ,
+            },"genre": "posts","keywords": "Server, Ubuntu","wordcount":  2942 ,
         "url": "https:\/\/belldrum.com\/2020\/02\/0003-ali-cloud-server\/","datePublished": "2020-02-12T19:48:57\x2b08:00","dateModified": "2020-02-12T19:48:57\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "Gavin",
@@ -552,7 +456,7 @@ ufw status
         <div class="navbar-header animated bounceIn">
             <a href="https://belldrum.com/">晨钟暮鼓</a>
         </div>
-        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/" title="English">主页</a><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"><i class="fas fa-home fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><nav class="navbar-mobile">
@@ -565,17 +469,17 @@ ufw status
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/" title="English">主页</a><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Ali 云服务器配置</h1><div class="post-meta">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">阿里ECS实例配置</h1><div class="post-meta">
             <div class="post-meta-main"><a class="author" href="https://belldrum.com/" rel="author" target="_blank">
                     <i class="fas fa-user-circle fa-fw"></i>Gavin
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://belldrum.com/categories/server/">Server</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=0001-01-01>0001-01-01</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 3549 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;<span id="/2020/02/0003-ali-cloud-server/" class="leancloud_visitors" data-flag-title="Ali 云服务器配置">
+                <i class="fas fa-pencil-alt fa-fw"></i>约 2942 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 6 分钟&nbsp;<span id="/2020/02/0003-ali-cloud-server/" class="leancloud_visitors" data-flag-title="阿里ECS实例配置">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
@@ -587,27 +491,14 @@ ufw status
     <li><a href="#带宽">带宽</a></li>
     <li><a href="#安全组">安全组</a>
       <ul>
-        <li><a href="#添加安全组规则">添加安全组规则</a></li>
+        <li><a href="#添加规则">添加规则</a></li>
         <li><a href="#规则优先级">规则优先级</a></li>
         <li><a href="#实践建议">实践建议</a></li>
-        <li><a href="#案例">案例</a></li>
+        <li><a href="#一个例子">一个例子</a></li>
       </ul>
     </li>
-    <li><a href="#ssh连接">SSH连接</a>
-      <ul>
-        <li><a href="#root用户">Root用户</a></li>
-        <li><a href="#非root用户">非Root用户</a></li>
-        <li><a href="#实践注意事项">实践注意事项</a></li>
-      </ul>
-    </li>
-    <li><a href="#安全优化">安全优化</a>
-      <ul>
-        <li><a href="#修改22端口">修改22端口</a></li>
-        <li><a href="#ssh禁止root登录">SSH禁止root登录</a></li>
-        <li><a href="#ssh密钥登录">SSH密钥登录</a></li>
-        <li><a href="#ufw防火墙">UFW防火墙</a></li>
-      </ul>
-    </li>
+    <li><a href="#远程连接">远程连接</a></li>
+    <li><a href="#防火墙">防火墙</a></li>
   </ul>
 </nav></div>
             </div>
@@ -626,32 +517,19 @@ ufw status
     <li><a href="#带宽">带宽</a></li>
     <li><a href="#安全组">安全组</a>
       <ul>
-        <li><a href="#添加安全组规则">添加安全组规则</a></li>
+        <li><a href="#添加规则">添加规则</a></li>
         <li><a href="#规则优先级">规则优先级</a></li>
         <li><a href="#实践建议">实践建议</a></li>
-        <li><a href="#案例">案例</a></li>
+        <li><a href="#一个例子">一个例子</a></li>
       </ul>
     </li>
-    <li><a href="#ssh连接">SSH连接</a>
-      <ul>
-        <li><a href="#root用户">Root用户</a></li>
-        <li><a href="#非root用户">非Root用户</a></li>
-        <li><a href="#实践注意事项">实践注意事项</a></li>
-      </ul>
-    </li>
-    <li><a href="#安全优化">安全优化</a>
-      <ul>
-        <li><a href="#修改22端口">修改22端口</a></li>
-        <li><a href="#ssh禁止root登录">SSH禁止root登录</a></li>
-        <li><a href="#ssh密钥登录">SSH密钥登录</a></li>
-        <li><a href="#ufw防火墙">UFW防火墙</a></li>
-      </ul>
-    </li>
+    <li><a href="#远程连接">远程连接</a></li>
+    <li><a href="#防火墙">防火墙</a></li>
   </ul>
 </nav></div>
                 </details>
             </div><div class="post-content"><p>趁着过年期间阿里云的新客活动，忍痛购买了3年的ECS云服务器，顺便可以给自己的域名挂上良民证，奥利给！</p>
-<p>但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的~踩坑~学习记录。</p>
+<p>但是由于今年疫情的原因，备案时间会比较长，据说需要20天左右。而且之前一直只是在用Linux Client，于是趁着备案期间先熟悉一下阿里云Linux Server的使用和设置，下面是一些零零散散的踩坑记录。</p>
 <a class="post-dummy-target" id="密码"></a><h2>密码</h2>
 <p>管理密码是一件非常头疼的事情，每次设置完密码都会陷入沉思，&ldquo;woc&hellip;马什么梅来?&quot;。<br>
 ECS实例创建后主要使用的有两个密码，分别是实例密码和远程连接密码。</p>
@@ -670,7 +548,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 <li>专有网络<br>
 是指逻辑隔离的私有网络，您可以自定义网络拓扑和 ip 地址，支持通过专线连接。适合于熟悉网络管理的用户。</li>
 </ul>
-<p>我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。</p>
+<p>我们通俗点理解就是，经典网络和专有网络公网使用同一个公网ip。但是从内网ip来看，经典网络是DHIP，也就是系统自动分配局域网ip地址，而专有网络则是手动分配局域网ip地址，方便有多台云服务器的用户自行定义内网ip结构。所以，如果我们只有一台服务器，或者有多台服务器但不需要进行内网互联，那么这两种网络任选一个就可以了。官方推荐使用专有网络。</p>
 <a class="post-dummy-target" id="带宽"></a><h2>带宽</h2>
 <ul>
 <li>入网带宽（上行带宽）<br>
@@ -691,10 +569,12 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 <a class="post-dummy-target" id="安全组"></a><h2>安全组</h2>
 <p>安全组是ECS实例的虚拟防火墙，用于设置实例的网络访问控制，允许或拒绝公网请求和内网请求。<br>
 安全组具备状态检测和数据包过滤功能，可以设置单台或多台云服务器的网络访问控制。<br>
+<br />
 每个实例必须属于至少一个安全组，一个安全组可以包括多个实例。同一安全组内的实例之间默认内网互通，不同安全组的实例之间默认内网不通，可以授权两个安全组之间互访。<br>
 在创建实例时，系统会提供一个默认安全组，默认安全组中的默认规则仅设置针对ICMP协议、SSH 22端口、RDP 3389端口、HTTP 80端口和HTTPS 443端口的入方向规则。<br>
-我们也可以自行创建一个安全组并添加能满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。</p>
-<a class="post-dummy-target" id="添加安全组规则"></a><h3>添加安全组规则</h3>
+<br />
+我们也可以自行创建一个安全组并添加满足自己业务需求的安全组规则，自行创建的安全组在未添加任何安全组规则之前，出方向允许所有访问，入方向拒绝所有访问。</p>
+<a class="post-dummy-target" id="添加规则"></a><h3>添加规则</h3>
 <p>一般场景下我们需要设置的选项主要有两个：端口范围和授权对象，其他可参考默认设置。</p>
 <ul>
 <li>端口范围<br>
@@ -712,7 +592,7 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 <li>选择开放具体的端口，如80/80端口，不要设置为端口范围。</li>
 <li>添加安全组规则时，谨慎授权0.0.0.0/0（全网段）访问源。</li>
 </ul>
-<a class="post-dummy-target" id="案例"></a><h3>案例</h3>
+<a class="post-dummy-target" id="一个例子"></a><h3>一个例子</h3>
 <p>如果您在实例上架设了一个网站，希望您的用户能通过HTTPS服务访问到您的网站，您需要在实例所在安全组中添加以下安全组规则。</p>
 <table>
 <thead>
@@ -753,93 +633,25 @@ ip地址由阿里云统一分配，配置简便，使用方便，适合对操作
 </tr>
 </tbody>
 </table>
-<a class="post-dummy-target" id="ssh连接"></a><h2>SSH连接</h2>
-<p>Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统。<br>
-SSH不是本文介绍的重点，详细请看这篇<a href="daibuchong">文章</a>，本文主要介绍阿里云SSH配置。</p>
-<a class="post-dummy-target" id="root用户"></a><h3>Root用户</h3>
-<p>首先，我们需要在安全组中开放入方向的22端口（默认已经开启），确认开启之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云的SSH密钥设置也非常简便，直接在控制台中即可完成。<br>
-首先我们在 <code>云服务控制台 &gt; 网络与安全 &gt; 密钥对</code> 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动保存在实例中，我们把私钥保存到本地，然后便可通过Xshell等工具连接实例了。</p>
-<a class="post-dummy-target" id="非root用户"></a><h3>非Root用户</h3>
-<a class="post-dummy-target" id="实践注意事项"></a><h3>实践注意事项</h3>
-<p>使用SSH密钥需要注意两点：</p>
+<a class="post-dummy-target" id="远程连接"></a><h2>远程连接</h2>
+<p>Secure Shell（SSH）是一种加密网络协议，通过对传输内容进行加密在不安全的网络上安全地操作网络服务，常用于用户远程登录到计算机系统，详细请戳<a href="https://belldrum.com/2020/02/0009-ssh-intro2/" target="_blank">「SSH 原理 &amp; 实践」</a>。<br>
+<br />
+连接之前我们需要确认安全组中已开放22端口，确认之后我们可以通过用户名密码验证和SSH密钥对验证两种方式远程连接服务器实例。密钥验证相对更加安全，而且阿里云密钥验证的设置也非常简便，直接在控制台中即可一键完成，因此我们推荐使用密钥认证的方式连接服务器。<br>
+<br />
+首先在 <code>云服务控制台 &gt; 网络与安全 &gt; 密钥对</code> 中创建密钥对并绑定实例，该密钥由ECS生成，默认采用RSA 2048位的加密方式。密钥绑定后，公钥会自动分发给绑定的实例，我们只需要把私钥保存到本地，然后便可通过XShell等工具连接实例了。<br>
+<br />
+绑定和解绑密钥时需要注意：</p>
 <ul>
 <li>如果使用SSH密钥对登录Linux实例，将会禁用密码登录，以提高安全性。<br>
 如果在绑定密钥对之后想使用密码方式登录实例，可以通过重置实例密码实现。如果在绑定密钥对之后重置了实例密码，使用密钥对方式和使用密码方式均能登录实例。</li>
-<li>基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，您需要重启实例使操作生效。</li>
+<li>基于数据安全考虑，在实例状态为运行中（Running）时绑定或者解绑密钥对，我们需要重启实例使操作生效。</li>
 </ul>
-<a class="post-dummy-target" id="安全优化"></a><h2>安全优化</h2>
-<a class="post-dummy-target" id="修改22端口"></a><h3>修改22端口</h3>
-<p>Linux默认使用22端口进行远程登录，有一些人专门用服务器扫描22端口并使用弱口令等进行暴力破解，我们通过更改22端口可以过滤掉大部分暴力破解的访问。<br>
-<ruby><rb>SSH服务</rb><rt>ssh daemon</rt></ruby>是OpenSSH软件套件中运行在服务器端的守护进程，作为服务器监听连接请求，它的配置文件是<code>/etc/ssh/sshd_config</code>。<br>
-修改之前我们先备份配置文件，然后再进行编辑：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-vim /etc/ssh/sshd_config
-</code></pre></td></tr></table>
-</div>
-</div><p>打开后可以看到如下内容：</p>
-<pre>
-	#	$OpenBSD: sshd_config,v 1.101 2017/03/14 07:19:07 djm Exp $
-
-	# This is the sshd server system-wide configuration file.  See
-	# sshd_config(5) for more information.
-
-	# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
-
-	# The strategy used for options in the default sshd_config shipped with
-	# OpenSSH is to specify options with their default value where
-	# possible, but leave them commented.  Uncommented options override the
-	# default value.
-
-	#Port 22
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-</pre>
-<p>其中22端口被注释掉了。<br>
-为了防止后续端口修改错误导致无法登录，我们先删除<code>#</code>保留<code>Port 22</code>端口，然后另起一行添加<code>Port 2222</code>，修改后的文件如下：</p>
-<pre>
-	Port 22
-	Port 2222
-	#AddressFamily any
-	#ListenAddress 0.0.0.0
-	#ListenAddress ::
-</pre>
-<p>修改完成后我们保存退出，重启sshd服务使配置生效：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">systemctl restart sshd
-</code></pre></td></tr></table>
-</div>
-</div><p>或</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">service sshd restart
-</code></pre></td></tr></table>
-</div>
-</div><p>重启完成后，我们可以通过<code>netstat -ntl</code>或<code>ss -ntl</code>命令查看一下端口。</p>
-<p>配置完成后，记得在防火墙和安全组中放行<code>2222</code>端口，然后用新端口重新登录。<br>
-如果登录成功，测试正常后，我们就可以注释或删除掉之前保留的<code>22</code>端口了。</p>
-<p>需要注意的是，在<code>/etc/ssh/</code>目录下还有一个<code>ssh_config</code>文件，它是<code>ssh</code>的配置文件，记录了用户常用的选项和连接的主机。sshd(SSH服务器)运行在服务器端，监听incomming connection；ssh运行在客户端，用于客户端使用SSH协议连接其它机器。我们不要错误的修改了<code>ssh</code>的配置文件。</p>
-<a class="post-dummy-target" id="ssh禁止root登录"></a><h3>SSH禁止root登录</h3>
-<a class="post-dummy-target" id="ssh密钥登录"></a><h3>SSH密钥登录</h3>
-<a class="post-dummy-target" id="ufw防火墙"></a><h3>UFW防火墙</h3>
+<a class="post-dummy-target" id="防火墙"></a><h2>防火墙</h2>
 <p><strong>特别提醒</strong><br>
-<u>远程使用ufw需要注意开启远程连接的端口，或者设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
+<u>远程使用ufw注意开启远程连接的端口，或者在测试时设置定时关闭防火墙的脚本，防止自己连接不上</u><br>
 <br />
 UFW，即<ruby><rb>简单防火墙</rb><rt>uncomplicated firewall</rt></ruby>，是Ubuntu下的一个简易防火墙配置工具。<br>
-UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用以下命令就可以启动：</p>
+UFW是iptables的前端，简化了iptables复杂的配置过程，使用起来很方便。默认情况下UFW是没有开启的，我们通过以下命令可以启动UFW：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -850,8 +662,8 @@ UFW的使用非常简单，默认情况下UFW是没有开启的，我们使用�
 ufw default deny
 </code></pre></td></tr></table>
 </div>
-</div><p>其中第一条命令是启动ufw，并将其设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。<br>
-我们也可以关闭ufw防火墙及开机启动，命令如下：</p>
+</div><p>其中第一条命令是启动ufw，并设置为开机启动；第二条命令是使用ufw默认的规则，即关闭所有的外部对本机的访问，但本机访问外部正常。<br>
+我们也可以关闭ufw和开机启动，命令如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -860,7 +672,7 @@ ufw default deny
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw disable
 </code></pre></td></tr></table>
 </div>
-</div><p>我们可以使用allow命令打开指定的端口，举个例子，我们打开22和80端口：</p>
+</div><p>使用allow命令打开指定的端口，举个例子，我们打开22和80端口：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -871,7 +683,16 @@ ufw default deny
 ufw allow <span class="m">80</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>也可以使用<code>delete allow</code>删除已经添加过的规则，举个例子，我们禁用80端口：</p>
+</div><p>指定允许来自某一个ip或网段的连接：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ufw allow from 192.168.1.1/24
+</code></pre></td></tr></table>
+</div>
+</div><p>使用<code>delete allow</code>删除已经添加过的规则，举个例子，我们禁用80端口：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -880,7 +701,7 @@ ufw allow <span class="m">80</span>
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw delete allow <span class="m">80</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效），命令如下：</p>
+</div><p>规则设置完成后，我们可以重新加载来使规则生效（不重新加载也会生效?），命令如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -898,7 +719,16 @@ ufw allow <span class="m">80</span>
 <pre class="chroma"><code class="language-bash" data-lang="bash">ufw status
 </code></pre></td></tr></table>
 </div>
-</div></div><div class="post-footer" id="post-footer">
+</div><p>我们配置了很多规则，但是现在需要抛弃它们重新配置，我们可以这么做：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ufw reset
+</code></pre></td></tr></table>
+</div>
+</div><p>更多配置选项可以参考UFW手册 <code>man ufw</code>。</p></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -908,11 +738,11 @@ ufw allow <span class="m">80</span>
         </div>
         <div class="post-info-line">
             <div class="post-info-md"></div>
-            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0003-ali-cloud-server%2f&amp;text=Ali%20%e4%ba%91%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%85%8d%e7%bd%ae&amp;via=" target="_blank" title="分享到 Twitter">
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0003-ali-cloud-server%2f&amp;text=%e9%98%bf%e9%87%8cECS%e5%ae%9e%e4%be%8b%e9%85%8d%e7%bd%ae&amp;via=" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
         </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0003-ali-cloud-server%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a><a href="//reddit.com/submit?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0003-ali-cloud-server%2f&amp;title=Ali%20%e4%ba%91%e6%9c%8d%e5%8a%a1%e5%99%a8%e9%85%8d%e7%bd%ae" target="_blank" title="分享到 Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0003-ali-cloud-server%2f&amp;title=%e9%98%bf%e9%87%8cECS%e5%ae%9e%e4%be%8b%e9%85%8d%e7%bd%ae" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
         </a></span></div>
         </div>
@@ -930,7 +760,7 @@ ufw allow <span class="m">80</span>
     </div>
 
     <div class="post-nav"><a href="https://belldrum.com/2020/02/0001-hugo-concise-tutorial/" class="prev" rel="prev" title="Hugo&#43;Github=?"><i class="fas fa-angle-left fa-fw"></i>Hugo&#43;Github=?</a>
-            <a href="https://belldrum.com/2020/02/0005-linux-user-management/" class="next" rel="next" title="Linux之用户管理">Linux之用户管理<i class="fas fa-angle-right fa-fw"></i></a></div>
+            <a href="https://belldrum.com/2020/02/0005-linux-user-management/" class="next" rel="next" title="Linux 之权限管理">Linux 之权限管理<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div><div class="post-comment"><div id="vcomments"></div><script src="/js/lib/valine/Valine.min.min.js"></script><script type="text/javascript">
             (function () {
                 

@@ -20,7 +20,7 @@
       <guid>https://belldrum.com/2020/02/0001-hugo-concise-tutorial/</guid>
       <description>&lt;p&gt;Hugo是由GO语言实现的静态网站生成器，自称“The world&amp;rsquo;s fastest framework for building websites”。&lt;/p&gt;
 &lt;p&gt;静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。&lt;br&gt;
-本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。&lt;/p&gt;
+本文主要介绍如何使用Hugo快速搭建静态网站以及如何使用Github Pages免费托管。&lt;/p&gt;
 &lt;h2 id=&#34;step-1-install-hugo&#34;&gt;Step 1: Install Hugo&lt;/h2&gt;
 &lt;p&gt;在release&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34; target=&#34;_blank&#34;&gt;&lt;u&gt;下载&lt;/u&gt;&lt;/a&gt; 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。&lt;/p&gt;
 &lt;p&gt;添加成功后，在cmd中输入&lt;code&gt;hugo version&lt;/code&gt;检查是否安装成功，如果安装成功会输出&lt;br&gt;

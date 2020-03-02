@@ -99,7 +99,7 @@ http {
 }
 </pre>
 
-## 配置SSL
+## 配置 SSL
 目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。  
 <br />
 在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为`belldrum.com.key`和`belldrum.com.pem`。  
@@ -111,8 +111,10 @@ server {
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
+
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
+	
 	ssl_session_timeout 5m;					//会话过期时间
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -128,7 +130,7 @@ server {
 此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。  
 
 ## 设置跳转
-我们希望当用户访问`http://belldrum.com`时能够自动跳转到`https://belldrum.com`，或者更进一步，能够同时实现`http://www.belldrum.com`和`https://www.belldrum.com`到`https://belldrum.com`的跳转。  
+我们希望当用户访问`http://belldrum.com`时能够自动重定向到`https://belldrum.com`，或者更进一步，能够同时实现`http://www.belldrum.com`和`https://www.belldrum.com`到`https://belldrum.com`的重定向。  
 <br />
 我们可以使用`rewrite`或者`301`重定向实现这种跳转，在这里只介绍`301`重定向的方法。  
 我们将`belldrum.conf`配置文件修改如下：  
@@ -144,24 +146,24 @@ server {
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
+
+	access_log /var/log/nginx/belldrum.com-access.log;
+	error_log /var/log/nginx/belldrum.com-error.log;
+
 	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
 		root /home/gavin/blog;
 	}
 }
 
-server {	//设置http跳转https
+server {	//设置http重定向到https
 	listen 80;
-	server_name belldrum.com;
-	return 301 https://$server_name$request_uri;
+	server_name belldrum.com www.belldrum.com;
+	return 301 https://belldrum.com$request_uri;
 }
 
-server {	//设置www.belldrum.com跳转belldrum.com
-        listen 80;
+server {	//设置www重定向到non-www
         listen 443 ssl;  
         server_name www.belldrum.com;
-
-        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
-        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
         return 301 https://belldrum.com$request_uri;
 }
 
@@ -169,6 +171,27 @@ server {	//设置www.belldrum.com跳转belldrum.com
 
 如果是多个域名的话，`server_name`选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。  
 
-## 使用HSTS
+## 配置HSTS
+<ruby><rb>HTTP严格传输安全</rb><rt>HTTP Strict Transport Security</rt></ruby>，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险。  
+<br />
+语法如下：  
+<pre>
+Strict-Transport-Security: max-age=<expire-time>[; includeSubDomains][; preload;]	
+</pre>
+选项说明：  
+- `max-age=<expire-time>` 浏览器收到这个请求后，在`<expire-time>`秒内访问该域名下的请求都使用HTTPS  
+- `includeSubDomains` 可选项，如果添加这个参数，那么说明此规则也适用于该网站的所有子域名  
+- `preload` 可选项，将域名申请添加到[预加载HSTS列表](https://hstspreload.org/)  
+<br />
+在nginx中配置HSTS非常简单，只需要在监听443端口的server中加入HSTS响应头。
+
+<pre>
+add_header Strict-Transport-Security "max-age=2592000; includeSubDomains; preload";
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+add_header Content-Security-Policy "default-src 'self' www.google-analytics.com ajax.googleapis.com www.google.com google.com gstatic.com www.gstatic.com connect.facebook.net facebook.com;";
+add_header X-XSS-Protection "1; mode=block";
+add_header Referrer-Policy "origin";
+</pre>
 ## 其他设置
 <!--more-->

@@ -1,10 +1,10 @@
 # Hugo+Github=?
 
   
-Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。
-  
+Hugo是由GO语言实现的静态网站生成器，自称“The world's fastest framework for building websites”。  
+
 静态网站的好处是快速、安全和易于部署，最主要的是可以利用版本控制系统来进行管理。  
-本文介绍了如何使用Hugo快速搭建个人网站以及如何利用免费的github pages进行发布。  
+本文主要介绍如何使用Hugo快速搭建静态网站以及如何使用Github Pages免费托管。  
 
 ## Step 1: Install Hugo  
 在release[<u>下载</u>](https://github.com/gohugoio/hugo/releases) 对应版本的二进制文件，二进制版本的好处是无需安装额外依赖。下载完成后解压获得hugo.exe文件，然后将其所在路径添加到环境变量PATH中，方便在命令行中使用。  

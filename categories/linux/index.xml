@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>Linux之用户管理</title>
+      <title>Linux 之权限管理</title>
       <link>https://belldrum.com/2020/02/0005-linux-user-management/</link>
       <pubDate>Sun, 16 Feb 2020 23:12:35 +0800</pubDate>
       
@@ -331,7 +331,7 @@ Root用户系统唯一，具有系统的最高权限，可以操作任何的文�
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;groupdel group
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h2 id=&#34;用户和用户组配置文件&#34;&gt;用户和用户组配置文件&lt;/h2&gt;
+&lt;/div&gt;&lt;h2 id=&#34;用户和组配置文件&#34;&gt;用户和组配置文件&lt;/h2&gt;
 &lt;p&gt;在Linux系统中，与用户和用户组相关的信息保存在一些系统文件中，主要包括以下三个文件:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;/etc/passwd&lt;/code&gt;&lt;/li&gt;
@@ -471,7 +471,7 @@ gavin&amp;#58;x:5:gavin,kavin
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id=&#34;细节补充&#34;&gt;细节补充&lt;/h2&gt;
+&lt;h2 id=&#34;待补充问题&#34;&gt;待补充问题&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;添加新用户后，切换到该用户只显示一个&lt;code&gt;$&lt;/code&gt;符号，而不是常见的&lt;code&gt;user@***&lt;/code&gt;的格式；而且一些命令，如&lt;code&gt;ll&lt;/code&gt;也无法使用，请问为什么？&lt;/p&gt;
@@ -480,10 +480,6 @@ gavin&amp;#58;x:5:gavin,kavin
 &lt;li&gt;
 &lt;p&gt;从权限高的用户切换到权限低的用户不需要输入密码，反之需要。&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.runoob.com/linux/linux-user-manage.html&#34; target=&#34;_blank&#34;&gt;菜鸟教程&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     

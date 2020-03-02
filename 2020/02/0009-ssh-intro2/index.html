@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>SSH 原理 &amp; 实践 | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SSH之原理&amp;实践 | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
 <meta name="Description" content="Gavin&#39;s Blog"><link rel="prev" href="https://belldrum.com/2020/02/0007-nginx/" /><link rel="canonical" href="https://belldrum.com/2020/02/0009-ssh-intro2/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -13,16 +13,15 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff"><meta property="og:title" content="SSH 原理 &amp; 实践" />
-<meta property="og:description" content="本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章SSH系列。
-OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。
-
-OpenSSH套件主要包含以下几种工具：
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="SSH之原理&amp;实践" />
+<meta property="og:description" content="OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。
+OpenSSH软件主要包含以下几种工具：
 
 服务器端由SSH服务(sshd)、sftp-server和ssh-agent组成
 客户端使用ssh-keygen、ssh-add、ssh-kyesign、ssh-keyscan等管理密钥
 远程操作使用ssh、scp和sftp完成
 
+本文主要介绍SSH的工作流程以及OpenSSH部分工具的使用。
 认证过程
 SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：
 
@@ -31,16 +30,17 @@ SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric 
 客户认证
 
 服务器验证
-首先客户端向服务器发送连接请求，服务器端的SSH服务(sshd)默认监听22端口的SSH连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：
+Ssh连接采用客户端-服务器模型(c/s)，客户端首先向服务器发送连接请求，服务器端运行的SSH服务(sshd)默认监听22端口并处理连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：
 1. 首次连接
 如果客户端是第一次连接服务器，则要求客户端通过验证服务器的公钥来手动认证服务器。服务器的公钥一般保存在/etc/ssh/host_key*，也可以使用ssh-keyscan命令找到。一旦服务器密钥被接受，那么将会被添加到客户端~/.ssh/know_hosts文件中。 known_hosts文件包含有关客户端所有已验证服务器的信息。
 2. 再次连接
 如果客户端不是第一次访问要连接的服务器，则将服务器的身份与known_hosts文件中先前记录的信息进行匹配以进行验证。
-我们可以发现，服务器身份需要用户手动进行验证，这样做的目的是为了防止中间人攻击(Man-in-the-middle attack, MITM)。
+
+服务器的身份需要用户手动进行验证，这样做的目的主要是为了防止中间人攻击(Man-in-the-middle attack, MITM)。
 生成会话密钥
 验证服务器后，服务器端和客户端使用Diffie-Hellman算法生成会话密钥(session key)。 该算法的设计方式是，双方在会话密钥的生成中会做出同等贡献。 生成的会话密钥是在客户端和服务器端共享的对称密钥，即双方使用相同的密钥加密和解密。
 客户端认证
-最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，如下所示：
+最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，验证过程如下：
 
 客户端首先向服务器发送要验证的密钥对的ID。
 服务器检查客户端尝试登录的帐户的authorized_keys文件中的密钥ID。
@@ -251,16 +251,15 @@ SSH命令和SSH服务详解
 <meta property="article:published_time" content="2020-02-28T00:25:28+08:00" />
 <meta property="article:modified_time" content="2020-02-28T00:25:28+08:00" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="SSH 原理 &amp; 实践"/>
-<meta name="twitter:description" content="本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章SSH系列。
-OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。
-
-OpenSSH套件主要包含以下几种工具：
+<meta name="twitter:title" content="SSH之原理&amp;实践"/>
+<meta name="twitter:description" content="OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。
+OpenSSH软件主要包含以下几种工具：
 
 服务器端由SSH服务(sshd)、sftp-server和ssh-agent组成
 客户端使用ssh-keygen、ssh-add、ssh-kyesign、ssh-keyscan等管理密钥
 远程操作使用ssh、scp和sftp完成
 
+本文主要介绍SSH的工作流程以及OpenSSH部分工具的使用。
 认证过程
 SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：
 
@@ -269,16 +268,17 @@ SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric 
 客户认证
 
 服务器验证
-首先客户端向服务器发送连接请求，服务器端的SSH服务(sshd)默认监听22端口的SSH连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：
+Ssh连接采用客户端-服务器模型(c/s)，客户端首先向服务器发送连接请求，服务器端运行的SSH服务(sshd)默认监听22端口并处理连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：
 1. 首次连接
 如果客户端是第一次连接服务器，则要求客户端通过验证服务器的公钥来手动认证服务器。服务器的公钥一般保存在/etc/ssh/host_key*，也可以使用ssh-keyscan命令找到。一旦服务器密钥被接受，那么将会被添加到客户端~/.ssh/know_hosts文件中。 known_hosts文件包含有关客户端所有已验证服务器的信息。
 2. 再次连接
 如果客户端不是第一次访问要连接的服务器，则将服务器的身份与known_hosts文件中先前记录的信息进行匹配以进行验证。
-我们可以发现，服务器身份需要用户手动进行验证，这样做的目的是为了防止中间人攻击(Man-in-the-middle attack, MITM)。
+
+服务器的身份需要用户手动进行验证，这样做的目的主要是为了防止中间人攻击(Man-in-the-middle attack, MITM)。
 生成会话密钥
 验证服务器后，服务器端和客户端使用Diffie-Hellman算法生成会话密钥(session key)。 该算法的设计方式是，双方在会话密钥的生成中会做出同等贡献。 生成的会话密钥是在客户端和服务器端共享的对称密钥，即双方使用相同的密钥加密和解密。
 客户端认证
-最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，如下所示：
+最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，验证过程如下：
 
 客户端首先向服务器发送要验证的密钥对的ID。
 服务器检查客户端尝试登录的帐户的authorized_keys文件中的密钥ID。
@@ -488,7 +488,7 @@ SSH命令和SSH服务详解
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        "headline": "SSH 原理 \x26 实践",
+        "headline": "SSH之原理\x26实践",
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/belldrum.com\/2020\/02\/0009-ssh-intro2\/"
@@ -497,7 +497,7 @@ SSH命令和SSH服务详解
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "ssh, server","wordcount":  4847 ,
+            },"genre": "posts","keywords": "SSH, Server","wordcount":  4838 ,
         "url": "https:\/\/belldrum.com\/2020\/02\/0009-ssh-intro2\/","datePublished": "2020-02-28T00:25:28\x2b08:00","dateModified": "2020-02-28T00:25:28\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "Gavin",
@@ -518,7 +518,7 @@ SSH命令和SSH服务详解
         <div class="navbar-header animated bounceIn">
             <a href="https://belldrum.com/">晨钟暮鼓</a>
         </div>
-        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/" title="English">主页</a><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"><i class="fas fa-home fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><nav class="navbar-mobile">
@@ -531,17 +531,17 @@ SSH命令和SSH服务详解
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/" title="English">主页</a><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container"><article class="page"><h1 class="post-title animated flipInX">SSH 原理 &amp; 实践</h1><div class="post-meta">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">SSH之原理&amp;实践</h1><div class="post-meta">
             <div class="post-meta-main"><a class="author" href="https://belldrum.com/" rel="author" target="_blank">
                     <i class="fas fa-user-circle fa-fw"></i>Gavin
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://belldrum.com/categories/server/">Server</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-28>2020-02-28</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 4847 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 10 分钟&nbsp;<span id="/2020/02/0009-ssh-intro2/" class="leancloud_visitors" data-flag-title="SSH 原理 &amp; 实践">
+                <i class="fas fa-pencil-alt fa-fw"></i>约 4838 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 10 分钟&nbsp;<span id="/2020/02/0009-ssh-intro2/" class="leancloud_visitors" data-flag-title="SSH之原理&amp;实践">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
@@ -612,15 +612,14 @@ SSH命令和SSH服务详解
   </ul>
 </nav></div>
                 </details>
-            </div><div class="post-content"><p>本文是SSH系列第二章，主要介绍SSH的工作流程以及OpenSSH的使用，SSH加密认证原理可以参考上一篇文章<a href="https://www.cnblogs.com/f-ck-need-u/p/7129122.html" target="_blank">SSH系列</a>。</p>
-<p>OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。<br>
-<br />
-OpenSSH套件主要包含以下几种工具：</p>
+            </div><div class="post-content"><p>OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。</p>
+<p>OpenSSH软件主要包含以下几种工具：</p>
 <ul>
 <li>服务器端由SSH服务(sshd)、sftp-server和ssh-agent组成</li>
 <li>客户端使用ssh-keygen、ssh-add、ssh-kyesign、ssh-keyscan等管理密钥</li>
 <li>远程操作使用ssh、scp和sftp完成</li>
 </ul>
+<p>本文主要介绍SSH的工作流程以及OpenSSH部分工具的使用。</p>
 <a class="post-dummy-target" id="认证过程"></a><h2>认证过程</h2>
 <p>SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：</p>
 <ol>
@@ -629,16 +628,17 @@ OpenSSH套件主要包含以下几种工具：</p>
 <li>客户认证</li>
 </ol>
 <a class="post-dummy-target" id="服务器验证"></a><h3>服务器验证</h3>
-<p>首先客户端向服务器发送连接请求，服务器端的SSH服务(sshd)默认监听22端口的SSH连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：</p>
+<p>Ssh连接采用客户端-服务器模型(c/s)，客户端首先向服务器发送连接请求，服务器端运行的SSH服务(sshd)默认监听22端口并处理连接请求，这时客户端需要验证服务器的身份。服务器身份验证主要有两种情况：</p>
 <p><strong>1. 首次连接</strong><br>
 如果客户端是第一次连接服务器，则要求客户端通过验证服务器的公钥来手动认证服务器。服务器的公钥一般保存在<code>/etc/ssh/host_key*</code>，也可以使用ssh-keyscan命令找到。一旦服务器密钥被接受，那么将会被添加到客户端<code>~/.ssh/know_hosts</code>文件中。<code> known_hosts</code>文件包含有关客户端所有已验证服务器的信息。<br>
 <strong>2. 再次连接</strong><br>
-如果客户端不是第一次访问要连接的服务器，则将服务器的身份与<code>known_hosts</code>文件中先前记录的信息进行匹配以进行验证。</p>
-<p>我们可以发现，服务器身份需要用户手动进行验证，这样做的目的是为了防止中间人攻击(Man-in-the-middle attack, MITM)。</p>
+如果客户端不是第一次访问要连接的服务器，则将服务器的身份与<code>known_hosts</code>文件中先前记录的信息进行匹配以进行验证。<br>
+<br />
+服务器的身份需要用户手动进行验证，这样做的目的主要是为了防止中间人攻击(Man-in-the-middle attack, MITM)。</p>
 <a class="post-dummy-target" id="生成会话密钥"></a><h3>生成会话密钥</h3>
 <p>验证服务器后，服务器端和客户端使用<code>Diffie-Hellman</code>算法生成会话密钥(session key)。 该算法的设计方式是，双方在会话密钥的生成中会做出同等贡献。 生成的会话密钥是在客户端和服务器端共享的对称密钥，即双方使用相同的密钥加密和解密。</p>
 <a class="post-dummy-target" id="客户端认证"></a><h3>客户端认证</h3>
-<p>最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，如下所示：</p>
+<p>最后阶段是使用SSH密钥对来验证客户端的身份。顾名思义，SSH密钥对由两个不同目的的密钥组成： 公钥用于加密数据并可以自由分发，私钥用于解密数据，并且永远不会与任何人共享。  对称加密建立后，将对客户端进行身份验证，验证过程如下：</p>
 <ol>
 <li>客户端首先向服务器发送要验证的密钥对的ID。</li>
 <li>服务器检查客户端尝试登录的帐户的authorized_keys文件中的密钥ID。</li>
@@ -853,11 +853,11 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
         </div>
         <div class="post-info-line">
             <div class="post-info-md"></div>
-            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0009-ssh-intro2%2f&amp;text=SSH%20%e5%8e%9f%e7%90%86%20%26%20%e5%ae%9e%e8%b7%b5&amp;via=" target="_blank" title="分享到 Twitter">
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0009-ssh-intro2%2f&amp;text=SSH%e4%b9%8b%e5%8e%9f%e7%90%86%26%e5%ae%9e%e8%b7%b5&amp;via=" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
         </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0009-ssh-intro2%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a><a href="//reddit.com/submit?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0009-ssh-intro2%2f&amp;title=SSH%20%e5%8e%9f%e7%90%86%20%26%20%e5%ae%9e%e8%b7%b5" target="_blank" title="分享到 Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fbelldrum.com%2f2020%2f02%2f0009-ssh-intro2%2f&amp;title=SSH%e4%b9%8b%e5%8e%9f%e7%90%86%26%e5%ae%9e%e8%b7%b5" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
         </a></span></div>
         </div>
@@ -865,9 +865,9 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
 
     <div class="post-info-more">
         <section><span class="tag">
-                        <a href="https://belldrum.com/tags/ssh/"><i class="fas fa-tag fa-fw"></i>&nbsp;ssh</a>&nbsp;
+                        <a href="https://belldrum.com/tags/ssh/"><i class="fas fa-tag fa-fw"></i>&nbsp;SSH</a>&nbsp;
                     </span><span class="tag">
-                        <a href="https://belldrum.com/tags/server/"><i class="fas fa-tag fa-fw"></i>&nbsp;server</a>&nbsp;
+                        <a href="https://belldrum.com/tags/server/"><i class="fas fa-tag fa-fw"></i>&nbsp;Server</a>&nbsp;
                     </span></section>
         <section>
             <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://belldrum.com/">主页</a></span>
