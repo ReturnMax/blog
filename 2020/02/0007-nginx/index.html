@@ -14,9 +14,10 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff"><meta property="og:title" content="Nginx之配置介绍" />
-<meta property="og:description" content="Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。
-说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。
-本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。
+<meta property="og:description" content="Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。
+本文主要介绍如何使用Nginx部署静态网站，所有资料皆收集于网络，纰漏之处还望见谅。
+说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」；2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。
+本文要谈的Nginx就可以作为第二类服务器，一个不间断运行的提供Web服务的软件程序。
 软件安装
 在Debian下可以使用apt-get安装nginx：
 
@@ -27,15 +28,15 @@
 apt-get install nginx
 
 
-默认安装位置在/etc/nginx。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。
+默认安装位置在/etc/nginx。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。如果没有启动，我们可以执行nginx命令手动启动。
 
 我们通过ps -aux命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。
-Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU个数相关（有利于进程切换），配置几个就有几个Worker进程。
-如果nginx没有启动，我们可以执行nginx命令手动启动。
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU核心个数相同（有利于进程切换）。
 安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。
 接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。
 配置文件
-默认情况下，nginx的配置文件是/etc/nginx/nginx.conf。配置文件里大部分内容是注释掉的，文件内容如下：
+默认情况下，nginx的配置文件是/etc/nginx/nginx.conf。Nginx 配置信息主要分为六大部分： main(全局设置)、events(事件设置)、http(HTTP服务器设置)、 sever(虚拟主机设置)、location(URL匹配设置)、upstream(反向代理设置)。
+配置文件里大部分内容是注释掉的，文件内容如下：
 
 user www-data www-data;				//配置用户和用户组，用户组可以为空
 worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
@@ -49,18 +50,20 @@ events {					//events块，配置影响nginx服务器或与用户的网络连接
 }
 
 http {						//http块，可以嵌套多个server
+	sendfile on;				//开启高效文件传输模式
+	keepalive_timeout 65;			//长连接超市时间，单位是秒
 	...
 	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
 	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
 	...
+	gzip on;				//开启gzip压缩输出，减少网络传输
+	...
 	server {				//server块，配置虚拟主机的参数
 		listen 80;			//server监听端口
-		server_name belldrum.com	//监听的主机ip地址或域名
+		server_name belldrum.com	//服务器名，填写监听的主机ip地址或域名
 		location {			//配置请求的路由和页面的处理
-
 		}
 	}
-
 }
 
 部署网站
@@ -71,11 +74,11 @@ http {
 	server {
 		listen 80;
 		server_name belldrum.com;	// 域名或者主机ip
-		root /home/gavin/blog;		// 网站资源根目录路，nginx需要有该目录的读取权限
+		root /home/gavin/blog;		// 网站资源根目录，nginx需要有该目录的读取权限
 		index index.html;		// 显示首页
 		location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
-    	root /home/gavin/blog;
-		}				// 访问网站的入口
+    			root /home/gavin/blog;
+		}				// 配置路由
 	}
 }
 
@@ -113,13 +116,14 @@ http {
 }
 
 配置 SSL
-目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。
+目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。
 
-在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为belldrum.com.key和belldrum.com.pem。
-我们在/etc/nginx目录下新建一个cert文件夹用于存放密钥和证书，然后修改之前创建的belldrum.conf配置文件，修改后的内容如下：
+如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为belldrum.com.key和belldrum.com.pem。
+
+我们在/etc/nginx目录下新建一个cert文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后我们修改之前创建的belldrum.conf配置文件，修改后的内容如下：
 
 server {
-	listen 443 ssl;						//监听443端口
+	listen 443 ssl;						//监听443端口，添加ssl参数
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
@@ -127,20 +131,24 @@ server {
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
 	
-	ssl_session_timeout 5m;					//会话过期时间
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
 		root /home/gavin/blog;
 	}
 }
 
+其中listen、ssl_certificate和ssl_certificate_key是必须明确说明的。命令ssl_protocols和ssl_ciphers用于限制连接仅包含加强版本和密码的SSL/TLS，上面是阿里云的推荐配置，没有显式配置时它们的默认值如下：
+
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2
+ssl_ciphers HIGH：！aNULL：！MD5  
+
 修改完成后保存退出，然后重启nginx服务即可通过https://belldrum.com访问网站了。
 
-此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。
+此外也可以借助一些工具，如Certbot，帮助我们自动申请和更新证书。
 设置跳转
-我们希望当用户访问http://belldrum.com时能够自动重定向到https://belldrum.com，或者更进一步，能够同时实现http://www.belldrum.com和https://www.belldrum.com到https://belldrum.com的重定向。
+我们希望当用户使用http访问网站时能够自动重定向到https，或者更进一步，能够同时实现子域名www到non-www的重定向。
 
 我们可以使用rewrite或者301重定向实现这种跳转，在这里只介绍301重定向的方法。
 我们将belldrum.conf配置文件修改如下：
@@ -150,12 +158,12 @@ server {
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
+
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
-	ssl_session_timeout 5m;
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 
 	access_log /var/log/nginx/belldrum.com-access.log;
 	error_log /var/log/nginx/belldrum.com-error.log;
@@ -174,15 +182,25 @@ server {	//设置http重定向到https
 server {	//设置www重定向到non-www
         listen 443 ssl;  
         server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
         return 301 https://belldrum.com$request_uri;
 }
 
-
 如果是多个域名的话，server_name选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。
 配置HSTS
-HTTP严格传输安全HTTP Strict Transport Security，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险。
+添加响应头
+HTTP严格传输安全HTTP Strict Transport Security，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险、保护网站流量。
 
-语法如下：
+网站第一次通过HTTPS请求时，服务器响应Strict-Transport-Security头，浏览器记录下这些信息然后在规定时间内访问这个网站的请求都会自动把HTTP替换为HTTPS，并忽略其它的跳转设置(如301重定向跳转)。
+当HSTS响应头(Response Header)设置的过期时间到了，后面通过HTTP的访问恢复到正常模式，不会再自动跳转到HTTPS。每次浏览器接收到STS头，它都会更新这个网站的过期时间，防止过期发生。
+
+HSTS响应头的语法如下：
 
 Strict-Transport-Security: max-age=[; includeSubDomains][; preload;]	
 
@@ -190,10 +208,86 @@ Strict-Transport-Security: max-age=[; includeSubDomains][; preload;]
 
 max-age=&lt;expire-time&gt; 浏览器收到这个请求后，在&lt;expire-time&gt;秒内访问该域名下的请求都使用HTTPS
 includeSubDomains 可选项，如果添加这个参数，那么说明此规则也适用于该网站的所有子域名
-preload 可选项，将域名申请添加到预加载HSTS列表
+preload 可选项，将域名申请添加到 预加载HSTS列表
 
-在nginx中配置HSTS非常简单，只需要在监听443端口的server中加入HSTS响应头。
 
+在nginx中设置HSTS响应头非常简单，只需要在监听443端口的server中加入以下内容：
+
+add_header Strict-Transport-Security &#34;max-age=31536000; includeSubDomains&#34; always;
+
+
+always参数确保为所有响应（包括内部生成的错误响应）设置HSTS响应头
+
+向客户提供HSTS策略后，它将在指定&lt;expire-time&gt;秒内缓存信息。在此期间，浏览器拒绝通过未加密的HTTP访问Web服务，同时也拒绝网站证书错误，而不会给用户继续访问的选择。如果指定了includeSubDomains参数，那么这些限制也适用于该域名的所有子域名。
+撤消HSTS策略以删除网站或服务的HTTPS版本非常困难。因此在测试阶段，请先使用非常短的max-age时间，例如设置为5分钟(max-age=300)，并在测试没有问题时逐渐延长为一周、一月或一年(max-age=31536000为一年)。
+
+修改后的belldrum.conf配置文件如下：
+
+server {
+	listen 443 ssl;		//监听所有ipv4地址
+	listen [::]:443 ssl;	//监听所有ipv6地址
+	server_name belldrum.com;
+
+	add_header Strict-Transport-Security &#34;max-age=31536000; includeSubDomains&#34; always;
+ 
+	root /home/gavin/blog;
+	index index.html;
+
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	
+	access_log /var/log/nginx/belldrum-access.log;
+	error_log /var/log/nginx/belldrum-error.log;
+
+	location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+
+server {
+	listen 80;
+	listen [::]:80;	
+	server_name belldrum.com www.belldrum.com;
+	return 301 https://belldrum.com$request_uri;
+}
+
+server {
+        listen 443 ssl;  
+        listen [::]:443 ssl;
+        server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/conf.d/cert/3492990_belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/conf.d/cert/3492990_belldrum.com.key;
+        
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
+        return 301 https://belldrum.com$request_uri;
+}
+
+预加载列表
+HSTS并不能完美的解决HTTP会话劫持，它也有一些缺点。如果用户在以下情况通过HTTP访问受HSTS保护的网站，仍然容易受到攻击：
+
+从未访问过该网站
+切换新的浏览器
+切换新设备或系统
+删除了浏览器缓存
+近期没有访问该网站，max-age已过期
+
+为了解决这个问题，Google维护了一份 预加载列表 (HSTS Preload List)。我们可以手动将自己的域名提交到HSTS预加载列表，然后这个列表会被硬编码到Chrome浏览器中。同时大多数主流浏览器，如 Firefox、Opera、Safari、Safari、IE 11和Edge等也支持该HSTS预加载列表。
+提交HSTS预加载列表之前网站需要满足以下几点要求：
+
+提供有效的证书
+如果正在监听80端口，则需要在同一主机上将HTTP重定向到HTTPS
+通过HTTPS服务所有的子域名，特别是www子域名
+HSTS头中的参数要求max-age至少为31536000(一年)，且必须包含includeSubDomains和preload参数
+
+需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。
+其他优化
+减少运算量
+加强安全性
 
 add_header Strict-Transport-Security &#34;max-age=2592000; includeSubDomains; preload&#34;;
 add_header X-Frame-Options DENY;
@@ -201,17 +295,17 @@ add_header X-Content-Type-Options nosniff;
 add_header Content-Security-Policy &#34;default-src &#39;self&#39; www.google-analytics.com ajax.googleapis.com www.google.com google.com gstatic.com www.gstatic.com connect.facebook.net facebook.com;&#34;;
 add_header X-XSS-Protection &#34;1; mode=block&#34;;
 add_header Referrer-Policy &#34;origin&#34;;
-
-其他设置" />
+" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://belldrum.com/2020/02/0007-nginx/" />
 <meta property="article:published_time" content="2020-02-21T23:25:34+08:00" />
 <meta property="article:modified_time" content="2020-02-21T23:25:34+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Nginx之配置介绍"/>
-<meta name="twitter:description" content="Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。
-说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。
-本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。
+<meta name="twitter:description" content="Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。
+本文主要介绍如何使用Nginx部署静态网站，所有资料皆收集于网络，纰漏之处还望见谅。
+说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」；2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。
+本文要谈的Nginx就可以作为第二类服务器，一个不间断运行的提供Web服务的软件程序。
 软件安装
 在Debian下可以使用apt-get安装nginx：
 
@@ -222,15 +316,15 @@ add_header Referrer-Policy &#34;origin&#34;;
 apt-get install nginx
 
 
-默认安装位置在/etc/nginx。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。
+默认安装位置在/etc/nginx。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。如果没有启动，我们可以执行nginx命令手动启动。
 
 我们通过ps -aux命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。
-Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU个数相关（有利于进程切换），配置几个就有几个Worker进程。
-如果nginx没有启动，我们可以执行nginx命令手动启动。
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU核心个数相同（有利于进程切换）。
 安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。
 接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。
 配置文件
-默认情况下，nginx的配置文件是/etc/nginx/nginx.conf。配置文件里大部分内容是注释掉的，文件内容如下：
+默认情况下，nginx的配置文件是/etc/nginx/nginx.conf。Nginx 配置信息主要分为六大部分： main(全局设置)、events(事件设置)、http(HTTP服务器设置)、 sever(虚拟主机设置)、location(URL匹配设置)、upstream(反向代理设置)。
+配置文件里大部分内容是注释掉的，文件内容如下：
 
 user www-data www-data;				//配置用户和用户组，用户组可以为空
 worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
@@ -244,18 +338,20 @@ events {					//events块，配置影响nginx服务器或与用户的网络连接
 }
 
 http {						//http块，可以嵌套多个server
+	sendfile on;				//开启高效文件传输模式
+	keepalive_timeout 65;			//长连接超市时间，单位是秒
 	...
 	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
 	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
 	...
+	gzip on;				//开启gzip压缩输出，减少网络传输
+	...
 	server {				//server块，配置虚拟主机的参数
 		listen 80;			//server监听端口
-		server_name belldrum.com	//监听的主机ip地址或域名
+		server_name belldrum.com	//服务器名，填写监听的主机ip地址或域名
 		location {			//配置请求的路由和页面的处理
-
 		}
 	}
-
 }
 
 部署网站
@@ -266,11 +362,11 @@ http {
 	server {
 		listen 80;
 		server_name belldrum.com;	// 域名或者主机ip
-		root /home/gavin/blog;		// 网站资源根目录路，nginx需要有该目录的读取权限
+		root /home/gavin/blog;		// 网站资源根目录，nginx需要有该目录的读取权限
 		index index.html;		// 显示首页
 		location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
-    	root /home/gavin/blog;
-		}				// 访问网站的入口
+    			root /home/gavin/blog;
+		}				// 配置路由
 	}
 }
 
@@ -308,13 +404,14 @@ http {
 }
 
 配置 SSL
-目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。
+目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。
 
-在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为belldrum.com.key和belldrum.com.pem。
-我们在/etc/nginx目录下新建一个cert文件夹用于存放密钥和证书，然后修改之前创建的belldrum.conf配置文件，修改后的内容如下：
+如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为belldrum.com.key和belldrum.com.pem。
+
+我们在/etc/nginx目录下新建一个cert文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后我们修改之前创建的belldrum.conf配置文件，修改后的内容如下：
 
 server {
-	listen 443 ssl;						//监听443端口
+	listen 443 ssl;						//监听443端口，添加ssl参数
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
@@ -322,20 +419,24 @@ server {
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
 	
-	ssl_session_timeout 5m;					//会话过期时间
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
 		root /home/gavin/blog;
 	}
 }
 
+其中listen、ssl_certificate和ssl_certificate_key是必须明确说明的。命令ssl_protocols和ssl_ciphers用于限制连接仅包含加强版本和密码的SSL/TLS，上面是阿里云的推荐配置，没有显式配置时它们的默认值如下：
+
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2
+ssl_ciphers HIGH：！aNULL：！MD5  
+
 修改完成后保存退出，然后重启nginx服务即可通过https://belldrum.com访问网站了。
 
-此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。
+此外也可以借助一些工具，如Certbot，帮助我们自动申请和更新证书。
 设置跳转
-我们希望当用户访问http://belldrum.com时能够自动重定向到https://belldrum.com，或者更进一步，能够同时实现http://www.belldrum.com和https://www.belldrum.com到https://belldrum.com的重定向。
+我们希望当用户使用http访问网站时能够自动重定向到https，或者更进一步，能够同时实现子域名www到non-www的重定向。
 
 我们可以使用rewrite或者301重定向实现这种跳转，在这里只介绍301重定向的方法。
 我们将belldrum.conf配置文件修改如下：
@@ -345,12 +446,12 @@ server {
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
+
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
-	ssl_session_timeout 5m;
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 
 	access_log /var/log/nginx/belldrum.com-access.log;
 	error_log /var/log/nginx/belldrum.com-error.log;
@@ -369,15 +470,25 @@ server {	//设置http重定向到https
 server {	//设置www重定向到non-www
         listen 443 ssl;  
         server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
         return 301 https://belldrum.com$request_uri;
 }
 
-
 如果是多个域名的话，server_name选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。
 配置HSTS
-HTTP严格传输安全HTTP Strict Transport Security，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险。
+添加响应头
+HTTP严格传输安全HTTP Strict Transport Security，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险、保护网站流量。
 
-语法如下：
+网站第一次通过HTTPS请求时，服务器响应Strict-Transport-Security头，浏览器记录下这些信息然后在规定时间内访问这个网站的请求都会自动把HTTP替换为HTTPS，并忽略其它的跳转设置(如301重定向跳转)。
+当HSTS响应头(Response Header)设置的过期时间到了，后面通过HTTP的访问恢复到正常模式，不会再自动跳转到HTTPS。每次浏览器接收到STS头，它都会更新这个网站的过期时间，防止过期发生。
+
+HSTS响应头的语法如下：
 
 Strict-Transport-Security: max-age=[; includeSubDomains][; preload;]	
 
@@ -385,10 +496,86 @@ Strict-Transport-Security: max-age=[; includeSubDomains][; preload;]
 
 max-age=&lt;expire-time&gt; 浏览器收到这个请求后，在&lt;expire-time&gt;秒内访问该域名下的请求都使用HTTPS
 includeSubDomains 可选项，如果添加这个参数，那么说明此规则也适用于该网站的所有子域名
-preload 可选项，将域名申请添加到预加载HSTS列表
+preload 可选项，将域名申请添加到 预加载HSTS列表
 
-在nginx中配置HSTS非常简单，只需要在监听443端口的server中加入HSTS响应头。
 
+在nginx中设置HSTS响应头非常简单，只需要在监听443端口的server中加入以下内容：
+
+add_header Strict-Transport-Security &#34;max-age=31536000; includeSubDomains&#34; always;
+
+
+always参数确保为所有响应（包括内部生成的错误响应）设置HSTS响应头
+
+向客户提供HSTS策略后，它将在指定&lt;expire-time&gt;秒内缓存信息。在此期间，浏览器拒绝通过未加密的HTTP访问Web服务，同时也拒绝网站证书错误，而不会给用户继续访问的选择。如果指定了includeSubDomains参数，那么这些限制也适用于该域名的所有子域名。
+撤消HSTS策略以删除网站或服务的HTTPS版本非常困难。因此在测试阶段，请先使用非常短的max-age时间，例如设置为5分钟(max-age=300)，并在测试没有问题时逐渐延长为一周、一月或一年(max-age=31536000为一年)。
+
+修改后的belldrum.conf配置文件如下：
+
+server {
+	listen 443 ssl;		//监听所有ipv4地址
+	listen [::]:443 ssl;	//监听所有ipv6地址
+	server_name belldrum.com;
+
+	add_header Strict-Transport-Security &#34;max-age=31536000; includeSubDomains&#34; always;
+ 
+	root /home/gavin/blog;
+	index index.html;
+
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	
+	access_log /var/log/nginx/belldrum-access.log;
+	error_log /var/log/nginx/belldrum-error.log;
+
+	location ~* ^.&#43;\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+
+server {
+	listen 80;
+	listen [::]:80;	
+	server_name belldrum.com www.belldrum.com;
+	return 301 https://belldrum.com$request_uri;
+}
+
+server {
+        listen 443 ssl;  
+        listen [::]:443 ssl;
+        server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/conf.d/cert/3492990_belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/conf.d/cert/3492990_belldrum.com.key;
+        
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
+        return 301 https://belldrum.com$request_uri;
+}
+
+预加载列表
+HSTS并不能完美的解决HTTP会话劫持，它也有一些缺点。如果用户在以下情况通过HTTP访问受HSTS保护的网站，仍然容易受到攻击：
+
+从未访问过该网站
+切换新的浏览器
+切换新设备或系统
+删除了浏览器缓存
+近期没有访问该网站，max-age已过期
+
+为了解决这个问题，Google维护了一份 预加载列表 (HSTS Preload List)。我们可以手动将自己的域名提交到HSTS预加载列表，然后这个列表会被硬编码到Chrome浏览器中。同时大多数主流浏览器，如 Firefox、Opera、Safari、Safari、IE 11和Edge等也支持该HSTS预加载列表。
+提交HSTS预加载列表之前网站需要满足以下几点要求：
+
+提供有效的证书
+如果正在监听80端口，则需要在同一主机上将HTTP重定向到HTTPS
+通过HTTPS服务所有的子域名，特别是www子域名
+HSTS头中的参数要求max-age至少为31536000(一年)，且必须包含includeSubDomains和preload参数
+
+需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。
+其他优化
+减少运算量
+加强安全性
 
 add_header Strict-Transport-Security &#34;max-age=2592000; includeSubDomains; preload&#34;;
 add_header X-Frame-Options DENY;
@@ -396,8 +583,7 @@ add_header X-Content-Type-Options nosniff;
 add_header Content-Security-Policy &#34;default-src &#39;self&#39; www.google-analytics.com ajax.googleapis.com www.google.com google.com gstatic.com www.gstatic.com connect.facebook.net facebook.com;&#34;;
 add_header X-XSS-Protection &#34;1; mode=block&#34;;
 add_header Referrer-Policy &#34;origin&#34;;
-
-其他设置"/>
+"/>
 <script type="application/ld+json">
     {
         "@context": "http://schema.org",
@@ -411,7 +597,7 @@ add_header Referrer-Policy &#34;origin&#34;;
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Nginx","wordcount":  2718 ,
+            },"genre": "posts","keywords": "Nginx","wordcount":  4184 ,
         "url": "https:\/\/belldrum.com\/2020\/02\/0007-nginx\/","datePublished": "2020-02-21T23:25:34\x2b08:00","dateModified": "2020-02-21T23:25:34\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "Gavin",
@@ -451,11 +637,11 @@ add_header Referrer-Policy &#34;origin&#34;;
 </nav><main class="main">
                 <div class="container"><article class="page"><h1 class="post-title animated flipInX">Nginx之配置介绍</h1><div class="post-meta">
             <div class="post-meta-main"><a class="author" href="https://belldrum.com/" rel="author" target="_blank">
-                    <i class="fas fa-user-circle fa-fw"></i>Gavin
+                    <i class="fas fa-user-circle fa-fw"></i>嘉文
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://belldrum.com/categories/server/">Server</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-21>2020-02-21</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 2718 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 6 分钟&nbsp;<span id="/2020/02/0007-nginx/" class="leancloud_visitors" data-flag-title="Nginx之配置介绍">
+                <i class="fas fa-pencil-alt fa-fw"></i>约 4184 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 9 分钟&nbsp;<span id="/2020/02/0007-nginx/" class="leancloud_visitors" data-flag-title="Nginx之配置介绍">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
@@ -467,8 +653,18 @@ add_header Referrer-Policy &#34;origin&#34;;
     <li><a href="#部署网站">部署网站</a></li>
     <li><a href="#配置-ssl">配置 SSL</a></li>
     <li><a href="#设置跳转">设置跳转</a></li>
-    <li><a href="#配置hsts">配置HSTS</a></li>
-    <li><a href="#其他设置">其他设置</a></li>
+    <li><a href="#配置hsts">配置HSTS</a>
+      <ul>
+        <li><a href="#添加响应头">添加响应头</a></li>
+        <li><a href="#预加载列表">预加载列表</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他优化">其他优化</a>
+      <ul>
+        <li><a href="#减少运算量">减少运算量</a></li>
+        <li><a href="#加强安全性">加强安全性</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
             </div>
@@ -487,14 +683,25 @@ add_header Referrer-Policy &#34;origin&#34;;
     <li><a href="#部署网站">部署网站</a></li>
     <li><a href="#配置-ssl">配置 SSL</a></li>
     <li><a href="#设置跳转">设置跳转</a></li>
-    <li><a href="#配置hsts">配置HSTS</a></li>
-    <li><a href="#其他设置">其他设置</a></li>
+    <li><a href="#配置hsts">配置HSTS</a>
+      <ul>
+        <li><a href="#添加响应头">添加响应头</a></li>
+        <li><a href="#预加载列表">预加载列表</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他优化">其他优化</a>
+      <ul>
+        <li><a href="#减少运算量">减少运算量</a></li>
+        <li><a href="#加强安全性">加强安全性</a></li>
+      </ul>
+    </li>
   </ul>
 </nav></div>
                 </details>
-            </div><div class="post-content"><p>Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。本文主要介绍如何使用Nginx部署静态网站。</p>
-<p>说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」，2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。</p>
-<p>本文要谈的Nginx就可以充当这种服务器，一个不间断运行的提供web服务的软件程序。</p>
+            </div><div class="post-content"><p>Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。<br>
+本文主要介绍如何使用Nginx部署静态网站，所有资料皆收集于网络，纰漏之处还望见谅。</p>
+<p>说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」；2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。</p>
+<p>本文要谈的Nginx就可以作为第二类服务器，一个不间断运行的提供Web服务的软件程序。</p>
 <a class="post-dummy-target" id="软件安装"></a><h2>软件安装</h2>
 <p>在Debian下可以使用<code>apt-get</code>安装nginx：</p>
 <div class="highlight"><div class="chroma">
@@ -505,15 +712,15 @@ add_header Referrer-Policy &#34;origin&#34;;
 <pre class="chroma"><code class="language-bash" data-lang="bash">apt-get install nginx
 </code></pre></td></tr></table>
 </div>
-</div><p>默认安装位置在<code>/etc/nginx</code>。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。<br>
+</div><p>默认安装位置在<code>/etc/nginx</code>。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。如果没有启动，我们可以执行<code>nginx</code>命令手动启动。<br>
 <br />
 我们通过<code>ps -aux</code>命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。<br>
-Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU个数相关（有利于进程切换），配置几个就有几个Worker进程。</p>
-<p>如果nginx没有启动，我们可以执行<code>nginx</code>命令手动启动。</p>
-<p>安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。<br>
-接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。</p>
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU核心个数相同（有利于进程切换）。</p>
+<p>安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。</p>
+<p>接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。</p>
 <a class="post-dummy-target" id="配置文件"></a><h2>配置文件</h2>
-<p>默认情况下，nginx的配置文件是<code>/etc/nginx/nginx.conf</code>。配置文件里大部分内容是注释掉的，文件内容如下：</p>
+<p>默认情况下，nginx的配置文件是<code>/etc/nginx/nginx.conf</code>。Nginx 配置信息主要分为六大部分： main(全局设置)、events(事件设置)、http(HTTP服务器设置)、 sever(虚拟主机设置)、location(URL匹配设置)、upstream(反向代理设置)。</p>
+<p>配置文件里大部分内容是注释掉的，文件内容如下：</p>
 <pre>
 user www-data www-data;				//配置用户和用户组，用户组可以为空
 worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
@@ -527,18 +734,20 @@ events {					//events块，配置影响nginx服务器或与用户的网络连接
 }
 
 http {						//http块，可以嵌套多个server
+	sendfile on;				//开启高效文件传输模式
+	keepalive_timeout 65;			//长连接超市时间，单位是秒
 	...
 	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
 	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
 	...
+	gzip on;				//开启gzip压缩输出，减少网络传输
+	...
 	server {				//server块，配置虚拟主机的参数
 		listen 80;			//server监听端口
-		server_name belldrum.com	//监听的主机ip地址或域名
+		server_name belldrum.com	//服务器名，填写监听的主机ip地址或域名
 		location {			//配置请求的路由和页面的处理
-
 		}
 	}
-
 }
 </pre>
 <a class="post-dummy-target" id="部署网站"></a><h2>部署网站</h2>
@@ -549,11 +758,11 @@ http {
 	server {
 		listen 80;
 		server_name belldrum.com;	// 域名或者主机ip
-		root /home/gavin/blog;		// 网站资源根目录路，nginx需要有该目录的读取权限
+		root /home/gavin/blog;		// 网站资源根目录，nginx需要有该目录的读取权限
 		index index.html;		// 显示首页
 		location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
-    	root /home/gavin/blog;
-		}				// 访问网站的入口
+    			root /home/gavin/blog;
+		}				// 配置路由
 	}
 }
 </pre>
@@ -591,13 +800,14 @@ http {
 }
 </pre>
 <a class="post-dummy-target" id="配置-ssl"></a><h2>配置 SSL</h2>
-<p>目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且各大证书授权中心也相继推出了免费的SSL安全证书，因此给自己的网站添加一把小锁势在必行。<br>
+<p>目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。<br>
 <br />
-在这之前，我们需要先申请一份SSL安全证书，如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，密钥和证书名称分别为<code>belldrum.com.key</code>和<code>belldrum.com.pem</code>。<br>
-我们在<code>/etc/nginx</code>目录下新建一个<code>cert</code>文件夹用于存放密钥和证书，然后修改之前创建的<code>belldrum.conf</code>配置文件，修改后的内容如下：</p>
+如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为<code>belldrum.com.key</code>和<code>belldrum.com.pem</code>。<br>
+<br />
+我们在<code>/etc/nginx</code>目录下新建一个<code>cert</code>文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后我们修改之前创建的<code>belldrum.conf</code>配置文件，修改后的内容如下：</p>
 <pre>
 server {
-	listen 443 ssl;						//监听443端口
+	listen 443 ssl;						//监听443端口，添加ssl参数
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
@@ -605,20 +815,24 @@ server {
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;	//证书路径
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;	//私钥路径
 	
-	ssl_session_timeout 5m;					//会话过期时间
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
 		root /home/gavin/blog;
 	}
 }
 </pre>
+<p>其中<code>listen</code>、<code>ssl_certificate</code>和<code>ssl_certificate_key</code>是必须明确说明的。命令<code>ssl_protocols</code>和<code>ssl_ciphers</code>用于限制连接仅包含加强版本和密码的SSL/TLS，上面是阿里云的推荐配置，没有显式配置时它们的默认值如下：</p>
+<pre>
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2
+ssl_ciphers HIGH：！aNULL：！MD5  
+</pre>
 <p>修改完成后保存退出，然后重启nginx服务即可通过<code>https://belldrum.com</code>访问网站了。<br>
 <br />
-此外也有一些工具，如Certbot，可以帮助我们自动申请和更新证书。</p>
+此外也可以借助一些工具，如Certbot，帮助我们自动申请和更新证书。</p>
 <a class="post-dummy-target" id="设置跳转"></a><h2>设置跳转</h2>
-<p>我们希望当用户访问<code>http://belldrum.com</code>时能够自动重定向到<code>https://belldrum.com</code>，或者更进一步，能够同时实现<code>http://www.belldrum.com</code>和<code>https://www.belldrum.com</code>到<code>https://belldrum.com</code>的重定向。<br>
+<p>我们希望当用户使用<code>http</code>访问网站时能够自动重定向到<code>https</code>，或者更进一步，能够同时实现子域名<code>www</code>到<code>non-www</code>的重定向。<br>
 <br />
 我们可以使用<code>rewrite</code>或者<code>301</code>重定向实现这种跳转，在这里只介绍<code>301</code>重定向的方法。<br>
 我们将<code>belldrum.conf</code>配置文件修改如下：</p>
@@ -628,12 +842,12 @@ server {
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
+
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
-	ssl_session_timeout 5m;
-	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_prefer_server_ciphers on;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
 
 	access_log /var/log/nginx/belldrum.com-access.log;
 	error_log /var/log/nginx/belldrum.com-error.log;
@@ -652,15 +866,25 @@ server {	//设置http重定向到https
 server {	//设置www重定向到non-www
         listen 443 ssl;  
         server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
         return 301 https://belldrum.com$request_uri;
 }
-
 </pre>
 <p>如果是多个域名的话，<code>server_name</code>选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。</p>
 <a class="post-dummy-target" id="配置hsts"></a><h2>配置HSTS</h2>
-<p><ruby><rb>HTTP严格传输安全</rb><rt>HTTP Strict Transport Security</rt></ruby>，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险。<br>
-<br />
-语法如下：</p>
+<a class="post-dummy-target" id="添加响应头"></a><h3>添加响应头</h3>
+<p><ruby><rb>HTTP严格传输安全</rb><rt>HTTP Strict Transport Security</rt></ruby>，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险、保护网站流量。
+<br /><br>
+网站第一次通过HTTPS请求时，服务器响应<code>Strict-Transport-Security</code>头，浏览器记录下这些信息然后在规定时间内访问这个网站的请求都会自动把HTTP替换为HTTPS，并忽略其它的跳转设置(如301重定向跳转)。</p>
+<p>当HSTS响应头(Response Header)设置的过期时间到了，后面通过HTTP的访问恢复到正常模式，不会再自动跳转到HTTPS。每次浏览器接收到STS头，它都会更新这个网站的过期时间，防止过期发生。
+<br /><br>
+HSTS响应头的语法如下：</p>
 <pre>
 Strict-Transport-Security: max-age=<expire-time>[; includeSubDomains][; preload;]	
 </pre>
@@ -668,10 +892,86 @@ Strict-Transport-Security: max-age=<expire-time>[; includeSubDomains][; preload;
 <ul>
 <li><code>max-age=&lt;expire-time&gt;</code> 浏览器收到这个请求后，在<code>&lt;expire-time&gt;</code>秒内访问该域名下的请求都使用HTTPS</li>
 <li><code>includeSubDomains</code> 可选项，如果添加这个参数，那么说明此规则也适用于该网站的所有子域名</li>
-<li><code>preload</code> 可选项，将域名申请添加到<a href="https://hstspreload.org/" target="_blank">预加载HSTS列表</a><br>
-<br />
-在nginx中配置HSTS非常简单，只需要在监听443端口的server中加入HSTS响应头。</li>
+<li><code>preload</code> 可选项，将域名申请添加到 <a href="#%e9%a2%84%e5%8a%a0%e8%bd%bd%e5%88%97%e8%a1%a8">预加载HSTS列表</a><br>
+<br /></li>
 </ul>
+<p>在nginx中设置HSTS响应头非常简单，只需要在监听443端口的server中加入以下内容：</p>
+<pre>
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+</pre>
+<ul>
+<li><code>always</code>参数确保为所有响应（包括内部生成的错误响应）设置HSTS响应头</li>
+</ul>
+<p>向客户提供HSTS策略后，它将在指定<code>&lt;expire-time&gt;</code>秒内缓存信息。在此期间，浏览器拒绝通过未加密的HTTP访问Web服务，同时也拒绝网站证书错误，而不会给用户继续访问的选择。如果指定了<code>includeSubDomains</code>参数，那么这些限制也适用于该域名的所有子域名。</p>
+<p>撤消HSTS策略以删除网站或服务的HTTPS版本非常困难。因此在测试阶段，请先使用非常短的<code>max-age</code>时间，例如设置为5分钟(<code>max-age=300</code>)，并在测试没有问题时逐渐延长为一周、一月或一年(<code>max-age=31536000</code>为一年)。
+<br /><br>
+修改后的<code>belldrum.conf</code>配置文件如下：</p>
+<pre>
+server {
+	listen 443 ssl;		//监听所有ipv4地址
+	listen [::]:443 ssl;	//监听所有ipv6地址
+	server_name belldrum.com;
+
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+ 
+	root /home/gavin/blog;
+	index index.html;
+
+	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
+	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	
+	access_log /var/log/nginx/belldrum-access.log;
+	error_log /var/log/nginx/belldrum-error.log;
+
+	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
+		root /home/gavin/blog;
+	}
+}
+
+server {
+	listen 80;
+	listen [::]:80;	
+	server_name belldrum.com www.belldrum.com;
+	return 301 https://belldrum.com$request_uri;
+}
+
+server {
+        listen 443 ssl;  
+        listen [::]:443 ssl;
+        server_name www.belldrum.com;
+
+        ssl_certificate /etc/nginx/conf.d/cert/3492990_belldrum.com.pem;
+        ssl_certificate_key /etc/nginx/conf.d/cert/3492990_belldrum.com.key;
+        
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+
+        return 301 https://belldrum.com$request_uri;
+}
+</pre>
+<a class="post-dummy-target" id="预加载列表"></a><h3>预加载列表</h3>
+<p>HSTS并不能完美的解决HTTP会话劫持，它也有一些缺点。如果用户在以下情况通过HTTP访问受HSTS保护的网站，仍然容易受到攻击：</p>
+<ul>
+<li>从未访问过该网站</li>
+<li>切换新的浏览器</li>
+<li>切换新设备或系统</li>
+<li>删除了浏览器缓存</li>
+<li>近期没有访问该网站，max-age已过期</li>
+</ul>
+<p>为了解决这个问题，Google维护了一份 <a href="https://hstspreload.org/" target="_blank">预加载列表</a> (HSTS Preload List)。我们可以手动将自己的域名提交到HSTS预加载列表，然后这个列表会被硬编码到Chrome浏览器中。同时大多数主流浏览器，如 Firefox、Opera、Safari、Safari、IE 11和Edge等也支持该HSTS预加载列表。</p>
+<p>提交HSTS预加载列表之前网站需要满足以下几点要求：</p>
+<ul>
+<li>提供有效的证书</li>
+<li>如果正在监听80端口，则需要在同一主机上将HTTP重定向到HTTPS</li>
+<li>通过HTTPS服务所有的子域名，特别是www子域名</li>
+<li>HSTS头中的参数要求<code>max-age</code>至少为31536000(一年)，且必须包含<code>includeSubDomains</code>和<code>preload</code>参数</li>
+</ul>
+<p>需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。</p>
+<a class="post-dummy-target" id="其他优化"></a><h2>其他优化</h2>
+<a class="post-dummy-target" id="减少运算量"></a><h3>减少运算量</h3>
+<a class="post-dummy-target" id="加强安全性"></a><h3>加强安全性</h3>
 <pre>
 add_header Strict-Transport-Security "max-age=2592000; includeSubDomains; preload";
 add_header X-Frame-Options DENY;
@@ -679,8 +979,7 @@ add_header X-Content-Type-Options nosniff;
 add_header Content-Security-Policy "default-src 'self' www.google-analytics.com ajax.googleapis.com www.google.com google.com gstatic.com www.gstatic.com connect.facebook.net facebook.com;";
 add_header X-XSS-Protection "1; mode=block";
 add_header Referrer-Policy "origin";
-</pre>
-<a class="post-dummy-target" id="其他设置"></a><h2>其他设置</h2></div><div class="post-footer" id="post-footer">
+</pre></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
@@ -734,7 +1033,7 @@ add_header Referrer-Policy "origin";
         </script></div>
     </article></div>
             </main><footer class="footer">
-    <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">Gavin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
+    <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">嘉文</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
                 <span class="icp"><a href="http://www.beian.miit.gov.cn" target="_blank">鲁ICP备20005030-1</a></span><span class="copyright-line">
 				&nbsp;|&nbsp;Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt</a>
 			</span>

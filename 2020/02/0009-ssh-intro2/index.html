@@ -105,7 +105,7 @@ ssh服务程序(sshd)启动时自动生成的服务端公钥和私钥文件，�
 配置文件主要包括服务端配置文件/etc/ssh/sshd_config和客户端配置文件/etc/ssh/ssh_config。这两个文件中有很多同名的配置项，但前者是sshd启动时开关性的设置，后者是请求连接时客户端采取的配置。例如，两配置文件都有GSSAPIAuthentication项，在客户端将其设置为no，表示连接时将直接跳过该身份验证机制，而在服务端设置为no则表示sshd启动时不开启GSSAPI身份验证的机制。即使客户端使用了GSSAPI认证机制，只要服务端没有开启，就绝对不可能认证通过。
 认证实现
 前文介绍了公钥认证的过程以及涉及到的文件，接下来主要介绍公钥认证的具体实现步骤。
-公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发密钥对。
+公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发公钥。
 生成密钥对
 OpenSSH提供了密钥生成工具ssh-keygen。我们在客户端（服务端也行，无所谓在哪生成）执行ssh-keygen指令会出现如下提示：
 
@@ -343,7 +343,7 @@ ssh服务程序(sshd)启动时自动生成的服务端公钥和私钥文件，�
 配置文件主要包括服务端配置文件/etc/ssh/sshd_config和客户端配置文件/etc/ssh/ssh_config。这两个文件中有很多同名的配置项，但前者是sshd启动时开关性的设置，后者是请求连接时客户端采取的配置。例如，两配置文件都有GSSAPIAuthentication项，在客户端将其设置为no，表示连接时将直接跳过该身份验证机制，而在服务端设置为no则表示sshd启动时不开启GSSAPI身份验证的机制。即使客户端使用了GSSAPI认证机制，只要服务端没有开启，就绝对不可能认证通过。
 认证实现
 前文介绍了公钥认证的过程以及涉及到的文件，接下来主要介绍公钥认证的具体实现步骤。
-公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发密钥对。
+公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发公钥。
 生成密钥对
 OpenSSH提供了密钥生成工具ssh-keygen。我们在客户端（服务端也行，无所谓在哪生成）执行ssh-keygen指令会出现如下提示：
 
@@ -497,7 +497,7 @@ SSH命令和SSH服务详解
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "SSH, Server","wordcount":  4838 ,
+            },"genre": "posts","keywords": "SSH, Server","wordcount":  4837 ,
         "url": "https:\/\/belldrum.com\/2020\/02\/0009-ssh-intro2\/","datePublished": "2020-02-28T00:25:28\x2b08:00","dateModified": "2020-02-28T00:25:28\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "Gavin",
@@ -537,10 +537,10 @@ SSH命令和SSH服务详解
 </nav><main class="main">
                 <div class="container"><article class="page"><h1 class="post-title animated flipInX">SSH之原理&amp;实践</h1><div class="post-meta">
             <div class="post-meta-main"><a class="author" href="https://belldrum.com/" rel="author" target="_blank">
-                    <i class="fas fa-user-circle fa-fw"></i>Gavin
+                    <i class="fas fa-user-circle fa-fw"></i>嘉文
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://belldrum.com/categories/server/">Server</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-28>2020-02-28</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 4838 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 4837 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 10 分钟&nbsp;<span id="/2020/02/0009-ssh-intro2/" class="leancloud_visitors" data-flag-title="SSH之原理&amp;实践">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
@@ -703,7 +703,7 @@ ssh服务程序(sshd)启动时自动生成的服务端公钥和私钥文件，�
 配置文件主要包括服务端配置文件<code>/etc/ssh/sshd_config</code>和客户端配置文件<code>/etc/ssh/ssh_config</code>。这两个文件中有很多同名的配置项，但前者是sshd启动时开关性的设置，后者是请求连接时客户端采取的配置。例如，两配置文件都有GSSAPIAuthentication项，在客户端将其设置为no，表示连接时将直接跳过该身份验证机制，而在服务端设置为no则表示sshd启动时不开启GSSAPI身份验证的机制。即使客户端使用了GSSAPI认证机制，只要服务端没有开启，就绝对不可能认证通过。</p>
 <a class="post-dummy-target" id="认证实现"></a><h2>认证实现</h2>
 <p>前文介绍了公钥认证的过程以及涉及到的文件，接下来主要介绍公钥认证的具体实现步骤。<br>
-公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发密钥对。</p>
+公钥认证过程主要包括两个步骤：1)生成密钥对和 2)分发公钥。</p>
 <a class="post-dummy-target" id="生成密钥对"></a><h3>生成密钥对</h3>
 <p>OpenSSH提供了密钥生成工具ssh-keygen。我们在客户端（服务端也行，无所谓在哪生成）执行<code>ssh-keygen</code>指令会出现如下提示：</p>
 <div class="highlight"><div class="chroma">
@@ -898,7 +898,7 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
         </script></div>
     </article></div>
             </main><footer class="footer">
-    <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">Gavin</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
+    <div class="copyright"><div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">嘉文</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span><span class="icp-splitter">&nbsp;|&nbsp;</span><br class="icp-br"/>
                 <span class="icp"><a href="http://www.beian.miit.gov.cn" target="_blank">鲁ICP备20005030-1</a></span><span class="copyright-line">
 				&nbsp;|&nbsp;Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt</a>
 			</span>
