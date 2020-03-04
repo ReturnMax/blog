@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>SSH之原理&amp;实践</title>
+      <title>SSH 原理与实践</title>
       <link>https://belldrum.com/2020/02/0009-ssh-intro2/</link>
       <pubDate>Fri, 28 Feb 2020 00:25:28 +0800</pubDate>
       
@@ -253,7 +253,7 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
     </item>
     
     <item>
-      <title>Nginx之简明介绍</title>
+      <title>Nginx 配置介绍</title>
       <link>https://belldrum.com/2020/02/0007-nginx/</link>
       <pubDate>Fri, 21 Feb 2020 23:25:34 +0800</pubDate>
       
@@ -294,7 +294,7 @@ events {					//events块，配置影响nginx服务器或与用户的网络连接
 
 http {						//http块，可以嵌套多个server
 	sendfile on;				//开启高效文件传输模式，去掉将数据复制到缓冲区的步骤
-	keepalive_timeout 65;			//长连接超时时间，单位是秒
+	keepalive_timeout 65;			//长连接超时时间，默认单位是秒
 	...
 	include /etc/nginx/conf.d/*.conf;
 	include /etc/nginx/sites-enabled/*;
@@ -303,7 +303,7 @@ http {						//http块，可以嵌套多个server
 	...
 	server {				//server块，配置虚拟主机的参数
 		listen 80;			//server监听端口
-		server_name belldrum.com	//服务器名，填写监听的主机ip地址或域名
+		server_name belldrum.com	//虚拟服务名，可设为主机公网IP地址或域名
 		location {			//配置请求的路由和页面的处理
 		}
 	}
@@ -311,12 +311,12 @@ http {						//http块，可以嵌套多个server
 &lt;/pre&gt;
 &lt;h2 id=&#34;部署网站&#34;&gt;部署网站&lt;/h2&gt;
 &lt;p&gt;假设我们的网站根目录为&lt;code&gt;/home/gavin/blog&lt;/code&gt;。&lt;br&gt;
-我们在http上下文(http context)中定义一个虚拟服务器(Virtual Server)，并添加以下内容：&lt;/p&gt;
+我们在http上下文 (http context) 中定义一个虚拟服务器 (Virtual Server)，并添加以下内容：&lt;/p&gt;
 &lt;pre&gt;
 http {
 	server {
 		listen 80;			//监听端口
-		server_name belldrum.com;	// 服务器名
+		server_name belldrum.com;	// 虚拟服务器名
 		root /home/gavin/blog;		// 网站资源根目录，nginx需要有该目录的读取权限
 		index index.html;		// 显示首页
 		location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
@@ -327,9 +327,9 @@ http {
 &lt;/pre&gt;
 &lt;p&gt;其中，&lt;code&gt;listen&lt;/code&gt;指令中如果省略端口，那么默认会使用标准端口；如果省略IP地址将监听所有地址，上面的例子中已省略地址。&lt;br&gt;
 如果有多个虚拟服务器与请求的IP地址和端口相匹配，那么将对照&lt;code&gt;server_name&lt;/code&gt;指令测试请求的Host头字段。&lt;/p&gt;
-&lt;p&gt;修改完成后保存退出，执行&lt;code&gt;nginx -s reload&lt;/code&gt;重启nginx服务，便可以通过域名或ip地址访问自己的网站了。&lt;br&gt;
+&lt;p&gt;修改完成后保存退出，执行&lt;code&gt;nginx -s reload&lt;/code&gt;重启nginx服务，便可以通过域名或IP地址访问自己的网站了。&lt;br&gt;
 &lt;br /&gt;
-实践中并不需要频繁的修改&lt;code&gt;nginx.conf&lt;/code&gt;文件，而是通过在该文件中使用&lt;code&gt;include&lt;/code&gt;指令管理额外的配置文件。上面的例子中已经通过&lt;code&gt;include&lt;/code&gt;指令引入了&lt;code&gt;conf.d&lt;/code&gt;、&lt;code&gt;sites-enable&lt;/code&gt;、&lt;code&gt;modules-enabled&lt;/code&gt;三个目录下的配置文件。我们可以直接在这些目录下新建一个虚拟主机的配置文件，或者在任意目录下新建，然后在&lt;code&gt;nginx.conf&lt;/code&gt;的http上下文中用&lt;code&gt;include&lt;/code&gt;引用。&lt;br&gt;
+我们也可以不用修改&lt;code&gt;nginx.conf&lt;/code&gt;文件，而是通过在该文件中使用&lt;code&gt;include&lt;/code&gt;指令管理额外的配置文件。上面的例子中已经通过&lt;code&gt;include&lt;/code&gt;指令引入了&lt;code&gt;conf.d&lt;/code&gt;、&lt;code&gt;sites-enable&lt;/code&gt;、&lt;code&gt;modules-enabled&lt;/code&gt;三个目录下的配置文件。我们可以直接在这些目录下新建一个虚拟主机的配置文件，或者在任意目录下新建，然后在&lt;code&gt;nginx.conf&lt;/code&gt;的http上下文中用&lt;code&gt;include&lt;/code&gt;引用。&lt;br&gt;
 &lt;br /&gt;
 举个例子：&lt;br&gt;
 我们在conf.d目录下新建一个名为&lt;code&gt;belldrum.com.conf&lt;/code&gt;的配置文件：&lt;/p&gt;
@@ -363,11 +363,11 @@ http {
 }
 &lt;/pre&gt;
 &lt;h2 id=&#34;配置-ssl&#34;&gt;配置 SSL&lt;/h2&gt;
-&lt;p&gt;目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制面板就可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。&lt;br&gt;
+&lt;p&gt;没有配置ssl加密的网站会被大多数浏览器标记为不安全，而且很多授信的证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制面板就可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。&lt;br&gt;
 &lt;br /&gt;
 如何申请证书不是本节重点，假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为&lt;code&gt;belldrum.com.key&lt;/code&gt;和&lt;code&gt;belldrum.com.pem&lt;/code&gt;。&lt;br&gt;
 &lt;br /&gt;
-我们在&lt;code&gt;/etc/nginx&lt;/code&gt;目录下新建一个&lt;code&gt;cert&lt;/code&gt;文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后修改之前创建的&lt;code&gt;belldrum.com.conf&lt;/code&gt;配置文件，修改后的内容如下：&lt;/p&gt;
+我们在&lt;code&gt;/etc/nginx&lt;/code&gt;目录下新建一个&lt;code&gt;cert&lt;/code&gt;文件夹用于存放私钥和证书。网站证书里面包含公钥，它是公开的，会发送给每一个连接服务器的客户；私钥需要保存在有权限限制的文件中，并保证nginx主进程拥有可读权限。准备完成后，我们再次修改&lt;code&gt;belldrum.com.conf&lt;/code&gt;文件，修改后的内容如下：&lt;/p&gt;
 &lt;pre&gt;
 server {
 	listen 443 ssl;						//监听443端口，并添加ssl参数
@@ -386,14 +386,26 @@ server {
 	}
 }
 &lt;/pre&gt;
-&lt;p&gt;其中&lt;code&gt;listen&lt;/code&gt;、&lt;code&gt;ssl_certificate&lt;/code&gt;和&lt;code&gt;ssl_certificate_key&lt;/code&gt;是必须明确说明的。命令&lt;code&gt;ssl_protocols&lt;/code&gt;和&lt;code&gt;ssl_ciphers&lt;/code&gt;用于限制连接仅包含加强版本和密码的SSL/TLS，上面是阿里云的推荐配置，没有显式配置时它们的默认值如下：&lt;/p&gt;
+&lt;p&gt;其中&lt;code&gt;listen&lt;/code&gt;、&lt;code&gt;ssl_certificate&lt;/code&gt;和&lt;code&gt;ssl_certificate_key&lt;/code&gt;是必须明确说明的。&lt;code&gt;ssl_protocols&lt;/code&gt;和&lt;code&gt;ssl_ciphers&lt;/code&gt;指令用于要求客户端建立连接时，只使用加强版本的SSL/TLS和加密算法，在没有显式配置时它们的默认值如下：&lt;/p&gt;
 &lt;pre&gt;
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2
 ssl_ciphers HIGH：！aNULL：！MD5  
 &lt;/pre&gt;
-&lt;p&gt;修改完成后保存退出，然后重启nginx服务即可通过&lt;code&gt;https://belldrum.com&lt;/code&gt;访问网站了。&lt;br&gt;
+&lt;p&gt;我们简单介绍一下什么是SSL/TLS。SSL (Secure Sockets Layer，安全套接字层) 是一种标准安全协议，用于在在线通信中建立Web服务器和浏览器之间的加密链接；TLS (Transport Layer Security) 是SSL协议的升级版，TLS 1.0通常被认为是SSL 3.1，TLS 1.1即为SSL 3.2，TLS 1.2即为SSL 3.3，两者合称为SSL/TLS。我们只要知道它是一种用于加密的安全协议就好了。HTTP协议用来传输数据，SSL/TLS用于加密传输内容，两者结合就是现在所用的HTTPS。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;HIGH：！aNULL：！MD5&lt;/code&gt;指明了服务器可用的SSL/TLS加密套件 (CipherSuite)，如&lt;code&gt;!MD5&lt;/code&gt;意为该算法不可用。我们可以使用&lt;code&gt;openssl ciphers -V &#39;HIGH:!aNULL:!MD5&#39;&lt;/code&gt;命令来查看一下具体支持的加密套件，根据OpenSSL版本不同可能略有区别。举个例子：&lt;/p&gt;
+&lt;pre&gt;
+0xC0,0x23 - ECDHE-ECDSA-AES128-SHA256 TLSv1.2 Kx=ECDH Au=ECDSA Enc=AES(128) Mac=SHA256
+&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;名字为 ECDH-ECDSA-AES128-SHA256 的加密套件，用于 TLSv1.2&lt;/li&gt;
+&lt;li&gt;密钥交换算法（Key Exchange）使用ECDH&lt;/li&gt;
+&lt;li&gt;认证算法（Authentication）使用ECDSA&lt;/li&gt;
+&lt;li&gt;加密算法（Encryption）使用AES-128&lt;/li&gt;
+&lt;li&gt;消息认证码算法（Message Authentication Code, MAC）使用SHA256&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;加密套件是SSL握手中需要协商的一个重要参数。客户端会在&lt;code&gt;Client Hello&lt;/code&gt;中带上它所支持的加密套件列表，服务端从中选择一个并通过&lt;code&gt;Server Hello&lt;/code&gt;返回。如果两者支持的加密套件列表没有交集会导致握手失败。服务器在选择算法时会有优先级，是以客户端提供的优先还是服务器端配置的优先。可以通过&lt;code&gt;ssl_prefer_server_ciphers on;&lt;/code&gt;设置为服务器端优先。&lt;br&gt;
 &lt;br /&gt;
-此外也可以借助一些工具，如Certbot，帮助我们自动申请和更新证书。&lt;/p&gt;
+最后，保存配置文件并退出，重启nginx服务即可通过&lt;code&gt;https://belldrum.com&lt;/code&gt;访问网站了。&lt;/p&gt;
 &lt;h2 id=&#34;设置跳转&#34;&gt;设置跳转&lt;/h2&gt;
 &lt;p&gt;我们希望当用户使用&lt;code&gt;http&lt;/code&gt;访问网站时能够自动重定向到&lt;code&gt;https&lt;/code&gt;，或者更进一步，能够同时实现子域名&lt;code&gt;www&lt;/code&gt;到&lt;code&gt;non-www&lt;/code&gt;的重定向。&lt;br&gt;
 &lt;br /&gt;
@@ -411,6 +423,7 @@ server {
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_prefer_server_ciphers on
 
 	access_log /var/log/nginx/belldrum.com-access.log;
 	error_log /var/log/nginx/belldrum.com-error.log;
@@ -432,6 +445,7 @@ server {	//设置www重定向到non-www
 
         ssl_certificate /etc/nginx/cert/belldrum.com.pem;
         ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+        ssl_prefer_server_ciphers on
 
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
@@ -482,9 +496,11 @@ server {
 
 	ssl_certificate /etc/nginx/cert/belldrum.com.pem;
 	ssl_certificate_key /etc/nginx/cert/belldrum.com.key;
+
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-	
+	ssl_prefer_server_ciphers on
+
 	access_log /var/log/nginx/belldrum-access.log;
 	error_log /var/log/nginx/belldrum-error.log;
 
@@ -510,6 +526,7 @@ server {
         
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_prefer_server_ciphers on
 
         return 301 https://belldrum.com$request_uri;
 }
@@ -533,6 +550,7 @@ server {
 &lt;/ul&gt;
 &lt;p&gt;需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。&lt;/p&gt;
 &lt;h2 id=&#34;https优化&#34;&gt;HTTPS优化&lt;/h2&gt;
+&lt;p&gt;SSL操作会消耗额外的CPU资源&lt;/p&gt;
 &lt;h3 id=&#34;减少运算量&#34;&gt;减少运算量&lt;/h3&gt;
 &lt;h3 id=&#34;加强安全性&#34;&gt;加强安全性&lt;/h3&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
