@@ -13,15 +13,14 @@
     
     
     <item>
-      <title>Nginx之配置介绍</title>
+      <title>Nginx之简明介绍</title>
       <link>https://belldrum.com/2020/02/0007-nginx/</link>
       <pubDate>Fri, 21 Feb 2020 23:25:34 +0800</pubDate>
       
       <guid>https://belldrum.com/2020/02/0007-nginx/</guid>
-      <description>&lt;p&gt;Nginx是一款轻量级的web服务器，也可作为反向代理服务器，邮件服务器等。&lt;br&gt;
-本文主要介绍如何使用Nginx部署静态网站，所有资料皆收集于网络，纰漏之处还望见谅。&lt;/p&gt;
-&lt;p&gt;说到服务器(Server)，我们通常会想到两种概念：1)指硬件，也就是一台机器，有时也称之为「主机」；2)指软件程序，这种程序主要用来对外提供某些服务，比如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接请求并作出回应。&lt;/p&gt;
-&lt;p&gt;本文要谈的Nginx就可以作为第二类服务器，一个不间断运行的提供Web服务的软件程序。&lt;/p&gt;
+      <description>&lt;p&gt;Nginx是一款轻量级的Web服务器，也可作为反向代理服务器、邮件服务器等。&lt;/p&gt;
+&lt;p&gt;说到服务器 (Server) 通常会想到两种概念：1) 硬件，就是一台机器，有时也称之为「主机」和 2) 软件，主要用来对外提供一些服务，如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接并作出回应。&lt;/p&gt;
+&lt;p&gt;本文主要介绍如何使用Nginx作为Web服务器快速部署静态网站，对许多配置选项并没有做出详细说明，更加详细的说明请参见文末 &lt;a href=&#34;#%e5%8f%82%e8%80%83%e8%b5%84%e6%96%99&#34;&gt;参考资料&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id=&#34;软件安装&#34;&gt;软件安装&lt;/h2&gt;
 &lt;p&gt;在Debian下可以使用&lt;code&gt;apt-get&lt;/code&gt;安装nginx：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -35,18 +34,18 @@
 &lt;/div&gt;&lt;p&gt;默认安装位置在&lt;code&gt;/etc/nginx&lt;/code&gt;。在Ubuntu 18.04系统中，nginx安装完成后会自动启动。如果没有启动，我们可以执行&lt;code&gt;nginx&lt;/code&gt;命令手动启动。&lt;br&gt;
 &lt;br /&gt;
 我们通过&lt;code&gt;ps -aux&lt;/code&gt;命令可以看到nginx的master进程和worker进程，分别由root用户和www-data用户启动。&lt;br&gt;
-Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求，注意Worker进程的个数由配置文件决定，一般和CPU核心个数相同（有利于进程切换）。&lt;/p&gt;
-&lt;p&gt;安装完成后，我们可以在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认防火墙已放行80端口）。&lt;/p&gt;
-&lt;p&gt;接下来我们需要更改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。&lt;/p&gt;
+Master进程主要负责读取并验证配置文件nginx.conf，管理worker进程；Worker进程负责处理连接和请求；Worker进程的个数由配置文件决定，一般和CPU核心个数相同（有利于进程切换）。&lt;/p&gt;
+&lt;p&gt;安装完成后，在浏览器输入服务器的公网IP，正常情况下可以看到nginx的默认欢迎页（确认已放行80端口）。&lt;/p&gt;
+&lt;p&gt;接下来修改nginx的配置文件，使这个地址指向我们的网站首页而不是ngixn的默认网页。&lt;/p&gt;
 &lt;h2 id=&#34;配置文件&#34;&gt;配置文件&lt;/h2&gt;
 &lt;p&gt;默认情况下，nginx的配置文件是&lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt;。Nginx 配置信息主要分为六大部分： main(全局设置)、events(事件设置)、http(HTTP服务器设置)、 sever(虚拟主机设置)、location(URL匹配设置)、upstream(反向代理设置)。&lt;/p&gt;
 &lt;p&gt;配置文件里大部分内容是注释掉的，文件内容如下：&lt;/p&gt;
 &lt;pre&gt;
 user www-data www-data;				//配置用户和用户组，用户组可以为空
-worker_processes auto;				//允许生成的进程数，通常设置成和cpu数量相等
-pid /run/nginx.pid;				//指定nginx进程运行文件存放地址
+worker_processes auto;				//允许生成的进程数，通常设置成和cpu核心数量相等
+pid /run/nginx.pid;				//指定nginx进程运行文件存放位置
 include /etc/nginx/modules-enabled/*.conf;
-//引入modules-enabled目录下.conf配置文件，会跳转到nginx的默认欢迎页
+//引用modules-enabled目录下.conf配置文件
 
 events {					//events块，配置影响nginx服务器或与用户的网络连接
 	worker_connections 768;			//设置最大连接数
@@ -54,11 +53,11 @@ events {					//events块，配置影响nginx服务器或与用户的网络连接
 }
 
 http {						//http块，可以嵌套多个server
-	sendfile on;				//开启高效文件传输模式
-	keepalive_timeout 65;			//长连接超市时间，单位是秒
+	sendfile on;				//开启高效文件传输模式，去掉将数据复制到缓冲区的步骤
+	keepalive_timeout 65;			//长连接超时时间，单位是秒
 	...
-	include /etc/nginx/conf.d/*.conf;	//引入conf.d目录下的.conf配置文件
-	include /etc/nginx/sites-enabled/*;	//引入sites-enabled目录下的所有配置文件
+	include /etc/nginx/conf.d/*.conf;
+	include /etc/nginx/sites-enabled/*;
 	...
 	gzip on;				//开启gzip压缩输出，减少网络传输
 	...
@@ -71,13 +70,13 @@ http {						//http块，可以嵌套多个server
 }
 &lt;/pre&gt;
 &lt;h2 id=&#34;部署网站&#34;&gt;部署网站&lt;/h2&gt;
-&lt;p&gt;首先我们在服务器上建立一个保存网站的目录，假设为&lt;code&gt;/home/gavin/blog&lt;/code&gt;。
-接下来我们对nginx的配置文件进行修改，主要是修改server块，修改后内容如下：&lt;/p&gt;
+&lt;p&gt;假设我们的网站根目录为&lt;code&gt;/home/gavin/blog&lt;/code&gt;。&lt;br&gt;
+我们在http上下文(http context)中定义一个虚拟服务器(Virtual Server)，并添加以下内容：&lt;/p&gt;
 &lt;pre&gt;
 http {
 	server {
-		listen 80;
-		server_name belldrum.com;	// 域名或者主机ip
+		listen 80;			//监听端口
+		server_name belldrum.com;	// 服务器名
 		root /home/gavin/blog;		// 网站资源根目录，nginx需要有该目录的读取权限
 		index index.html;		// 显示首页
 		location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
@@ -86,12 +85,14 @@ http {
 	}
 }
 &lt;/pre&gt;
+&lt;p&gt;其中，&lt;code&gt;listen&lt;/code&gt;指令中如果省略端口，那么默认会使用标准端口；如果省略IP地址将监听所有地址，上面的例子中已省略地址。&lt;br&gt;
+如果有多个虚拟服务器与请求的IP地址和端口相匹配，那么将对照&lt;code&gt;server_name&lt;/code&gt;指令测试请求的Host头字段。&lt;/p&gt;
 &lt;p&gt;修改完成后保存退出，执行&lt;code&gt;nginx -s reload&lt;/code&gt;重启nginx服务，便可以通过域名或ip地址访问自己的网站了。&lt;br&gt;
 &lt;br /&gt;
-其实在实践中，我们并不需要频繁的修改&lt;code&gt;nginx.conf&lt;/code&gt;文件，而是通过在该文件中使用&lt;code&gt;include&lt;/code&gt;指令引入额外的配置文件。一般情况下，&lt;code&gt;nginx.conf&lt;/code&gt;中已经通过&lt;code&gt;include&lt;/code&gt;指令引入了&lt;code&gt;conf.d&lt;/code&gt;、&lt;code&gt;sites-enable&lt;/code&gt;、&lt;code&gt;modules-enabled&lt;/code&gt;三个目录下的配置文件。我们可以在这些目录下新建配置文件，或者在任意目录下新建配置文件，然后在&lt;code&gt;nginx.conf&lt;/code&gt;的http块内用&lt;code&gt;include&lt;/code&gt;指令引入新建的配置文件。&lt;br&gt;
+实践中并不需要频繁的修改&lt;code&gt;nginx.conf&lt;/code&gt;文件，而是通过在该文件中使用&lt;code&gt;include&lt;/code&gt;指令管理额外的配置文件。上面的例子中已经通过&lt;code&gt;include&lt;/code&gt;指令引入了&lt;code&gt;conf.d&lt;/code&gt;、&lt;code&gt;sites-enable&lt;/code&gt;、&lt;code&gt;modules-enabled&lt;/code&gt;三个目录下的配置文件。我们可以直接在这些目录下新建一个虚拟主机的配置文件，或者在任意目录下新建，然后在&lt;code&gt;nginx.conf&lt;/code&gt;的http上下文中用&lt;code&gt;include&lt;/code&gt;引用。&lt;br&gt;
 &lt;br /&gt;
 举个例子：&lt;br&gt;
-我们在conf.d目录下新建一个名为&lt;code&gt;belldrum.conf&lt;/code&gt;的配置文件：&lt;/p&gt;
+我们在conf.d目录下新建一个名为&lt;code&gt;belldrum.com.conf&lt;/code&gt;的配置文件：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -99,7 +100,7 @@ http {
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
 &lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;nb&#34;&gt;cd&lt;/span&gt; /etc/nginx/conf.d
-vim belldrum.conf
+vim belldrum.com.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;我们在文件中写入以下内容，然后保存退出：&lt;/p&gt;
@@ -110,24 +111,26 @@ server {
 	root /home/gavin/blog;
 	index index.html;
 	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
-    root /home/gavin/blog;
+    		root /home/gavin/blog;
 	}
 &lt;/pre&gt;  
-&lt;p&gt;最后检查&lt;code&gt;nginx.conf&lt;/code&gt;的http块内是否已经正确引入这个配置文件：&lt;/p&gt;
+&lt;p&gt;最后检查&lt;code&gt;nginx.conf&lt;/code&gt;的http块内是否已经正确引用即可。&lt;/p&gt;
 &lt;pre&gt;
 http {
+	···
 	include /etc/nginx/conf.d/*.conf;
+	···
 }
 &lt;/pre&gt;
 &lt;h2 id=&#34;配置-ssl&#34;&gt;配置 SSL&lt;/h2&gt;
-&lt;p&gt;目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制中心可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。&lt;br&gt;
+&lt;p&gt;目前，没有配置ssl加密的网站已经被大多数浏览器标记为不安全，而且很多证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制面板就可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。&lt;br&gt;
 &lt;br /&gt;
-如何申请证书不是本节重点，我们假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为&lt;code&gt;belldrum.com.key&lt;/code&gt;和&lt;code&gt;belldrum.com.pem&lt;/code&gt;。&lt;br&gt;
+如何申请证书不是本节重点，假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为&lt;code&gt;belldrum.com.key&lt;/code&gt;和&lt;code&gt;belldrum.com.pem&lt;/code&gt;。&lt;br&gt;
 &lt;br /&gt;
-我们在&lt;code&gt;/etc/nginx&lt;/code&gt;目录下新建一个&lt;code&gt;cert&lt;/code&gt;文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后我们修改之前创建的&lt;code&gt;belldrum.conf&lt;/code&gt;配置文件，修改后的内容如下：&lt;/p&gt;
+我们在&lt;code&gt;/etc/nginx&lt;/code&gt;目录下新建一个&lt;code&gt;cert&lt;/code&gt;文件夹用于存放私钥和证书。网站证书是公开的，会发送给每一个连接服务器的客户；私钥需要有一定的权限限制，并保证nginx主进程拥有可读权限。然后修改之前创建的&lt;code&gt;belldrum.com.conf&lt;/code&gt;配置文件，修改后的内容如下：&lt;/p&gt;
 &lt;pre&gt;
 server {
-	listen 443 ssl;						//监听443端口，添加ssl参数
+	listen 443 ssl;						//监听443端口，并添加ssl参数
 	server_name belldrum.com; 
 	root /home/gavin/blog;
 	index index.html;
@@ -155,7 +158,7 @@ ssl_ciphers HIGH：！aNULL：！MD5
 &lt;p&gt;我们希望当用户使用&lt;code&gt;http&lt;/code&gt;访问网站时能够自动重定向到&lt;code&gt;https&lt;/code&gt;，或者更进一步，能够同时实现子域名&lt;code&gt;www&lt;/code&gt;到&lt;code&gt;non-www&lt;/code&gt;的重定向。&lt;br&gt;
 &lt;br /&gt;
 我们可以使用&lt;code&gt;rewrite&lt;/code&gt;或者&lt;code&gt;301&lt;/code&gt;重定向实现这种跳转，在这里只介绍&lt;code&gt;301&lt;/code&gt;重定向的方法。&lt;br&gt;
-我们将&lt;code&gt;belldrum.conf&lt;/code&gt;配置文件修改如下：&lt;/p&gt;
+我们将&lt;code&gt;belldrum.com.conf&lt;/code&gt;配置文件修改如下：&lt;/p&gt;
 &lt;pre&gt;
 server {
 	listen 443 ssl;
@@ -197,7 +200,7 @@ server {	//设置www重定向到non-www
 }
 &lt;/pre&gt;
 &lt;p&gt;如果是多个域名的话，&lt;code&gt;server_name&lt;/code&gt;选项也支持正则表达式。修改完成后保存退出，然后重启nginx服务即可实现跳转。&lt;/p&gt;
-&lt;h2 id=&#34;配置hsts&#34;&gt;配置HSTS&lt;/h2&gt;
+&lt;h2 id=&#34;设置hsts&#34;&gt;设置HSTS&lt;/h2&gt;
 &lt;h3 id=&#34;添加响应头&#34;&gt;添加响应头&lt;/h3&gt;
 &lt;p&gt;&lt;ruby&gt;&lt;rb&gt;HTTP严格传输安全&lt;/rb&gt;&lt;rt&gt;HTTP Strict Transport Security&lt;/rt&gt;&lt;/ruby&gt;，即HSTS，是由互联网工程任务组发布的互联网安全策略机制。采用HSTS策略的网站会强制浏览器使用HTTPS而不是HTTP访问当前资源，以减少会话劫持风险、保护网站流量。
 &lt;br /&gt;&lt;br&gt;
@@ -225,7 +228,7 @@ add_header Strict-Transport-Security &#34;max-age=31536000; includeSubDomains&#3
 &lt;p&gt;向客户提供HSTS策略后，它将在指定&lt;code&gt;&amp;lt;expire-time&amp;gt;&lt;/code&gt;秒内缓存信息。在此期间，浏览器拒绝通过未加密的HTTP访问Web服务，同时也拒绝网站证书错误，而不会给用户继续访问的选择。如果指定了&lt;code&gt;includeSubDomains&lt;/code&gt;参数，那么这些限制也适用于该域名的所有子域名。&lt;/p&gt;
 &lt;p&gt;撤消HSTS策略以删除网站或服务的HTTPS版本非常困难。因此在测试阶段，请先使用非常短的&lt;code&gt;max-age&lt;/code&gt;时间，例如设置为5分钟(&lt;code&gt;max-age=300&lt;/code&gt;)，并在测试没有问题时逐渐延长为一周、一月或一年(&lt;code&gt;max-age=31536000&lt;/code&gt;为一年)。
 &lt;br /&gt;&lt;br&gt;
-修改后的&lt;code&gt;belldrum.conf&lt;/code&gt;配置文件如下：&lt;/p&gt;
+修改后的&lt;code&gt;belldrum.com.conf&lt;/code&gt;配置文件如下：&lt;/p&gt;
 &lt;pre&gt;
 server {
 	listen 443 ssl;		//监听所有ipv4地址
@@ -289,9 +292,10 @@ server {
 &lt;li&gt;HSTS头中的参数要求&lt;code&gt;max-age&lt;/code&gt;至少为31536000(一年)，且必须包含&lt;code&gt;includeSubDomains&lt;/code&gt;和&lt;code&gt;preload&lt;/code&gt;参数&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。&lt;/p&gt;
-&lt;h2 id=&#34;其他优化&#34;&gt;其他优化&lt;/h2&gt;
+&lt;h2 id=&#34;https优化&#34;&gt;HTTPS优化&lt;/h2&gt;
 &lt;h3 id=&#34;减少运算量&#34;&gt;减少运算量&lt;/h3&gt;
 &lt;h3 id=&#34;加强安全性&#34;&gt;加强安全性&lt;/h3&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
 &lt;pre&gt;
 add_header Strict-Transport-Security &#34;max-age=2592000; includeSubDomains; preload&#34;;
 add_header X-Frame-Options DENY;
