@@ -232,12 +232,12 @@ service sshd restart
 禁止root登录
 修改/etc/ssh/sshd_config文件：
 
-PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+PermitRootLogin no			# 是否允许root用户登录，默认为yes
 
 禁止口令登录
 修改/etc/ssh/sshd_config文件：
 
-PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
 
 待补充
 参考资料
@@ -470,12 +470,12 @@ service sshd restart
 禁止root登录
 修改/etc/ssh/sshd_config文件：
 
-PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+PermitRootLogin no			# 是否允许root用户登录，默认为yes
 
 禁止口令登录
 修改/etc/ssh/sshd_config文件：
 
-PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
 
 待补充
 参考资料
@@ -518,7 +518,7 @@ SSH命令和SSH服务详解
         <div class="navbar-header animated bounceIn">
             <a href="https://belldrum.com/">晨钟暮鼓</a>
         </div>
-        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"><i class="fas fa-home fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"><i class="fas fa-home fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换模式"></i></a>
         </div>
     </div>
 </nav><nav class="navbar-mobile">
@@ -531,7 +531,7 @@ SSH命令和SSH服务详解
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换模式"></i></a>
         </div>
     </div>
 </nav><main class="main">
@@ -830,12 +830,12 @@ vim /etc/ssh/sshd_config
 <a class="post-dummy-target" id="禁止root登录"></a><h3>禁止root登录</h3>
 <p>修改<code>/etc/ssh/sshd_config</code>文件：</p>
 <pre>
-PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+PermitRootLogin no			# 是否允许root用户登录，默认为yes
 </pre>
 <a class="post-dummy-target" id="禁止口令登录"></a><h3>禁止口令登录</h3>
 <p>修改<code>/etc/ssh/sshd_config</code>文件：</p>
 <pre>
-PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
 </pre>
 <a class="post-dummy-target" id="待补充"></a><h3>待补充</h3>
 <a class="post-dummy-target" id="参考资料"></a><h2>参考资料</h2>
@@ -847,7 +847,7 @@ PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果�
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>本文于 2020-02-28 更新</span>
+                <span>本文于 2020-02-28 更新。商业转载请联系作者，非商业转载请注明出处</span>
             </div>
             <div class="post-info-license"></div>
         </div>

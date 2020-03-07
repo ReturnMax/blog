@@ -1,5 +1,7 @@
 # Nginx 配置介绍
 
+本文记录了作者使用nginx从头搭建Web服务器的详细过程。网上有很多资料告诉大家如何配置nginx，根据这些教程可以很方便的部署自己的网站。但是很多教程往往语焉不详，配置完成后只知其然而不知其所以然。对于作者这种不弄明白不舒服斯基来说有点难受，因此在参考了很多资料之后就写了这篇总结，希望能给和作者一样的小白们一点帮助。作者对网络的了解仅处于学过《计算机网络原理》的水平，纰漏之处还望谅解。以下为正文。  
+
 Nginx是一款轻量级的Web服务器，也可作为反向代理服务器、邮件服务器等。  
 
 说到服务器 (Server) 通常会想到两种概念：1) 硬件，就是一台机器，有时也称之为「主机」和 2) 软件，主要用来对外提供一些服务，如邮件服务、数据库服务、网页服务等，它们24小时不间断的运行并监听某些固定的端口，等待客户端的连接并作出回应。  
@@ -8,7 +10,7 @@ Nginx是一款轻量级的Web服务器，也可作为反向代理服务器、邮
 
 ## 软件安装
 
-在Debian下可以使用`apt-get`安装nginx：  
+通过源码编译安装nginx的教程有很多，此处不再赘述。而在Debian下可以很方便的使用`apt-get`安装nginx：  
 ```bash
 apt-get install nginx
 ```
@@ -108,11 +110,31 @@ http {
 </pre>
 
 ## 配置 SSL
-没有配置ssl加密的网站会被大多数浏览器标记为不安全，而且很多授信的证书授权中心也都提供免费的SSL安全证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制面板就可以申请到免费的SSL证书（这不是广告，阿里云，打钱！！）。  
+我们简单介绍一下什么是SSL/TLS。  
+
+<ruby><rb>安全套接字层</rb><rt>Secure Sockets Layer</rt></ruby> (SSL) 是一种标准安全协议，用于在在线通信中建立Web服务器和浏览器之间的加密链接；Transport Layer Security (TLS) 是SSL协议的升级版，TLS 1 通常被认为是SSL 3.1，TLS 1.1 即为SSL 3.2，TLS 1.2 即为SSL 3.3，两者合称为SSL/TLS。我们简单了解它是一种用于加密的安全协议就好了。HTTP协议用来传输数据，SSL/TLS 用于加密传输内容，两者结合就是现在所用的 HTTPS。  
+
+HTTP 的握手过程在此不再赘述，我们主要了解一下 SSL/TLS 的握手过程，有助于后面配置的理解 (本节可以跳过，直接参考后面的参数设置)。  
+SSL/TLS 握手过程如下：  
+1. 与 HTTP 连接时的 `SYN` 消息一样，客户端首先向服务端发送`Clinet Hello`消息，消息里包含了客户端生成的一个32字节的随机数 1 (random 1)、客户端支持的密码套件 (CipherSuite) 列表、SSL 版本和空的会话 ID (Session ID，如果不为空则意为不是首次连接，服务器会从缓存中匹配会话 ID 简化握手步骤) 等信息；  
+2. 服务端向客户端发送`Server Hello`消息，消息里包含服务器从客户端提供的列表中选择的的加密套件（这个套件决定了后续加密和生成摘要时具体使用那些算法）、服务器生成的一个随机数 2 ( random 2) 以及会话 ID；  
+3. 服务端将自己的证书发送给客户端以验证身份，验证通过后客户端取出证书里包含的服务器公钥；  
+  
+接下来根据密钥交换算法不同，生成会话密钥的方式有所不同。  
+使用 DH 算法：  
+4. Server Key Exchange. 服务器发送使用的DH参数
+
 <br />
-如何申请证书不是本节重点，假设你已经拥有了一份有效的SSL安全证书，私钥文件和证书文件分别为`belldrum.com.key`和`belldrum.com.pem`。  
+没有配置 SSL 加密的网站会被大多数浏览器标记为不安全，而且很多授信任的数字证书颁发机构 CA 也都提供免费的 SSL 证书，因此给自己的网站添加一把小绿锁势在必行。如果你使用的是阿里云，那么在控制面板就可以申请到免费的 SSL 证书（这不是广告，阿里云，打钱！！）。  
+
+### 准备工作
+如何申请证书不是本节重点，假设你已经拥有了一份有效的 SSL 安全证书，私钥文件和证书文件分别为`belldrum.com.key`和`belldrum.com.pem`。  
 <br />
-我们在`/etc/nginx`目录下新建一个`cert`文件夹用于存放私钥和证书。网站证书里面包含公钥，它是公开的，会发送给每一个连接服务器的客户；私钥需要保存在有权限限制的文件中，并保证nginx主进程拥有可读权限。准备完成后，我们再次修改`belldrum.com.conf`文件，修改后的内容如下：  
+我们在`/etc/nginx`目录下新建一个`cert`文件夹用于存放私钥和证书。网站证书里面包含公钥，它是公开的，会发送给每一个连接服务器的客户；私钥需要保存在有权限限制的文件中，并保证 nginx 主进程拥有可读权限。
+
+### 
+
+准备完成后，我们再次修改`belldrum.com.conf`文件，修改后的内容如下：  
 
 <pre>
 server {
@@ -126,6 +148,8 @@ server {
 	
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+	ssl_prefer_server_ciphers on;
+	ssl_dhparam /etc/nginx/cert/dhparams.pem;
 
 	location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt){
 		root /home/gavin/blog;
@@ -133,26 +157,32 @@ server {
 }
 </pre>
 
-其中`listen`、`ssl_certificate`和`ssl_certificate_key`是必须明确说明的。`ssl_protocols`和`ssl_ciphers`指令用于要求客户端建立连接时，只使用加强版本的SSL/TLS和加密算法，在没有显式配置时它们的默认值如下：  
+其中`listen`、`ssl_certificate`和`ssl_certificate_key`是必须明确说明的。  
+<br />
+我们来解释一下其他的几个指令：  
+`ssl_protocols`和`ssl_ciphers`指令用于要求客户端建立连接时，只使用 SSL/TLS 协议的加强版本和更安全的加密算法，在没有显式配置时它们的默认值如下：  
 <pre>
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2
 ssl_ciphers HIGH：！aNULL：！MD5  
-</pre>
-我们简单介绍一下什么是SSL/TLS。SSL (Secure Sockets Layer，安全套接字层) 是一种标准安全协议，用于在在线通信中建立Web服务器和浏览器之间的加密链接；TLS (Transport Layer Security) 是SSL协议的升级版，TLS 1.0通常被认为是SSL 3.1，TLS 1.1即为SSL 3.2，TLS 1.2即为SSL 3.3，两者合称为SSL/TLS。我们只要知道它是一种用于加密的安全协议就好了。HTTP协议用来传输数据，SSL/TLS用于加密传输内容，两者结合就是现在所用的HTTPS。  
+</pre>  
 
-`HIGH：！aNULL：！MD5`指明了服务器可用的SSL/TLS加密套件 (CipherSuite)，如`!MD5`意为该算法不可用。我们可以使用`openssl ciphers -V 'HIGH:!aNULL:!MD5'`命令来查看一下具体支持的加密套件，根据OpenSSL版本不同可能略有区别。举个例子：  
+在`ssl_ssl_protocols`中我们应该放弃使用 SSL。`ssl_ciphers`指令告诉SSL库，nginx 偏好哪些加密算法 (Cipher)。`HIGH：！aNULL：！MD5`指明了服务器可用的 SSL/TLS 加密套件，如`!MD5`意为该算法不可用。我们可以使用`openssl ciphers -V 'HIGH:!aNULL:!MD5'`命令来查看一下具体支持的加密套件，根据 OpenSSL 版本不同支持的加密套件可能略有区别。下面是一个加密套件的例子：  
 <pre>
 0xC0,0x23 - ECDHE-ECDSA-AES128-SHA256 TLSv1.2 Kx=ECDH Au=ECDSA Enc=AES(128) Mac=SHA256
 </pre>
 - 名字为 ECDH-ECDSA-AES128-SHA256 的加密套件，用于 TLSv1.2
-- 密钥交换算法（Key Exchange）使用ECDH
-- 认证算法（Authentication）使用ECDSA
-- 加密算法（Encryption）使用AES-128
-- 消息认证码算法（Message Authentication Code, MAC）使用SHA256
+- 密钥交换算法（Key Exchange）使用 ECDH，常用的还有RSA、DH、ECDH、SRP、CSW
+- 认证算法（Authentication）使用 ECDSA，常用的还有RSA、DSA、ECDSA
+- 加密算法（Encryption）使用 AES-128，常用的还有RC4、DES、AES、IDEA
+- 消息认证码算法（Message Authentication Code, MAC）使用 SHA256，用于验证数据完整性，常用的还有MD5
 
-加密套件是SSL握手中需要协商的一个重要参数。客户端会在`Client Hello`中带上它所支持的加密套件列表，服务端从中选择一个并通过`Server Hello`返回。如果两者支持的加密套件列表没有交集会导致握手失败。服务器在选择算法时会有优先级，是以客户端提供的优先还是服务器端配置的优先。可以通过`ssl_prefer_server_ciphers on;`设置为服务器端优先。  
+加密套件是 SSL 握手中需要协商的一个重要参数。客户端会在`Client Hello`中带上它所支持的加密套件列表，服务端从中选择一个并通过`Server Hello`返回。如果两者支持的加密套件列表没有交集会导致握手失败。服务器在选择算法时会有优先级，是以客户端提供的优先还是服务器端配置的优先。可以通过`ssl_prefer_server_ciphers on;`设为以服务器端配置优先。  
+
+`ssl_dhparam`这个指令
+
+
 <br />
-最后，保存配置文件并退出，重启nginx服务即可通过`https://belldrum.com`访问网站了。   
+修改完成后保存配置文件并退出，重启nginx服务即可通过`https://belldrum.com`访问网站了。   
 
 ## 设置跳转
 我们希望当用户使用`http`访问网站时能够自动重定向到`https`，或者更进一步，能够同时实现子域名`www`到`non-www`的重定向。  
@@ -171,7 +201,7 @@ server {
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
-	ssl_prefer_server_ciphers on
+	ssl_prefer_server_ciphers on;
 
 	access_log /var/log/nginx/belldrum.com-access.log;
 	error_log /var/log/nginx/belldrum.com-error.log;
@@ -301,12 +331,39 @@ HSTS并不能完美的解决HTTP会话劫持，它也有一些缺点。如果用
 需要注意的是，从预加载列表中删除自己的域名非常困难，可能需要几个月的时间才能使用户更新。因此，除非确定可以长期支持整个站点和其子域名的HTTPS服务，否则不要申请加入该列表。  
 
 ## HTTPS优化
-SSL操作会消耗额外的CPU资源
-### 减少运算量
-### 加强安全性
+
+### 会话缓存
+使用SSL/TLS会消耗额外的CPU资源影响服务器性能，一般nginx在多核处理器系统上会运行多个Worker进程。最消耗CPU的操作是SSL握手，我们可以通过以下两种方法最大程度的减少每个客户端执行这些操作的次数。  
+- 启动`keepalive`长连接，使用一个连接发送多个请求
+- 复用SSL会话参数，避免并行连接和后续连接的SSL握手  
+
+这些会话保存在在worker进程间共享的SSL会话缓存中，可以通过`ssl_session_cache`指令来配置。利用客戶端在握手阶段使用的`seesion id`去查询服务端的`session cache`，从而简化握手阶段。  
+默认的缓存超时时间为5分钟，可以使用`ssl_session_timeout`指令增加缓存超时时间。1MB的会话缓存大约可以保存4000个会话，下面是一个拥有4小时超市时间，20MB 共享会话缓存的多核系统优化配置例子：  
+<pre>
+worker_processes auto;
+
+server {
+	···
+    ssl_session_cache   shared:SSL:20m;	//共享会话缓存
+    ssl_session_timeout 4h;	//会话超时时间，默认为5m
+
+	keepalive_timeout   70;	//设置长连接
+	···
+}
+</pre>
+<br />
+`Session Tickets`是会话缓存的替代方法，它将会话信息存储在客户端，无需服务器端缓存即可保存会话信息。当客户端恢复与服务器端的交互时，它会展示`session ticket`，而不需要重新协商。将`ssl_session_tickets`设置为`on`：  
+<pre>
+server {
+	ssl_session_tickets on;
+}
+</pre>
+### OCSP
+### 安全优化
 
 ## 参考资料
-
+1. [NGINX Documentation](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-tcp/)  
+2. []()
 
 
 <pre>

@@ -236,12 +236,12 @@ vim /etc/ssh/sshd_config
 &lt;h3 id=&#34;禁止root登录&#34;&gt;禁止root登录&lt;/h3&gt;
 &lt;p&gt;修改&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;文件：&lt;/p&gt;
 &lt;pre&gt;
-PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+PermitRootLogin no			# 是否允许root用户登录，默认为yes
 &lt;/pre&gt;
 &lt;h3 id=&#34;禁止口令登录&#34;&gt;禁止口令登录&lt;/h3&gt;
 &lt;p&gt;修改&lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt;文件：&lt;/p&gt;
 &lt;pre&gt;
-PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
 &lt;/pre&gt;
 &lt;h3 id=&#34;待补充&#34;&gt;待补充&lt;/h3&gt;
 &lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;

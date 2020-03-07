@@ -197,12 +197,12 @@ service sshd restart
 ### 禁止root登录
 修改`/etc/ssh/sshd_config`文件：  
 <pre>
-PermitRootLogin yes			# 是否允许root用户登录，默认为yes
+PermitRootLogin no			# 是否允许root用户登录，默认为yes
 </pre>
 ### 禁止口令登录
 修改`/etc/ssh/sshd_config`文件：  
 <pre>
-PasswordAuthentication yes		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
+PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使用密钥对验证可以关闭
 </pre>
 
 ### 待补充  
