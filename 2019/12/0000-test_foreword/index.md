@@ -1,8 +1,8 @@
 # 未至之事，皆为惊喜
 
 <div class="post-meta"><center class="post-meta-other">This article is for testing.</center></div>
+<br />  
 
-<br />
 六岁你想学骑自行车，你稚气十足的嘱咐父母扶紧，却也忍不住的畏怯高大的车把和摔倒后满身尘土的狼狈；  
 <br />
 十几岁的年纪你遇到了喜欢的女孩子，你夸张的吸引她的注意，装作着不经意，也担心着得不到回应的心意和家长发现你们遮遮掩掩的联系；  
