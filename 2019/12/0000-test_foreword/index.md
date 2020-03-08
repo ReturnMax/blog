@@ -1,6 +1,6 @@
 # 未至之事，皆为惊喜
 
-<div class="post-meta"><center class="post-meta-other">This article is for testing.</center></div>
+<div class="post-meta"><center class="post-meta-other">This article is for testing</center></div>
 <br />  
 
 六岁你想学骑自行车，你稚气十足的嘱咐父母扶紧，却也忍不住的畏怯高大的车把和摔倒后满身尘土的狼狈；  
