@@ -29,14 +29,16 @@
 
 ## 网站日志
 
-2020/02/22&emsp;备案通过，博客正式上线  
+2020/02/22&emsp;备案通过，博客上线  
 
-2020/02/23&emsp;网站添加小绿锁，通过 [https://belldrum.com](https://belldrum.com) 访问吧  
+2020/02/23&emsp;添加小绿锁，通过 [https://belldrum.com](https://belldrum.com) 访问吧  
 
-2020/03/05&emsp;HTTPS优化，增加服务器和本地会话缓存，支持 TLSv1.3 和 HTTP/2  
+2020/03/05&emsp;HTTPS 优化，增加服务器和本地会话缓存，支持 TLSv1.3 和 HTTP/2  
 
 2020/03/08&emsp;支持添加背景音乐；修改版权协议，如无特殊说明，文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreffer"> CC-BY-NC-SA 4.0 </a> 许可协议
 
 ## 写在最后
-:beer: 谢谢你在这听我胡言乱语。博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。  
+:beer: 谢谢你在这听我胡言乱语。  
+
+博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。  
 <!--more-->
