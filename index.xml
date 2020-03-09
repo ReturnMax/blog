@@ -13,7 +13,6 @@
                 <link>https://belldrum.com/about/</link>
                 <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate><guid>https://belldrum.com/about/</guid>
                 <description>&lt;h2 id=&#34;关于我&#34;&gt;关于我&lt;/h2&gt;
-&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;https://belldrum.com/svg/loading.min.svg&#34; data-sizes=&#34;auto&#34; data-src=&#34;%22%22&#34; alt=&#34;江湖路远，我想见你&#34; class=&#34;lazyload&#34;&gt;&lt;figcaption class=&#34;image-caption&#34;&gt;江湖路远，我想见你&lt;/figcaption&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;你好，我是嘉文。&lt;/p&gt;
 &lt;p&gt;一个 &lt;del&gt;半路出家的程序员&lt;/del&gt; 热爱生活的咸鱼，感兴趣的方向为 机器学习 / 数据挖掘 / 信息科学交叉领域，相关技能树正在疯狂点亮中。&lt;br&gt;
 &lt;br /&gt;
@@ -41,12 +40,13 @@
 &lt;p&gt;······&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;🎯 这是一个菜鸟的自留地，他也梦想着有一天从 New Bean 成长为真正的 NB。&lt;/p&gt;
+&lt;p&gt;🎯 这是一个菜鸟的自留地，他也渴望着有一天从 New Bean 成长为真正的 NB。&lt;/p&gt;
 &lt;h2 id=&#34;网站日志&#34;&gt;网站日志&lt;/h2&gt;
 &lt;p&gt;2020/02/22 备案通过，博客上线&lt;/p&gt;
 &lt;p&gt;2020/02/23 添加小绿锁，通过 &lt;a href=&#34;https://belldrum.com&#34; target=&#34;_blank&#34;&gt;https://belldrum.com&lt;/a&gt; 访问吧&lt;/p&gt;
 &lt;p&gt;2020/03/05 HTTPS 优化，增加服务器和本地会话缓存，支持 TLSv1.3 和 HTTP/2&lt;/p&gt;
 &lt;p&gt;2020/03/08 支持添加背景音乐；修改版权协议，如无特殊说明，文章均采用 &lt;a href=&#34;https://creativecommons.org/licenses/by-nc-sa/4.0/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreffer&#34;&gt; CC-BY-NC-SA 4.0 &lt;/a&gt; 许可协议&lt;/p&gt;
+&lt;p&gt;2020/03/09 前端公共库更换为 &lt;a href=&#34;https://www.staticfile.org/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreffer&#34;&gt;七牛云 CDN&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;写在最后&#34;&gt;写在最后&lt;/h2&gt;
 &lt;p&gt;🍺 谢谢你在这听我胡言乱语。&lt;/p&gt;
 &lt;p&gt;博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。&lt;/p&gt;</description>

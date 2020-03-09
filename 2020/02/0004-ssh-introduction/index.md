@@ -1,6 +1,5 @@
 # SSH 原理 & 实践
 
-
 OpenSSH是SSH协议的一个免费开源实现，是用于使用SSH协议进行远程登录的主要连接工具。它对所有流量进行加密，以消除窃听、连接劫持等攻击。此外，OpenSSH还提供了一整套安全的隧道功能、多种身份验证方法以及复杂的配置选项。  
 
 OpenSSH软件主要包含以下几种工具：  
@@ -9,7 +8,7 @@ OpenSSH软件主要包含以下几种工具：
 - 远程操作使用ssh、scp和sftp完成
   
 本文主要介绍SSH的工作流程以及OpenSSH部分工具的使用。
-
+<!--more-->  
 ## 认证过程
 SSH 协议使用对称加密(symmetric encryption)，非对称加密(asymmetric encryption)和哈希(hashing)来保证信息传输的安全。客户端和服务器端的SSH连接过程主要包括三个阶段：  
 1. 在客户端进行服务器验证
@@ -211,4 +210,3 @@ PasswordAuthentication no		# 是否使用密码验证，默认为yes，如果使
 1. [Understanding the SSH Encryption and Connection Process](https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process)
 2. [Understanding SSH workflow](https://medium.com/@Magical_Mudit/understanding-ssh-workflow-66a0e8d4bf65)  
 3. [SSH命令和SSH服务详解](https://www.cnblogs.com/f-ck-need-u/p/7129122.html)
-<!--more-->

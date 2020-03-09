@@ -1,7 +1,6 @@
 # About
 
 ## 关于我
-![江湖路远，我想见你]("")  
 
 你好，我是嘉文。  
 
@@ -25,8 +24,8 @@
 
 - ······
   
-:dart: 这是一个菜鸟的自留地，他也梦想着有一天从 New Bean 成长为真正的 NB。  
-
+:dart: 这是一个菜鸟的自留地，他也渴望着有一天从 New Bean 成长为真正的 NB。  
+<!--more-->
 ## 网站日志
 
 2020/02/22&emsp;备案通过，博客上线  
@@ -35,10 +34,11 @@
 
 2020/03/05&emsp;HTTPS 优化，增加服务器和本地会话缓存，支持 TLSv1.3 和 HTTP/2  
 
-2020/03/08&emsp;支持添加背景音乐；修改版权协议，如无特殊说明，文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreffer"> CC-BY-NC-SA 4.0 </a> 许可协议
+2020/03/08&emsp;支持添加背景音乐；修改版权协议，如无特殊说明，文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreffer"> CC-BY-NC-SA 4.0 </a> 许可协议  
+
+2020/03/09&emsp;前端公共库更换为 <a href="https://www.staticfile.org/" target="_blank" rel="external nofollow noopener noreffer">七牛云 CDN</a>  
 
 ## 写在最后
 :beer: 谢谢你在这听我胡言乱语。  
 
 博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。  
-<!--more-->
