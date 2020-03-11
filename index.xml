@@ -3,7 +3,7 @@
         <title>晨钟暮鼓 | 晨钟暮鼓</title>
         <link>https://belldrum.com/</link>
         <description>晨钟暮鼓 | 晨钟暮鼓</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 28 Feb 2020 00:25:28 +0800</lastBuildDate><atom:link href="https://belldrum.com/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Fri, 02 Aug 2019 11:04:49 +0800</lastBuildDate><atom:link href="https://belldrum.com/" rel="self" type="application/rss+xml" /><item>
                 <title>Posts</title>
                 <link>https://belldrum.com/posts/</link>
                 <pubDate>Fri, 28 Feb 2020 00:25:28 +0800</pubDate><guid>https://belldrum.com/posts/</guid>
@@ -13,6 +13,9 @@
                 <link>https://belldrum.com/about/</link>
                 <pubDate>Fri, 02 Aug 2019 11:04:49 +0800</pubDate><guid>https://belldrum.com/about/</guid>
                 <description>&lt;h2 id=&#34;关于我&#34;&gt;关于我&lt;/h2&gt;
+&lt;div class=&#34;home-intro&#34;&gt;&lt;div class=&#34;home-avatar&#34;&gt;
+	&lt;img src=&#34;https://belldrum.com/images/avatar/avatar.jpg&#34; alt=&#34;江湖路远，我想见你&#34;&gt;
+&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;你好，我是嘉文。&lt;/p&gt;
 &lt;p&gt;一个 &lt;del&gt;半路出家的程序员&lt;/del&gt; 热爱生活的咸鱼，感兴趣的方向为 机器学习 / 数据挖掘 / 信息科学交叉领域，相关技能树正在疯狂点亮中。&lt;br&gt;
 &lt;br /&gt;
@@ -34,13 +37,13 @@
 &lt;p&gt;菜鸟的批评与自我批评&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;del&gt;大豆的种植与收获技术&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;基因与生命的魔法知识&lt;/del&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;······&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;🎯 这是一个菜鸟的自留地，他也梦想着有一天从 New Bean 成长为真正的 NB。&lt;/p&gt;
+&lt;p&gt;🎯 这是一个菜鸟的自留地，他也梦想着有一天从 Newbie 成长为真正的 NB。&lt;/p&gt;
 &lt;h2 id=&#34;网站声明&#34;&gt;网站声明&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
