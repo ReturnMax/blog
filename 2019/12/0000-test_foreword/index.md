@@ -1,8 +1,25 @@
 # 未至之事，皆为惊喜
 
 <!--more-->
+
+<div id="aplayer"></div>  
+<script>  
+	const ap = new APlayer({
+		container: document.getElementById('aplayer'),
+		fixed: true,
+		autoplay: true,
+	    audio: [{
+	        name: 'Rain after summer',
+	        artist: '羽肿',
+	        url: 'https://music.163.com/song/media/outer/url?id=430685732.mp3',
+	        cover: '/images/post/rain_after_summer.jpg'
+	    }]
+	});
+</script>  
+
 <center style="color:#a9a9b3">This article is for testing.</center>  
- 
+<br />  
+
 六岁你想学骑自行车，你稚气十足的嘱咐父母扶紧，却也忍不住的畏怯高大的车把和摔倒后满身尘土的狼狈；  
 <br />
 十几岁的年纪你遇到了喜欢的女孩子，你夸张的吸引她的注意，装作着不经意，也担心着得不到回应的心意和家长发现你们遮遮掩掩的联系；  

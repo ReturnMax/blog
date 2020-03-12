@@ -16,7 +16,6 @@
 <meta name="theme-color" content="#ffffff"><meta property="og:title" content="About" />
 <meta property="og:description" content="关于我
 
-	
 
 你好，我是嘉文。
 一个 半路出家的程序员 热爱生活的咸鱼，感兴趣的方向为 机器学习 / 数据挖掘 / 信息科学交叉领域，相关技能树正在疯狂点亮中。
@@ -54,7 +53,6 @@
 <meta name="twitter:title" content="About"/>
 <meta name="twitter:description" content="关于我
 
-	
 
 你好，我是嘉文。
 一个 半路出家的程序员 热爱生活的咸鱼，感兴趣的方向为 机器学习 / 数据挖掘 / 信息科学交叉领域，相关技能树正在疯狂点亮中。
@@ -97,7 +95,7 @@
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "page","wordcount":  530 ,
+            },"genre": "page","wordcount":  557 ,
         "url": "https:\/\/belldrum.com\/about\/","datePublished": "2019-08-02T11:04:49\x2b08:00","dateModified": "2019-08-02T11:04:49\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "嘉文",
@@ -136,9 +134,19 @@
     </div>
 </nav><main class="main">
                 <div class="container"><div class="page single"><div class="post-content"><a class="post-dummy-target" id="关于我"></a><h2>关于我</h2>
-<div class="home-intro"><div class="home-avatar">
-	<img src="/images/avatar/avatar.jpg" alt="江湖路远，我想见你">
-</div></div>
+<div id="aplayer"></div>
+<script>
+	const ap = new APlayer({
+		container: document.getElementById('aplayer'),
+		mini: true,
+	    audio: [{
+	        name: 'Rain after summer',
+	        artist: '羽肿',
+	        url: 'https://music.163.com/song/media/outer/url?id=430685732.mp3',
+	        cover: '/images/avatar/avatar.jpg'
+	    }]
+	});
+</script>
 <p>你好，我是嘉文。</p>
 <p>一个 <del>半路出家的程序员</del> 热爱生活的咸鱼，感兴趣的方向为 机器学习 / 数据挖掘 / 信息科学交叉领域，相关技能树正在疯狂点亮中。<br>
 <br />
@@ -221,14 +229,10 @@
     </div></div>
             </main><footer class="footer">
     <div class="copyright">
-		<div>
-			<a href="https://www.upyun.com/" target="_blank" rel="external nofollow noopener noreffer">
-				<img src="/images/resource/youpai.png" height="38" />
-			</a>
-		</div>
         <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">嘉文</a></span><span class="icp-splitter">&ensp;|&ensp;</span><br class="icp-br"/>
                 <span class="icp"><a href="http://www.miitbeian.gov.cn/" target="_blank">鲁ICP备20005030-1</a></span>&ensp;|&ensp;Power by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> & <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt</a>
         </div>
+		
     </div>
 </footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
             <span>&nbsp;</span>

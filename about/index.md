@@ -2,9 +2,20 @@
 
 ## 关于我
 
-<div class="home-intro"><div class="home-avatar">
-	<img src="/images/avatar/avatar.jpg" alt="江湖路远，我想见你">
-</div></div>
+<div id="aplayer"></div>
+
+<script>
+	const ap = new APlayer({
+		container: document.getElementById('aplayer'),
+		mini: true,
+	    audio: [{
+	        name: 'Rain after summer',
+	        artist: '羽肿',
+	        url: 'https://music.163.com/song/media/outer/url?id=430685732.mp3',
+	        cover: '/images/avatar/avatar.jpg'
+	    }]
+	});
+</script>
 
 你好，我是嘉文。  
 
