@@ -204,7 +204,13 @@
 </ul>
 <a class="post-dummy-target" id="写在最后"></a><h2>写在最后</h2>
 <p>🍺 谢谢你在这听我胡言乱语。</p>
-<p>博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。</p></div><div class="post-comment"><div class="fa fa-comments fa-lg" style="line-height:60px">&nbsp;评论区</div><div id="vcomments"></div><script src="https://cdn.staticfile.org/valine/1.3.10/Valine.min.js"></script><script type="text/javascript">
+<p>博客有诸多纰漏，欢迎在评论区留言指出，我会慢慢改善。</p></div><div class="post-comment"><div class="fa fa-comments fa-lg" style="line-height:60px">&nbsp;评论区</div><div id="vcomments"></div><script src="https://cdn.staticfile.org/valine/1.3.10/Valine.min.js"></script><style type="text/css">
+			div.info{
+				display: none;
+			}
+		</style>
+		
+        <script type="text/javascript">
             (function () {
                 
                 
@@ -224,12 +230,6 @@
                     lang: "zh-cn",
                 });
             })();
-			var infoEle = document.querySelector('#comments .info');
-			if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
-				infoEle.childNodes.forEach(function(item) {
-					item.parentNode.removeChild(item);
-				});
-			}
         </script>
         <noscript>Please enable JavaScript to view the <a href="https://valine.js.org/">comments powered by Valine.</a></noscript></div>
     </div></div>
