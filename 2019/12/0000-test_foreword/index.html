@@ -182,6 +182,12 @@
                     lang: "zh-cn",
                 });
             })();
+			var infoEle = document.querySelector('#comments .info');
+			if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0){
+				infoEle.childNodes.forEach(function(item) {
+					item.parentNode.removeChild(item);
+				});
+			}
         </script>
         <noscript>Please enable JavaScript to view the <a href="https://valine.js.org/">comments powered by Valine.</a></noscript></div>
     </article></div>
