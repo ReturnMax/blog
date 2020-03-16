@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>日常！ Leetcode | 晨钟暮鼓</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="嘉文的博客">
+
+
+<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?2c56c438754967780763f1508d10a53d";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+</script><link rel="prev" href="https://belldrum.com/2020/02/0004-ssh-introduction/" /><link rel="canonical" href="https://belldrum.com/2020/03/0006-leetcode/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="日常！ Leetcode" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://belldrum.com/2020/03/0006-leetcode/" />
+<meta property="article:published_time" content="2020-03-16T17:47:38+08:00" />
+<meta property="article:modified_time" content="2020-03-16T17:47:38+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="日常！ Leetcode"/>
+<meta name="twitter:description" content=""/>
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "日常！ Leetcode",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/belldrum.com\/2020\/03\/0006-leetcode\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/belldrum.com\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  200 ,
+        "url": "https:\/\/belldrum.com\/2020\/03\/0006-leetcode\/","datePublished": "2020-03-16T17:47:38\x2b08:00","dateModified": "2020-03-16T17:47:38\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "嘉文",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/belldrum.com\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
+    }
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/5.12.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.staticfile.org/animate.css/3.7.2/animate.min.css"></head>
+    <body><script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script><div class="wrapper"><nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://belldrum.com/">晨钟暮鼓</a>
+        </div>
+        <div class="navbar-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"><i class="fas fa-home fa-fw"></i></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        </div>
+    </div>
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://belldrum.com/">晨钟暮鼓</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://belldrum.com/posts" title="">文章</a><a class="menu-item" href="https://belldrum.com/tags" title="">标签</a><a class="menu-item" href="https://belldrum.com/categories" title="">分类</a><a class="menu-item" href="https://belldrum.com/about" title="">关于</a><a class="menu-item" href="https://belldrum.com/" title="主页"></a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">日常！ Leetcode</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://belldrum.com/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>嘉文
+                </a>&nbsp;</div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-03-16>2020-03-16</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 200 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;<span id="/2020/03/0006-leetcode/" class="leancloud_visitors" data-flag-title="日常！ Leetcode">
+                        <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
+                    </span>&nbsp;</div>
+        </div><div class="post-content"><a class="post-dummy-target" id="面试题-0106-字符串压缩"></a><h2>面试题 01.06 字符串压缩</h2>
+<div class="admonition question">
+字符串压缩。利用字符重复出现的次数，编写一种方法，实现基本的字符串压缩功能。比如，字符串aabcccccaaa会变为a2b1c5a3。若“压缩”后的字符串没有变短，则返回原先的字符串。你可以假设字符串中只包含大小写英文字母（a至z）。
+</div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compressString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">S</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&#34;&#34;</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">ch</span><span class="p">:</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span> <span class="o">+=</span> <span class="n">ch</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+                <span class="n">ch</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ans</span> <span class="o">+=</span> <span class="n">ch</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ans</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="k">else</span> <span class="n">S</span>
+</code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2020-03-16 更新</span>
+				<span>
+					，采用 
+					<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="external nofollow noopener noreffer">
+						署名-非商业性使用-相同方式共享 4.0 国际协议
+					</a>
+					发布
+                </span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fbelldrum.com%2f2020%2f03%2f0006-leetcode%2f&amp;text=%e6%97%a5%e5%b8%b8%ef%bc%81%20Leetcode&amp;via=" target="_blank" title="分享到 Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fbelldrum.com%2f2020%2f03%2f0006-leetcode%2f" target="_blank" title="分享到 Facebook">
+            <i class="fab fa-facebook-square fa-fw"></i>
+        </a><a href="//service.weibo.com/share/share.php?url=https%3a%2f%2fbelldrum.com%2f2020%2f03%2f0006-leetcode%2f&amp;appkey=&amp;title=%e6%97%a5%e5%b8%b8%ef%bc%81%20Leetcode" target="_blank" title="分享到 Weibo">
+            <i class="fab fa-weibo fa-fw"></i>
+        </a><a href="//sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3a%2f%2fbelldrum.com%2f2020%2f03%2f0006-leetcode%2f&amp;sharesource=qzone&title=%e6%97%a5%e5%b8%b8%ef%bc%81%20Leetcode&amp;summary=%e6%97%a5%e5%b8%b8%ef%bc%81%20Leetcode" target="_blank" title="分享到 Qzone">
+            <i class="fa fa-star fa-fw"></i>
+        </a></span></div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section><span class="tag">
+                        <a href="https://belldrum.com/tags/leetcode/"><i class="fas fa-tag fa-fw"></i>&nbsp;Leetcode</a>&nbsp;
+                    </span><span class="tag">
+                        <a href="https://belldrum.com/tags/python/"><i class="fas fa-tag fa-fw"></i>&nbsp;Python</a>&nbsp;
+                    </span></section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://belldrum.com/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="https://belldrum.com/2020/02/0004-ssh-introduction/" class="prev" rel="prev" title="SSH 原理 &amp; 实践"><i class="fas fa-angle-left fa-fw"></i>SSH 原理 &amp; 实践</a></div>
+</div><div class="post-comment"><div class="fa fa-comments fa-lg" style="line-height:60px">&nbsp;评论区</div><div id="vcomments"></div><script src="https://cdn.staticfile.org/valine/1.3.10/Valine.min.js"></script><style type="text/css">
+			div.info{
+				display: none;
+			}
+		</style>
+		
+        <script type="text/javascript">
+            (function () {
+                
+                
+                if (window.location.hostname == "localhost")
+                    return;
+                new Valine({
+                    el: "#vcomments",
+                    appId: "wi2zHvTM3ahn6m8dCA1YUV0u-gzGzoHsz",
+                    appKey: "IotWRV7YPP7EeVVFGMicGR0S",
+                    meta: ["nick", "mail"],
+                    notify: "true",
+                    verify: "true",
+                    avatar: "retro",
+                    placeholder: "我想听到你的声音 ...",
+                    visitor: "true",
+                    recordIP: "true",
+                    lang: "zh-cn",
+                });
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://valine.js.org/">comments powered by Valine.</a></noscript></div>
+    </article></div>
+            </main><footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://belldrum.com/" target="_blank">嘉文</a></span><span class="icp-splitter">&ensp;&#x22C5;&ensp;</span><br class="icp-br"/>
+                <span class="icp"><a href="http://beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreffer">鲁&nbsp;ICP&nbsp;备&nbsp;20005030&nbsp;号&nbsp;-&nbsp;1</a></span>&ensp;&#x22C5;&ensp;由<a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">&nbsp;Hugo</a>&nbsp;&#x00D7;&nbsp;<a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt&nbsp;</a>驱动
+        </div>
+		
+    </div>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-160692644-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.slim.min.js"></script><script src="https://cdn.staticfile.org/lazysizes/5.1.2/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><script src="/js/blog.min.js"></script></body>
+</html>
