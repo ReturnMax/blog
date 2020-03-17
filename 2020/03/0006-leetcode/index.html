@@ -46,7 +46,7 @@
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  200 ,
+            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  466 ,
         "url": "https:\/\/belldrum.com\/2020\/03\/0006-leetcode\/","datePublished": "2020-03-16T17:47:38\x2b08:00","dateModified": "2020-03-16T17:47:38\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "嘉文",
@@ -89,11 +89,53 @@
                     <i class="fas fa-user-circle fa-fw"></i>嘉文
                 </a>&nbsp;</div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-03-16>2020-03-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 200 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 466 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;<span id="/2020/03/0006-leetcode/" class="leancloud_visitors" data-flag-title="日常！ Leetcode">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
-        </div><div class="post-content"><a class="post-dummy-target" id="面试题-0106-字符串压缩"></a><h2>面试题 01.06 字符串压缩</h2>
+        </div><div class="post-content"><a class="post-dummy-target" id="1160-拼写单词"></a><h2>1160. 拼写单词</h2>
+<div class="admonition question">
+给你一份『词汇表』（字符串数组） words 和一张『字母表』（字符串） chars。  
+假如你可以用 chars 中的『字母』（字符）拼写出 words 中的某个『单词』（字符串），那么我们就认为你掌握了这个单词。  
+注意：每次拼写时，chars 中的每个字母都只能用一次。  
+返回词汇表 words 中你掌握的所有单词的 长度之和。
+</div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">countCharacters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">chars</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">chars_cnt</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="n">word_cnt</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">word_cnt</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">chars_cnt</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">word_cnt</span><span class="p">[</span><span class="n">c</span><span class="p">]:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ans</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>时间复杂度 <code>O(n)</code>，<code>n</code> 为所有字符串的总长度，包括 <code>chars</code> 和 <code>words</code>。<br>
+精髓是使用哈希表存储 <code>chars</code> 中每个字母的数量，没有接触过 <code>collection.Counter()</code> 这种用法 orz。<br>
+另外注意 <code>for...else</code> 的使用。</p>
+<a class="post-dummy-target" id="面试题-0106-字符串压缩"></a><h2>面试题 01.06 字符串压缩</h2>
 <div class="admonition question">
 字符串压缩。利用字符重复出现的次数，编写一种方法，实现基本的字符串压缩功能。比如，字符串aabcccccaaa会变为a2b1c5a3。若“压缩”后的字符串没有变短，则返回原先的字符串。你可以假设字符串中只包含大小写英文字母（a至z）。
 </div>
