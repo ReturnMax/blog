@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "style.min.css",
-	"sourceRoot": "C:/Users/CHNGU/Desktop/blog_master",
+	"sourceRoot": "C:/Users/CHNGU/Desktop/blog/blog_master",
 	"sources": [
 		"themes/LoveIt/assets/css/style.scss",
 		"themes/LoveIt/assets/css/_variables.scss",
