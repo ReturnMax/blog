@@ -4,11 +4,64 @@
 第 N+1 次立下决心刷题，现已加入日常任务。  
 
 <!--more-->
-2020/ 04/ 01 Update  
-近期比较忙，疯狂打脸ing  
 
-不过抽空看完了 Python 实现的常见数据结构，继续刷题。
+{{< admonition warning >}}
 
+2020/ 04/ 01 Update  近期比较忙，疯狂打脸ing  
+{{< /admonition >}}
+{{< admonition warning >}}
+2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
+{{< /admonition >}}
+
+## 289. 生命游戏
+
+{{< admonition question >}}
+给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+
+1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+
+根据当前状态，写一个函数来计算面板上所有细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
+
+{{< /admonition >}}  
+
+```python
+class Solution:
+    def gameOfLife(self, board: List[List[int]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+
+        neighbors = [(1,0), (1,-1), (0,-1), (-1,-1), (-1,0), (-1,1), (0,1), (1,1)]
+
+        rows = len(board)
+        cols = len(board[0])
+
+        copy_board = [[board[row][col] for col in range(cols)] for row in range(rows)]
+
+        for row in range(rows):
+            for col in range(cols):
+
+                live_neighbors = 0
+                for neighbor in neighbors:
+
+                    r = (row + neighbor[0])
+                    c = (col + neighbor[1])
+
+                    if (r < rows and r >= 0) and (c < cols and c >= 0) and (copy_board[r][c] == 1):
+                        live_neighbors += 1
+    
+                if copy_board[row][col] == 1 and (live_neighbors < 2 or live_neighbors > 3):
+                    board[row][col] = 0
+
+                if copy_board[row][col] == 0 and live_neighbors == 3:
+                    board[row][col] = 1
+
+```
+
+有个大佬给出了使用 CNN 卷积来解决问题的思路，真的是服气。
 
 ## 225. 用队列实现栈
 

@@ -16,7 +16,7 @@
 	  var s = document.getElementsByTagName("script")[0]; 
 	  s.parentNode.insertBefore(hm, s);
 	})();
-</script><link rel="prev" href="https://belldrum.com/2020/03/0005-svm-derivation/" /><link rel="canonical" href="https://belldrum.com/2020/03/0006-leetcode/" />
+</script><link rel="prev" href="https://belldrum.com/2020/02/0004-ssh-introduction/" /><link rel="canonical" href="https://belldrum.com/2020/03/0006-leetcode/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -46,7 +46,7 @@
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  998 ,
+            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  1512 ,
         "url": "https:\/\/belldrum.com\/2020\/03\/0006-leetcode\/","datePublished": "2020-03-16T17:47:38\x2b08:00","dateModified": "2020-03-19T17:47:38\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "嘉文",
@@ -89,14 +89,99 @@
                     <i class="fas fa-user-circle fa-fw"></i>嘉文
                 </a>&nbsp;</div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-03-16>2020-03-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 998 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 2 分钟&nbsp;<span id="/2020/03/0006-leetcode/" class="leancloud_visitors" data-flag-title="LeetCode！ 日常">
+                <i class="fas fa-pencil-alt fa-fw"></i>约 1512 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 4 分钟&nbsp;<span id="/2020/03/0006-leetcode/" class="leancloud_visitors" data-flag-title="LeetCode！ 日常">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
         </div><div class="post-content"><p>第 N+1 次立下决心刷题，现已加入日常任务。</p>
-<p>2020/ 04/ 01 Update<br>
-近期比较忙，疯狂打脸ing</p>
-<p>不过抽空看完了 Python 实现的常见数据结构，继续刷题。</p>
+<p><div class="admonition warning">
+
+2020/ 04/ 01 Update  近期比较忙，疯狂打脸ing  
+</div>
+<div class="admonition warning">
+2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
+</div></p>
+<a class="post-dummy-target" id="289-生命游戏"></a><h2>289. 生命游戏</h2>
+<div class="admonition question">
+给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+
+1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+
+根据当前状态，写一个函数来计算面板上所有细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
+
+</div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">gameOfLife</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">        Do not return anything, modify board in-place instead.
+</span><span class="s2">        &#34;&#34;&#34;</span>
+
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">copy_board</span> <span class="o">=</span> <span class="p">[[</span><span class="n">board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">)]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+
+                <span class="n">live_neighbors</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+
+                    <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="n">neighbor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">col</span> <span class="o">+</span> <span class="n">neighbor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="ow">and</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="n">cols</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">copy_board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">live_neighbors</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+                <span class="k">if</span> <span class="n">copy_board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">live_neighbors</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">live_neighbors</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">):</span>
+                    <span class="n">board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">if</span> <span class="n">copy_board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">live_neighbors</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>有个大佬给出了使用 CNN 卷积来解决问题的思路，真的是服气。</p>
 <a class="post-dummy-target" id="225-用队列实现栈"></a><h2>225. 用队列实现栈</h2>
 <div class="admonition question">
 使用队列实现栈的下列操作：
@@ -387,7 +472,7 @@ empty() -- 返回栈是否为空
         </section>
     </div>
 
-    <div class="post-nav"><a href="https://belldrum.com/2020/03/0005-svm-derivation/" class="prev" rel="prev" title="SVM 之 从零推导"><i class="fas fa-angle-left fa-fw"></i>SVM 之 从零推导</a></div>
+    <div class="post-nav"><a href="https://belldrum.com/2020/02/0004-ssh-introduction/" class="prev" rel="prev" title="SSH 原理 &amp; 实践"><i class="fas fa-angle-left fa-fw"></i>SSH 原理 &amp; 实践</a></div>
 </div><div class="post-comment"><div class="fa fa-comments fa-lg" style="line-height:60px">&nbsp;评论区</div><div id="vcomments"></div><script src="https://cdn.staticfile.org/valine/1.3.10/Valine.min.js"></script><style type="text/css">
 			div.info{
 				display: none;
