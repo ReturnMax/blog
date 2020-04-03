@@ -1,4 +1,4 @@
-# LeetCode！ 日常
+# Leetcode！ 日常
 
 
 第 N+1 次立下决心刷题，现已加入日常任务。  
@@ -13,18 +13,91 @@
 2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
 {{< /admonition >}}
 
+
+## 8. 字符串转换整数 (atoi)
+{{< admonition question >}}
+请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+
+首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。接下来的转化规则如下：
+{{< /admonition >}}
+{{< admonition question >}}
+如果第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字字符组合起来，形成一个有符号整数。
+{{< /admonition >}}
+{{< admonition question >}}
+假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成一个整数。
+{{< /admonition >}}
+{{< admonition question >}}
+该字符串在有效的整数部分之后也可能会存在多余的字符，那么这些字符可以被忽略，它们对函数不应该造成影响。
+{{< /admonition >}}
+{{< admonition question >}}
+注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换，即无法进行有效转换。
+
+在任何情况下，若函数不能进行有效的转换时，请返回 0 。
+{{< /admonition >}} 
+
+```python
+INT_MAX = 2 ** 31 - 1
+INT_MIN = -2 ** 31
+
+class Automaton:
+    def __init__(self):
+        self.state = 'start'
+        self.sign = 1
+        self.ans = 0
+        self.table = {
+            'start': ['start', 'signed', 'in_number', 'end'],
+            'signed': ['end', 'end', 'in_number', 'end'],
+            'in_number': ['end', 'end', 'in_number', 'end'],
+            'end': ['end', 'end', 'end', 'end'],
+        }
+        
+    def get_col(self, c):
+        if c.isspace():
+            return 0
+        if c == '+' or c == '-':
+            return 1
+        if c.isdigit():
+            return 2
+        return 3
+
+    def get(self, c):
+        self.state = self.table[self.state][self.get_col(c)]
+        if self.state == 'in_number':
+            self.ans = self.ans * 10 + int(c)
+            self.ans = min(self.ans, INT_MAX) if self.sign == 1 else min(self.ans, -INT_MIN)
+        elif self.state == 'signed':
+            self.sign = 1 if c == '+' else -1
+
+class Solution:
+    def myAtoi(self, str: str) -> int:
+        automaton = Automaton()
+        for c in str:
+            automaton.get(c)
+        return automaton.sign * automaton.ans
+```
+  
+题解中使用了 [确定有限状态机 (DFA)]^(deterministic finite automaton)，类似于 `TCP` 协议中的状态机。有点意思，先mark一下回头再仔细看看
+
+
 ## 289. 生命游戏
 
 {{< admonition question >}}
 给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
-
+{{< /admonition >}}
+{{< admonition question >}}
 1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+{{< /admonition >}}
+{{< admonition question >}}
 2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+{{< /admonition >}}
+{{< admonition question >}}
 3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+{{< /admonition >}}
+{{< admonition question >}}
 4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
-
+{{< /admonition >}}
+{{< admonition question >}}
 根据当前状态，写一个函数来计算面板上所有细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
-
 {{< /admonition >}}  
 
 ```python
@@ -61,16 +134,25 @@ class Solution:
 
 ```
 
+注意 Python 迭代器 [] 和生成器 () 的使用
+
 有个大佬给出了使用 CNN 卷积来解决问题的思路，真的是服气。
 
 ## 225. 用队列实现栈
 
 {{< admonition question >}}
 使用队列实现栈的下列操作：
-
+{{< /admonition >}}
+{{< admonition question >}}
 push(x) -- 元素 x 入栈
+{{< /admonition >}}
+{{< admonition question >}}
 pop() -- 移除栈顶元素
+{{< /admonition >}}
+{{< admonition question >}}
 top() -- 获取栈顶元素
+{{< /admonition >}}
+{{< admonition question >}}
 empty() -- 返回栈是否为空
 {{< /admonition >}}
 
