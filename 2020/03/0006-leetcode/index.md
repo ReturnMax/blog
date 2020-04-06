@@ -13,8 +13,37 @@
 2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
 {{< /admonition >}}
 
+## 121. 买卖股票的最佳时机
 
-## 8. 字符串转换整数 (atoi)
+{{< admonition question >}}
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+如果你最多只允许完成一笔交易（即买入和卖出一支股票一次），设计一个算法来计算你所能获取的最大利润。
+
+注意：你不能在买入股票前卖出股票。
+{{< /admonition >}}
+
+  
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if len(prices) == 0:
+            return 0
+        min_price = prices[0]
+        profit = 0
+        for cur_price in prices:
+            if cur_price > min_price:
+                max_profit = cur_price - min_price
+                profit = max(max_profit, profit)
+            else:
+                min_price = cur_price
+        
+        return profit
+```
+
+关键是 `max()` 的使用，开始没有想到。另外没事还得看看谷歌开源项目风格指南，经常忘。  
+
+## `Mark` 8. 字符串转换整数 (atoi)
 {{< admonition question >}}
 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
 
