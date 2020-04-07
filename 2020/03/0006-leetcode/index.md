@@ -10,8 +10,36 @@
 2020/ 04/ 01 Update  近期比较忙，疯狂打脸ing  
 {{< /admonition >}}
 {{< admonition warning >}}
-2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
+2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，又信心满满的回来刷题了。
 {{< /admonition >}}
+
+
+## 面试题 01.07. 旋转矩阵
+
+{{< admonition question >}}
+给你一幅由 N × N 矩阵表示的图像，其中每个像素的大小为 4 字节。请你设计一种算法，将图像顺时针旋转 90 度。
+
+不占用额外内存空间能否做到？
+{{< /admonition >}}
+
+```python
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        n = len(matrix)
+        # 水平翻转
+        for i in range(n // 2):
+            for j in range(n):
+                matrix[i][j], matrix[n - i - 1][j] = matrix[n - i - 1][j], matrix[i][j]
+        # 主对角线翻转
+        for i in range(n):
+            for j in range(i):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+```
+  
+要求不占用额外空间，首先想到的就是矩阵内元素两两互换，类似于快排。但是没想到具体怎么实现，刚好题解中有这种解法，使用了对角线旋转。  
 
 ## 121. 买卖股票的最佳时机
 

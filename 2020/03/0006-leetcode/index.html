@@ -46,7 +46,7 @@
                 "url": "https:\/\/belldrum.com\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  2280 ,
+            },"genre": "posts","keywords": "Leetcode, Python","wordcount":  2499 ,
         "url": "https:\/\/belldrum.com\/2020\/03\/0006-leetcode\/","datePublished": "2020-03-16T17:47:38\x2b08:00","dateModified": "2020-03-19T17:47:38\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "嘉文",
@@ -89,7 +89,7 @@
                     <i class="fas fa-user-circle fa-fw"></i>嘉文
                 </a>&nbsp;</div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-03-16>2020-03-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 2280 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 2499 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 5 分钟&nbsp;<span id="/2020/03/0006-leetcode/" class="leancloud_visitors" data-flag-title="Leetcode！ 日常">
                         <i class="far fa-eye fa-fw"></i><span class=leancloud-visitors-count></span> 次阅读
                     </span>&nbsp;</div>
@@ -99,8 +99,49 @@
 2020/ 04/ 01 Update  近期比较忙，疯狂打脸ing  
 </div>
 <div class="admonition warning">
-2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，我又信心满满的回来刷题了。
+2020/ 04/ 02 Update 抽空看完了 Python 实现的常见数据结构，又信心满满的回来刷题了。
 </div></p>
+<a class="post-dummy-target" id="面试题-0107-旋转矩阵"></a><h2>面试题 01.07. 旋转矩阵</h2>
+<div class="admonition question">
+给你一幅由 N × N 矩阵表示的图像，其中每个像素的大小为 4 字节。请你设计一种算法，将图像顺时针旋转 90 度。
+
+不占用额外内存空间能否做到？
+</div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">        Do not return anything, modify matrix in-place instead.
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="c1"># 水平翻转</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+        <span class="c1"># 主对角线翻转</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>要求不占用额外空间，首先想到的就是矩阵内元素两两互换，类似于快排。但是没想到具体怎么实现，刚好题解中有这种解法，使用了对角线旋转。</p>
 <a class="post-dummy-target" id="121-买卖股票的最佳时机"></a><h2>121. 买卖股票的最佳时机</h2>
 <div class="admonition question">
 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
