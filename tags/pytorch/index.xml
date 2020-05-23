@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PyTorch on 晨钟暮鼓</title>
+    <link>https://belldrum.com/tags/pytorch/</link>
+    <description>Recent content in PyTorch on 晨钟暮鼓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 07 May 2020 16:31:41 +0800</lastBuildDate>
+    
+	<atom:link href="https://belldrum.com/tags/pytorch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PyTorch 命令备忘</title>
+      <link>https://belldrum.com/2020/05/pytorch-trick/</link>
+      <pubDate>Thu, 07 May 2020 16:31:41 +0800</pubDate>
+      
+      <guid>https://belldrum.com/2020/05/pytorch-trick/</guid>
+      <description>&lt;p&gt;使用 PyTorch 可以快速搭建深度学习模型，但是一些常用的命令很容易忘记。为了避免时间浪费在重复查找，本文记录了一些常用的方法，方便使用时查询。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
